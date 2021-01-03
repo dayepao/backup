@@ -1,0 +1,39 @@
+name: keeplive
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 13 1,15 * *
+
+jobs:
+  keeplive:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set time zone
+      run: | 
+        sudo timedatectl set-timezone 'Asia/Shanghai'
+    - name: Update keeplive
+      run: | 
+        repos="backup hostloc-auto-get-points BiliBiliTool TiebaSignIn" #仓库名称
+        str=$(date)%0D%0A%0D%0A
+        str=$(echo $str | sed "s/\ /%20/g")
+        str=$(echo $str | sed "s/:/%3A/g")
+        for repo in $repos
+        do
+        git clone https://github.com/${GITHUB_ACTOR}/${repo}
+        cd ${repo}
+        echo "$(date)" > keeplive
+        git config user.name "GitHub Action"
+        git config user.email "action@github.com"
+        git add keeplive
+        git commit -m "Update keeplive" -a
+        git push "https://${GITHUB_ACTOR}:${{ secrets.PAT }}@github.com/${GITHUB_ACTOR}/${repo}.git"
+        str=${str}${repo}保活成功%0D%0A%0D%0A
+        cd ..
+        done
+        echo "PUSHSTR=${str}" >> $GITHUB_ENV
+    - name: Push
+      run: | 
+        if [ "${{ secrets.PUSH_SCKEY }}" != "" ];then
+        curl -d "text=keeplive" -d "desp=${PUSHSTR}" -X POST  https://sc.ftqq.com/${{ secrets.PUSH_SCKEY }}.send
+        fi
