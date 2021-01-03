@@ -1,4 +1,5 @@
 #!/bin/bash
+echo ""
 echo "#安装/更新 trojan面板"
 echo "source <(curl -sL https://git.io/trojan-install)"
 echo "#卸载 trojan面板"
