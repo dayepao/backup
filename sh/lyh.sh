@@ -5,7 +5,7 @@ do
     echo ""
     echo "功能列表:"
     echo "1.剧集重命名           2.内核自带bbr"
-    echo "3.一键bbr脚本          4.安装onelist"
+    echo "3.bbr多合一脚本        4.安装onelist"
     echo "5.安装rclone           6.linux关闭mail提示"
     echo "7.编译openwrt依赖      8.安装cuteone"
     echo "9.aria2管理面板        10.添加开机启动项"
@@ -36,7 +36,7 @@ do
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/stopmail_lyh.sh)
             ;;
         7)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/require.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/openwrt_require.sh)
             ;;
         8)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/cuteone_lyh.sh)
@@ -56,12 +56,11 @@ do
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/trojan.sh)
             ;;
         13)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/bench_lyh.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/lemonbench.sh)
             rm -rf LemonBench.Result.txt
             ;;
         14)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/speedtest.sh)
-            rm -rf vpsTest
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/bench_all.sh)
             ;;
         15)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_ubuntu_zhcn.sh)
