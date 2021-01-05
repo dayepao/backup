@@ -1,11 +1,11 @@
 #!/bin/bash
 echo ""
-echo -e "\033[32;1m #安装/更新 trojan面板 \033[0m"
+echo -e "\033[32;1m#安装/更新 trojan面板\033[0m"
 echo "source <(curl -sL https://git.io/trojan-install)"
-echo -e "\033[32;1m #卸载 trojan面板 \033[0m"
+echo -e "\033[32;1m#卸载 trojan面板\033[0m"
 echo "source <(curl -sL https://git.io/trojan-install) --remove"
 echo -e "\033[31;1m [注意] \033[0m 若要使用trojan面板，必须安装docker"
-key=$(which docker)
+key=$(command -v docker)
 if [[ ${key} =~ "docker" ]];then
     echo -e "docker状态:\033[32;1m 已安装 \033[0m"
 else
