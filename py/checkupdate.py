@@ -7,7 +7,7 @@ now = datetime.datetime.now()
 now = now.strftime("%Y-%m-%d %H:%M:%S")
 for repo in repos :
     url = "https://github.com/" + sys.argv[1] + "/" + repo
-    res =requests.get(url)
+    res = requests.get(url)
     html = res.text
     soup = BeautifulSoup(html,'html.parser')
     items = soup.find_all(class_='d-flex flex-auto')
