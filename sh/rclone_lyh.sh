@@ -2,6 +2,13 @@
 autostart(){
 wget "https://raw.githubusercontent.com/dayepao/backup/main/src/rclone.service" -O rclone.service
 mv rclone.service /etc/systemd/system/rclone.service
+read -p "请输入远程文件夹路径(例如：VPS)：" remotepath
+rclonename=$(grep "\[" /root/.config/rclone/rclone.conf)
+rclonename=${rclonename//\[/}
+rclonename=${rclonename//\]/}
+sed -i "s/NAME=onedrive/NAME=${rclonename}/g" /etc/systemd/system/rclone.service
+sed -i "s/REMOTE=VPS/REMOTE=${remotepath//\//\\/}/g" /etc/systemd/system/rclone.service
+sed -i "s/LOCAL=\/onedrive/LOCAL=${mountpath//\//\\/}/g" /etc/systemd/system/rclone.service
 systemctl enable rclone
 systemctl start rclone
 }
