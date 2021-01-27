@@ -12,13 +12,13 @@ def download() :
         imgs = soup.find_all('img')
         src = imgs[0].get('src')
         imgr = requests.get(src)
-        filename = "img\\" + str(key) + ".jpg"
+        filename = "bing\\" + str(key) + ".jpg"
         print("正在下载" + filename)
         with open(filename,'wb') as f:
             f.write(imgr.content)
         key = key + 1
-if (os.path.exists('img')) :
+if (os.path.exists('bing')) :
     download()
 else :
-    os.mkdir('img')
+    os.mkdir('bing')
     download()

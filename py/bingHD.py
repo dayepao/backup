@@ -15,15 +15,15 @@ def download() :
     while key < len(images) :
         image = ast.literal_eval(images[key] + "}")
         imgurl = "https://cn.bing.com" + image['url']
-        filename = "img\\" + ''.join(re.findall('[,，\u4e00-\u9fa5]',image['copyright'])) + ".jpg"
+        filename = "bingHD\\" + ''.join(re.findall('[,，\u4e00-\u9fa5]',image['copyright'])) + ".jpg"
         imgr = requests.get(imgurl)
         print("正在下载 " + filename)
         with open(filename,'wb') as f:
             f.write(imgr.content)
         key = key + 1
 
-if (os.path.exists('img')) :
+if (os.path.exists('bingHD')) :
     download()
 else :
-    os.mkdir('img')
+    os.mkdir('bingHD')
     download()
