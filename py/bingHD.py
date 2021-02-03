@@ -4,7 +4,8 @@ from bs4 import BeautifulSoup
 
 def download() :
     url = "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=2&nc=1610239683659&pid=hp&uhd=1&uhdwidth=3840&uhdheight=2160"
-    res = requests.get(url)
+    headers = {'X-Forwarded-For' : '106.112.196.1'}
+    res = requests.get(url,headers=headers)
     html = res.text
     soup = BeautifulSoup(html,'html.parser')
     jsonstr = json.loads(soup.text)
@@ -15,7 +16,7 @@ def download() :
     while key < len(images) :
         image = ast.literal_eval(images[key] + "}")
         imgurl = "https://cn.bing.com" + image['url']
-        filename = "bingHD\\" + ''.join(re.findall('[,，\u4e00-\u9fa5]',image['copyright'])) + ".jpg"
+        filename = "bingHD/" + ''.join(re.findall('[,，\u4e00-\u9fa5]',image['copyright'])) + ".jpg"
         imgr = requests.get(imgurl)
         print("正在下载 " + filename)
         with open(filename,'wb') as f:
