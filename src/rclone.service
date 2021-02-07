@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-Environment=NAME=onedrive REMOTE=VPS LOCAL=/onedrive PARAMETER=--contimeout=10s --timeout=30s --transfers 20
-ExecStart=rclone mount ${NAME}:${REMOTE} ${LOCAL} ${PARAMETER} --copy-links --no-gzip-encoding --no-check-certificate --allow-other --allow-non-empty --umask 000
+ExecStart=sudo bash /root/autorclone.sh start
+ExecStop=sudo bash /root/autorclone.sh stop
 Restart=on-failure
 
 [Install]
