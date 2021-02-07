@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-Environment=NAME=onedrive REMOTE=VPS LOCAL=/onedrive PARAMETER=--contimeout=5s --tpslimit 60 --tpslimit-burst 30 --timeout=5s --transfers 20 --buffer-size 256M --low-level-retries 200 --vfs-read-chunk-size 256M --vfs-read-chunk-size-limit 1G
+Environment=NAME=onedrive REMOTE=VPS LOCAL=/onedrive PARAMETER=--contimeout=10s --timeout=30s --transfers 20
 ExecStart=rclone mount ${NAME}:${REMOTE} ${LOCAL} ${PARAMETER} --copy-links --no-gzip-encoding --no-check-certificate --allow-other --allow-non-empty --umask 000
 Restart=on-failure
 
