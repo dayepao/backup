@@ -1,6 +1,8 @@
 <?php
-$o = "bing";
+$o = "bingHD";
 $imgs = scandir("/onedrive/resource/photo/$o/");
+unset($imgs[0]);
+unset($imgs[1]);
 $num = array_rand($imgs);
 $img = $imgs[$num];
 $url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'];
