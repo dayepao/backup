@@ -43,6 +43,8 @@ deleteuseless(){
     rm -rf *.ass
     rm -rf *.ssa
     rm -rf *.nfo
+    rm -rf *.jpg
+    rm -rf *.png
 }
 
 filerename(){
