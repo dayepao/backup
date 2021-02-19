@@ -8,6 +8,7 @@ def download() :
     key_stop = input("请输入结束数字:")
     key_stop = int(key_stop) + 1
     notice = ""
+    
     while key < key_stop :
         url = "https://tbing.cn/detail/" + str(key)
         res = requests.get(url)
@@ -26,6 +27,7 @@ def download() :
             notice = notice + "\n" + "已删除" + filename
         key = key + 1
     print(notice)
+
 if (os.path.exists('bing')) :
     download()
 else :
