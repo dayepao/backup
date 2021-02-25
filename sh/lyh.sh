@@ -11,7 +11,8 @@ do
     echo "9.aria2管理面板        10.添加开机启动项"
     echo "11.v2-ui面板           12.trojan面板"
     echo "13.LemonBench跑分      14.VPS跑分多合一"
-    echo "15.修复Ubuntu中文乱码  0.退出"
+    echo "15.修复Ubuntu中文乱码  16.Netflix检测"
+    echo "0.退出"
     read -p "请输入序号:" shkey
     case ${shkey} in
         0)
@@ -64,6 +65,9 @@ do
             ;;
         15)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_ubuntu_zhcn.sh)
+            ;;
+        16)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/netflix_check.sh)
             ;;
         *)
             echo -e "\033[31;1m [错误] \033[0m 请重新输入"
