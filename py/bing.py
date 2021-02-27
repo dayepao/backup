@@ -13,6 +13,9 @@ def download() :
         url = "https://tbing.cn/detail/" + str(key)
         res = requests.get(url)
         html = res.text
+        if (str(html) == "Error") :
+            key = key + 1
+            continue
         soup = BeautifulSoup(html,'html.parser')
         imgs = soup.find_all('img')
         src = imgs[0].get('src')
