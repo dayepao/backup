@@ -35,5 +35,5 @@ jobs:
     - name: Push
       run: | 
         if [ "${{ secrets.PUSH_SCKEY }}" != "" ];then
-        curl -d "text=keeplive" -d "desp=${PUSHSTR}" -X POST  https://sc.ftqq.com/${{ secrets.PUSH_SCKEY }}.send
+        curl -d "text=keeplive" -d "desp=${PUSHSTR}" -X POST  https://sctapi.ftqq.com/${{ secrets.PUSH_SCKEY }}.send
         fi

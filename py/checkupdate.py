@@ -18,7 +18,7 @@ if pushstr:
     pushstr = now + "\n\n" + pushstr
     print(pushstr)
     if len(sys.argv) > 2:
-        pushurl = "https://sc.ftqq.com/" + sys.argv[2] + ".send"
+        pushurl = "https://sctapi.ftqq.com/" + sys.argv[2] + ".send"
         pushdata = {'text':'checkupdate','desp':pushstr}
         requests.post(pushurl,pushdata)
 else:
