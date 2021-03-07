@@ -3,7 +3,7 @@ do
     read -p "是否要检测Netflix解锁情况?（y/N）:" nfkey
     case ${nfkey} in
     [yY])
-        bash <(curl -sSL "https://raw.githubusercontent.com/CoiaPrant/Netflix_Unlock_Information/main/netflix.sh")
+        bash <(curl -sSL "https://github.com/CoiaPrant/MediaUnlock_Test/raw/main/check.sh")
         break 1
         ;;
     [nN])
