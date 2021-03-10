@@ -1,4 +1,4 @@
-name: keeplive
+name: keepalive
 
 on:
   workflow_dispatch:
@@ -6,13 +6,13 @@ on:
     - cron: 0 13 1,15 * *
 
 jobs:
-  keeplive:
+  keepalive:
     runs-on: ubuntu-latest
     steps:
     - name: Set time zone
       run: | 
         sudo timedatectl set-timezone 'Asia/Shanghai'
-    - name: Update keeplive
+    - name: Update keepalive
       run: | 
         repos="backup hostloc-auto-get-points BiliBiliTool TiebaSignIn" #仓库名称
         str=$(date)%0D%0A%0D%0A
@@ -22,11 +22,11 @@ jobs:
         do
         git clone https://github.com/${GITHUB_ACTOR}/${repo}
         cd ${repo}
-        echo "$(date)" > keeplive
+        echo "$(date)" > keepalive
         git config user.name "GitHub Action"
         git config user.email "action@github.com"
-        git add keeplive
-        git commit -m "Update keeplive" -a
+        git add keepalive
+        git commit -m "Update keepalive" -a
         git push "https://${GITHUB_ACTOR}:${{ secrets.PAT }}@github.com/${GITHUB_ACTOR}/${repo}.git"
         str=${str}${repo}保活成功%0D%0A%0D%0A
         cd ..
@@ -35,5 +35,5 @@ jobs:
     - name: Push
       run: | 
         if [ "${{ secrets.PUSH_SCKEY }}" != "" ];then
-        curl -d "text=keeplive" -d "desp=${PUSHSTR}" -X POST  https://sctapi.ftqq.com/${{ secrets.PUSH_SCKEY }}.send
+        curl -d "text=keepalive" -d "desp=${PUSHSTR}" -X POST  https://sctapi.ftqq.com/${{ secrets.PUSH_SCKEY }}.send
         fi
