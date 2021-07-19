@@ -25,11 +25,17 @@ jobs:
     - name: Update_workflows
       run: | 
         cp -arf backup/workflows/. personal_actions/.github/workflows
+    - name: Update_.gitignore
+      run: | 
+        cp -arf backup/.gitignore personal_actions
     - name: commit & push
       run: | 
         cd personal_actions
         git config user.name "GitHub Action"
         git config user.email "action@github.com"
         git add .
-        git commit -m "Update_personal_actions" -a
-        git push "https://${{ github.actor }}:${{ secrets.GH_PAT }}@github.com/${{ github.actor }}/personal_actions.git"
+        {
+        git commit -m "Update_personal_actions" -a && git push "https://${{ github.actor }}:${{ secrets.GH_PAT }}@github.com/${{ github.actor }}/personal_actions.git"
+        } || { 
+        echo "没有找到更改"
+        }
