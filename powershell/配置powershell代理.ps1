@@ -1,11 +1,11 @@
-#Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
-#https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.1
+# Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+# https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.1
 
 
 if (!(Test-Path -Path $PROFILE.AllUsersAllHosts)) {
   New-Item -ItemType File -Path $PROFILE.AllUsersAllHosts -Force
 }
-#https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.1#how-to-create-a-profile
+# https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.1#how-to-create-a-profile
 
 $content = @"
 function set_proxy_variable {
