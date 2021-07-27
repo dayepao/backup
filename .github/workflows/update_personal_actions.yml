@@ -22,6 +22,7 @@ jobs:
         git clone https://github.com/${{ github.actor }}/personal_actions
         for folder in $folders
         do
+        rm -rf personal_actions/${folder}
         cp -arf backup/${folder}/. personal_actions/${folder}
         done
     - name: Update_workflows
