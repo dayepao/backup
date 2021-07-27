@@ -69,7 +69,7 @@ def check_cookie():
 
 
 def start_signin():
-    para.tbs = get_tbs()
+    para.tbs = get_tbs(headers)
     tiebalist = get_list()
     para.pushstr = para.pushstr + now + "\n\n开始签到，共" + str(len(tiebalist)) + "个贴吧\n"
     print(tiebalist)
@@ -77,7 +77,7 @@ def start_signin():
     signin(tiebalist, 1)
 
 
-def get_tbs():
+def get_tbs(headers):
     url = "http://tieba.baidu.com/dc/common/tbs"
     res = get_method(url, headers)
     html = res.text
