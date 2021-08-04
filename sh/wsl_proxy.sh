@@ -1,3 +1,5 @@
+# 添加到/home/user_name/.bashrc中
+
 proxy=$(cat /etc/resolv.conf | grep nameserver | awk '{ print $2 }')
 
 setp(){
