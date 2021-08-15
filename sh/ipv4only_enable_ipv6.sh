@@ -111,6 +111,7 @@ enableipv6(){
                 echo -e "\033[31;1m [错误] \033[0m 请重新输入"
                 ;;
             esac
+        done
     fi
 }
 
