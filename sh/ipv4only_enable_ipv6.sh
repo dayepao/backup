@@ -96,7 +96,21 @@ enableipv6(){
         done
     else
         echo -e "Wire­Guard状态:\033[31;1m 未安装 \033[0m"
-        configuration_wire­guard
+        while :
+        do
+            read -p "是否要安装 Wire­Guard? (y/N): " install_key
+            case ${install_key} in
+            [yY])
+                configuration_wire­guard
+                break 1
+                ;;
+            [nN])
+                break 1
+                ;;
+            *)
+                echo -e "\033[31;1m [错误] \033[0m 请重新输入"
+                ;;
+            esac
     fi
 }
 
