@@ -13,7 +13,8 @@ do
     echo "13.LemonBench跑分      14.VPS跑分多合一"
     echo "15.修复Ubuntu中文乱码  16.流媒体解锁检测"
     echo "17.为ipv4 only服务器添加ipv6支持"
-    echo "18.配置bash代理"
+    echo "18.配置bash代理        19.安装lnmp"
+    echo "20.获取网站SSL证书文件路径"
     echo "0.退出"
     read -p "请输入序号:" shkey
     case ${shkey} in
@@ -74,6 +75,12 @@ do
             ;;
         18)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/set_bash_proxy.sh)
+            ;;
+        19)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/lnmp_lyh.sh)
+            ;;
+        20)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/get_cert_path.sh)
             ;;
         *)
             echo -e "\033[31;1m [错误] \033[0m 请重新输入"
