@@ -28,8 +28,8 @@ do
             echo -e "\033[32;1m -----------------------开始安装rclone------------------------------ \033[0m"
             curl https://rclone.org/install.sh | sudo bash
             echo -e "\033[32;1m -----------------------开始配置rclone------------------------------ \033[0m"
-            echo -e "\033[32;1m ----------Client ID（客户端 ID）：3d008f3b-d44f-47be-a3d6-a97440eb8917--------------- \033[0m"
-            echo -e "\033[32;1m ----------Client secret（客户端密码）：6_?9I0rap?]ncqONc0p]Oba314JC4rwy--------------- \033[0m"
+            # echo -e "\033[32;1m ----------Client ID（客户端 ID）：3d008f3b-d44f-47be-a3d6-a97440eb8917--------------- \033[0m"
+            # echo -e "\033[32;1m ----------Client secret（客户端密码）：6_?9I0rap?]ncqONc0p]Oba314JC4rwy--------------- \033[0m"
             read -p "按回车键继续"
             rclone config
             read -p "请输入要在本地挂载的路径(例如：/onedrive)：" mountpath
