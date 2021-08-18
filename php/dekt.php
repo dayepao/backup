@@ -138,7 +138,7 @@ if(!empty($_POST["xuehao"])){
     $pdfname = 'temp/'.$xuehao."-".$time.".pdf";
     $pngname = 'temp/'.$xuehao."-".$time.".png";
     downFile("$url","$pdfname");
-    pdf2png2("$pdfname", "$pngname");
+    pdf2png2("$pdfname", "$pngname");  // ImageMagick配置文件位置: /etc/ImageMagick-6/policy.xml
     echo "<img style='max-width: 100%;' src=\"$pngname\"/>";
 }
 ?>
