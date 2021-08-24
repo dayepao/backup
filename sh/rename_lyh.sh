@@ -77,6 +77,14 @@ filerename(){
     done
 }
 
+file_rename_2_0(){
+    oldfiles=$(ls $folder)
+    for oldfile in $oldfiles
+    do
+        echo $oldfile
+    done
+}
+
 
 rename_1_0(){
     filerename
