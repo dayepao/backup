@@ -1,15 +1,32 @@
 #!/bin/bash
+restore_name(){
+    i=0
+    while (( ${i}<${#failure_names[*]} ))
+    do
+        if [[ "${1:2}" == "${failure_names[${i}]}" ]];then
+            mv "${1}" "${2}"
+            echo -e "\033[33m [已还原] \033[0m${2:2}"
+            echo ""
+        fi
+        i=$((${i}+1))
+    done
+}
+
 listchange(){
+    echo ""
+    echo "列出文件名对应关系: "
     while read oldmd51 oldmd52
     do
         while read newmd51 newmd52
         do
             if [ ${oldmd51} == ${newmd51} ];then
-                echo -e "${oldmd52} \033[32;1m >>> \033[0m ${newmd52}"
+                echo -e "${oldmd52:2} \033[32;1m >>> \033[0m ${newmd52:2}"
+                restore_name "${newmd52}" "${oldmd52}"
                 break 1
             fi
         done < ${rootpath}/${videoname}_${season:0-2}_new.txt
     done < ${rootpath}/${videoname}_${season:0-2}_old.txt
+    echo ""
 }
 
 checkmd5(){
@@ -49,7 +66,7 @@ deleteuseless(){
     rm -rf *.png
 }
 
-filerename(){
+file_rename_1_0(){
     oldfiles=$(ls $folder)
     for oldfile in $oldfiles
     do
@@ -78,16 +95,39 @@ filerename(){
 }
 
 file_rename_2_0(){
-    oldfiles=$(ls $folder)
-    for oldfile in $oldfiles
+    oldfiles=()
+    key=0
+    for oldfile in $(ls)
     do
-        echo $oldfile
+        oldfiles[${#oldfiles[*]}]=${oldfile}
+        if (( ${#oldfile} > $key ));then
+            key=${#oldfile}
+        fi
+    done
+
+    i=1
+    while (( ${i}<=${key} ))
+    do
+        j=0
+        temp_name=""
+        while (( ${j}<${#oldfiles[*]} ))
+        do
+            if [[ $temp_name == "" ]];then
+                temp_name="${oldfiles[${j}]::${i}}"
+            fi
+            if [[ "${oldfiles[${j}]::${i}}" != "$temp_name" ]];then
+                echo $(($i-1))
+                break 2
+            fi
+            j=$((${j}+1))
+        done
+        i=$((${i}+1))
     done
 }
 
 
 rename_1_0(){
-    filerename
+    file_rename_1_0
     filenames=$(ls $folder)
     for filename in $filenames
     do
@@ -127,13 +167,16 @@ rename_2_0(){
         seasons=$(ls $folder)
         for season in $seasons
         do
-            echo "正在处理 ${videoname}/${season}"
+            echo ""
+            echo -e "\033[32;1m [正在处理] \033[0m${videoname}/${season}"
+            echo ""
             cd "${season}"
             deleteuseless
             find ./ -type f -print0 | xargs -0 md5sum | sort >${rootpath}/${videoname}_${season:0-2}_old.txt
-            filerename
+            file_rename_1_0
             filenames=$(ls $folder)
             failurekey=0
+            failure_names=()
             if [ ${season} == "Specials" ];then
                 SXX="SP"
                 for filename in $filenames
@@ -160,6 +203,7 @@ rename_2_0(){
                             fi
                         else
                             echo -e "\033[31;1m [失败] \033[0m${videoname}/${season}/${filename}"
+                            failure_names[${#failure_names[*]}]=${filename}
                             failurekey=1
                             break 1
                         fi
@@ -192,6 +236,7 @@ rename_2_0(){
                             fi
                         else
                             echo -e "\033[31;1m [失败] \033[0m${videoname}/${season}/${filename}"
+                            failure_names[${#failure_names[*]}]=${filename}
                             failurekey=1
                             break 1
                         fi
