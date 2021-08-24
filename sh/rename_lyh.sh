@@ -105,23 +105,23 @@ file_rename_2_0(){
         fi
     done
 
-    i=1
-    while (( ${i}<=${key} ))
+    j=1
+    while (( ${j}<=${key} ))
     do
-        j=0
+        i=0
         temp_name=""
-        while (( ${j}<${#oldfiles[*]} ))
+        while (( ${i}<${#oldfiles[*]} ))
         do
             if [[ $temp_name == "" ]];then
-                temp_name="${oldfiles[${j}]::${i}}"
+                temp_name="${oldfiles[${i}]::${j}}"
             fi
-            if [[ "${oldfiles[${j}]::${i}}" != "$temp_name" ]];then
-                echo $(($i-1))
+            if [[ "${oldfiles[${i}]::${j}}" != "$temp_name" ]];then
+                echo $(($j-1))
                 break 2
             fi
-            j=$((${j}+1))
+            i=$((${i}+1))
         done
-        i=$((${i}+1))
+        j=$((${j}+1))
     done
 }
 
