@@ -18,7 +18,7 @@ function getUrlKeyValue($url)
     return $result;
 }
 $value = getUrlKeyValue($url);
-if (key_exists("type",$value)) {
+if (key_exists("type", $value)) {
     switch ($value['type']) {
         case 'img':
             die(header("Location:"."https://img.dayepao.com/img/$o/$img"));
