@@ -96,7 +96,7 @@ file_rename_1_0(){
 
 file_rename_2_0(){
     oldfiles=()
-    key=0
+    key=0  # 最长的文件名长度
     for oldfile in $(ls)
     do
         oldfiles[${#oldfiles[*]}]=${oldfile}
