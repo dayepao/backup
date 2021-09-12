@@ -97,6 +97,12 @@ file_rename_1_0(){
 file_rename_2_0(){
     oldfiles=()
     key=0  # 文件名长度
+
+    for oldfile in $(ls)
+    do
+        mv "${oldfile}" "${oldfile,,}"
+    done
+
     for oldfile in $(ls)
     do
         oldfiles[${#oldfiles[*]}]=${oldfile}
