@@ -96,12 +96,16 @@ file_rename_1_0(){
 
 file_rename_2_0(){
     oldfiles=()
-    key=0  # 最长的文件名长度
+    key=0  # 文件名长度
     for oldfile in $(ls)
     do
         oldfiles[${#oldfiles[*]}]=${oldfile}
-        if (( ${#oldfile} > $key ));then
+        if (( ${key}==0 ));then
             key=${#oldfile}
+        fi
+        if (( ${#oldfile}!=${key} ));then
+            file_rename_1_0
+            return
         fi
     done
 
@@ -116,18 +120,61 @@ file_rename_2_0(){
                 temp_name="${oldfiles[${i}]::${j}}"
             fi
             if [[ "${oldfiles[${i}]::${j}}" != "$temp_name" ]];then
-                echo $(($j-1))
                 break 2
             fi
             i=$((${i}+1))
         done
         j=$((${j}+1))
     done
+
+
+    k=${key}
+    while (( ${k}>=0 ))
+    do
+        i=0
+        temp_name=""
+        while (( ${i}<${#oldfiles[*]} ))
+        do
+            if [[ $temp_name == "" ]];then
+                temp_name="${oldfiles[${i}]:${k}}"
+            fi
+            if [[ "${oldfiles[${i}]:${k}}" != "$temp_name" ]];then
+                break 2
+            fi
+            i=$((${i}+1))
+        done
+        k=$((${k}-1))
+    done
+
+    start_index=$(($j-1))
+    index_length=$((${k}-$j+2))
+    failurekey_2_0=0
+
+    i=0
+    while (( ${i}<${#oldfiles[*]} ))
+    do
+        if [[ ${oldfiles[${i}]:${start_index}:${index_length}} =~ [^0-9] ]];then
+            failurekey_2_0=1
+            break
+        fi
+        i=$((${i}+1))
+    done
+
+    if [[ ${failurekey_2_0} == 0 ]];then
+        i=0
+        while (( ${i}<${#oldfiles[*]} ))
+        do
+            mv "${oldfiles[${i}]}" "${oldfiles[${i}]:${start_index}:${index_length}}.mp4"
+            i=$((${i}+1))
+        done
+    else
+        file_rename_1_0
+    fi
 }
 
 
 rename_1_0(){
-    file_rename_1_0
+    file_rename_2_0
     filenames=$(ls $folder)
     for filename in $filenames
     do
@@ -173,7 +220,7 @@ rename_2_0(){
             cd "${season}"
             deleteuseless
             find ./ -type f -print0 | xargs -0 md5sum | sort >${rootpath}/${videoname}_${season:0-2}_old.txt
-            file_rename_1_0
+            file_rename_2_0
             filenames=$(ls $folder)
             failurekey=0
             failure_names=()
