@@ -97,8 +97,10 @@ file_rename_1_0(){
 file_rename_2_0(){
     for oldfile in $(ls)
     do
-        if [[ "${oldfile}" != "${oldfile,,}" ]];then
-            mv "${oldfile}" "${oldfile,,}"
+        newfile=${oldfile,,}
+        if [[ "${oldfile}" != "${newfile}" ]];then
+            mv "${oldfile}" "${newfile}1"
+            mv "${newfile}1" "${newfile}"
         fi
     done
 
