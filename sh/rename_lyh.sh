@@ -97,7 +97,9 @@ file_rename_1_0(){
 file_rename_2_0(){
     for oldfile in $(ls)
     do
-        mv "${oldfile}" "${oldfile,,}"
+        if [[ "${oldfile}" != "${oldfile,,}" ]];then
+            mv "${oldfile}" "${oldfile,,}"
+        fi
     done
 
     oldfiles=()
@@ -170,7 +172,9 @@ file_rename_2_0(){
         i=0
         while (( ${i}<${#oldfiles[*]} ))
         do
-            mv "${oldfiles[${i}]}" "${oldfiles[${i}]:${start_index}:${index_length}}.mp4"
+            if [[ "${oldfiles[${i}]}" != "${oldfiles[${i}]:${start_index}:${index_length}}.mp4" ]];then
+                mv "${oldfiles[${i}]}" "${oldfiles[${i}]:${start_index}:${index_length}}.mp4"
+            fi
             i=$((${i}+1))
         done
     else
