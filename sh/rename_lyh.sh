@@ -58,6 +58,7 @@ checkmd5(){
 deleteuseless(){
     rm -rf *.torrent
     rm -rf *.txt
+    rm -rf *.url
     rm -rf *.srt
     rm -rf *.ass
     rm -rf *.ssa
