@@ -158,8 +158,12 @@ file_rename_2_0(){
 
     start_index=$(($j-1))
     index_length=$((${k}-$j+2))
-    failurekey_2_0=0
+    if (( ${start_index} >= ${key} ));then
+        start_index=0
+        index_length=${key}
+    fi
 
+    failurekey_2_0=0
     i=0
     while (( ${i}<${#oldfiles[*]} ))
     do
@@ -248,7 +252,7 @@ rename_2_0(){
                             if [[ ${filename} =~ "e${jj}" ]];then
                                 mv "${filename}" "${videoname} ${SXX}${jj}.mp4"
                                 break 1
-                            elif [[ ${filename} =~ "${jj}.mp4" ]] || [[ ${filename} =~ "${jj}.mkv" ]];then
+                            elif [[ ${filename} == "${jj}.mp4" ]] || [[ ${filename} == "${jj}.mkv" ]] || [[ ${filename} == "${j}.mp4" ]];then
                                 mv "${filename}" "${videoname} ${SXX}${jj}.mp4"
                                 break 1
                             fi
@@ -256,7 +260,7 @@ rename_2_0(){
                             if [[ ${filename} =~ "e${j}" ]];then
                                 mv "${filename}" "${videoname} ${SXX}${j}.mp4"
                                 break 1
-                            elif [[ ${filename} =~ "${j}.mp4" ]] || [[ ${filename} =~ "${j}.mkv" ]];then
+                            elif [[ ${filename} == "${j}.mp4" ]] || [[ ${filename} == "${j}.mkv" ]];then
                                 mv "${filename}" "${videoname} ${SXX}${j}.mp4"
                                 break 1
                             fi
@@ -281,7 +285,7 @@ rename_2_0(){
                             if [[ ${filename} =~ "e${jj}" ]] || [[ ${filename} =~ "[${jj}]" ]];then
                                 mv "${filename}" "${videoname} ${SXX}E${jj}.mp4"
                                 break 1
-                            elif [[ ${filename} =~ "${jj}.mp4" ]] || [[ ${filename} =~ "${jj}.mkv" ]];then
+                            elif [[ ${filename} == "${jj}.mp4" ]] || [[ ${filename} == "${jj}.mkv" ]] || [[ ${filename} == "${j}.mp4" ]];then
                                 mv "${filename}" "${videoname} ${SXX}E${jj}.mp4"
                                 break 1
                             fi
@@ -289,7 +293,7 @@ rename_2_0(){
                             if [[ ${filename} =~ "e${j}" ]] || [[ ${filename} =~ "[${j}]" ]];then
                                 mv "${filename}" "${videoname} ${SXX}E${j}.mp4"
                                 break 1
-                            elif [[ ${filename} =~ "${j}.mp4" ]] || [[ ${filename} =~ "${j}.mkv" ]];then
+                            elif [[ ${filename} == "${j}.mp4" ]] || [[ ${filename} == "${j}.mkv" ]];then
                                 mv "${filename}" "${videoname} ${SXX}E${j}.mp4"
                                 break 1
                             fi
