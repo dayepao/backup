@@ -18,7 +18,7 @@ async function gatherResponse(response) {
     }
 }
 
-async function refresh_access_token(pushstrs,num) {
+async function refresh_access_token(pushstrs, num) {
     const corpid = await DAYEPAOPUSH.get('corpid')
     const corpsecret = await DAYEPAOPUSH.get('corpsecret')
     const refresh_url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + corpid + "&corpsecret=" + corpsecret
@@ -27,10 +27,10 @@ async function refresh_access_token(pushstrs,num) {
         const data = await response.json()
         await DAYEPAOPUSH.put('access_token', data.access_token)
     }
-    return push(pushstrs,num)
+    return dayepao_push(pushstrs, num)
 }
 
-async function push(pushstrs,num) {
+async function dayepao_push(pushstrs, num) {
     if (num < 4) {
         const access_token = await DAYEPAOPUSH.get('access_token')
         var pushurl = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + access_token
@@ -49,7 +49,7 @@ async function push(pushstrs,num) {
             const response = await fetch(pushurl, pushdata)
             const result = await gatherResponse(response)
             if (result.indexOf("access_token") != -1) {
-                return refresh_access_token(pushstrs,num+1)
+                return refresh_access_token(pushstrs, num+1)
             } else {
                 results.push(result)
             }
@@ -60,26 +60,26 @@ async function push(pushstrs,num) {
     }
 }
 
-async function reBytesStrArr(str,len) {
+async function reBytesStrArr(str, len) {
     if (!str || str == undefined) {
-        return '';
+        return;
     }
     let num = 0;
     let result = '';
     for (let i = 0; i < str.length; i++) {
-    num += ((str.charCodeAt(i) > 255) ? 4 : 1);
-    if (num > len) {
-        break;
-    } else {
-        result = str.substring(0, i + 1);
-    }
+        num += ((str.charCodeAt(i) > 255) ? 4 : 1);
+        if (num > len) {
+            break;
+        } else {
+            result = str.substring(0, i + 1);
+        }
     }
     contents.push(result)
-    let nextStr = str.replace(result,'')
-    reBytesStrArr(nextStr,len)
+    let nextStr = str.replace(result, '')
+    reBytesStrArr(nextStr, len)
 }
 
-async function separate_from_2kB(request) {
+async function separate_from_xxB(request, xxB) {
     var pushstrs =[]
     var pushstr = await request.clone().text()
     var pushjson = JSON.parse(pushstr)
@@ -89,7 +89,10 @@ async function separate_from_2kB(request) {
         content = content.substr(1)
         content = content.substr(0,content.length-1)
         //return new Response(content)
-        reBytesStrArr(content,2048)
+        if (!content){
+            return new Response("要推送的消息为空消息")
+        }
+        reBytesStrArr(content, xxB)
         //return new Response(contents)
         for(var contentpart of contents){
             text.content = contentpart
@@ -111,7 +114,7 @@ async function separate_from_2kB(request) {
         pushstrs.push(pushstr)
         //return new Response(pushstrs)
     }
-    return push(pushstrs,1)
+    return dayepao_push(pushstrs, 1)
 }
 
 async function verifykey(request) {
@@ -123,7 +126,7 @@ async function verifykey(request) {
         debugkey = 1
     }
     if (rpushkey == pushkey) {
-        return separate_from_2kB(request)
+        return separate_from_xxB(request, 2048)
     } else {
         return new Response('pushkey错误')
     }
