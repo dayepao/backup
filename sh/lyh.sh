@@ -7,7 +7,7 @@ do
     echo "1.剧集重命名           2.内核自带bbr"
     echo "3.bbr多合一脚本        4.安装onelist"
     echo "5.安装rclone           6.linux关闭mail提示"
-    echo "7.编译openwrt依赖      8.安装cuteone"
+    echo "7.安装编译openwrt依赖  8.安装cuteone"
     echo "9.aria2管理面板        10.添加开机启动项"
     echo "11.x-ui面板            12.trojan面板"
     echo "13.LemonBench跑分      14.VPS跑分多合一"
