@@ -27,9 +27,11 @@ jobs:
         done
     - name: Update_workflows
       run: | 
+        rm -rf personal_actions/.github/workflows/*
         cp -arf backup/workflows/. personal_actions/.github/workflows
     - name: Update_.gitignore
       run: | 
+        rm -rf personal_actions/.gitignore
         cp -arf backup/.gitignore personal_actions
     - name: commit & push
       run: | 
