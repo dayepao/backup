@@ -22,7 +22,7 @@ jobs:
     - name: Get Git Message
       run: | 
         cd backup
-        echo "MESSAGE=\"$(git log --pretty=format:"%s" -1)\"" >> $GITHUB_ENV
+        echo "MESSAGE=$(git log --pretty=format:"%s" -1)" >> $GITHUB_ENV
     - name: Update_script
       run: | 
         folders="py others" # 要更新的文件夹名称
