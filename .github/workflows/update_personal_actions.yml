@@ -12,14 +12,20 @@ jobs:
   Update_personal_actions:
     runs-on: ubuntu-latest
     steps:
-    - name: Set time zone
+    - name: Set Time Zone
       run: | 
         sudo timedatectl set-timezone 'Asia/Shanghai'
+    - name: Git Clone
+      run: | 
+        git clone https://github.com/${{ github.actor }}/backup
+        git clone https://github.com/${{ github.actor }}/personal_actions
+    - name: Get Git Message
+      run: | 
+        cd backup
+        echo "MESSAGE=\"$(git log --pretty=format:"%s" -1)\"" >> $GITHUB_ENV
     - name: Update_script
       run: | 
         folders="py others" # 要更新的文件夹名称
-        git clone https://github.com/${{ github.actor }}/backup
-        git clone https://github.com/${{ github.actor }}/personal_actions
         for folder in $folders
         do
         rm -rf personal_actions/${folder}/*
@@ -40,7 +46,7 @@ jobs:
         git config user.email "action@github.com"
         git add .
         {
-        git commit -m "Update_personal_actions" -a && git push "https://${{ github.actor }}:${{ secrets.GH_PAT }}@github.com/${{ github.actor }}/personal_actions.git"
+        git commit -m "Update_personal_actions" -m "${MESSAGE}" -a && git push "https://${{ github.actor }}:${{ secrets.GH_PAT }}@github.com/${{ github.actor }}/personal_actions.git"
         } || { 
         echo "没有找到更改"
         }
