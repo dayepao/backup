@@ -3,9 +3,10 @@ do
     read -p "是否要检测流媒体解锁情况?（y/N）:" mckey
     case ${mckey} in
     [yY])
-        apt install -y jq
-        bash <(curl -sSL "https://github.com/CoiaPrant/MediaUnlock_Test/raw/main/check.sh")
-        rm -rf check.log
+        # apt install -y jq
+        # bash <(curl -sSL "https://github.com/CoiaPrant/MediaUnlock_Test/raw/main/check.sh")
+        # rm -rf check.log
+        bash <(curl -sL "https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh")
         break 1
         ;;
     [nN])
