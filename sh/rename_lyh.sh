@@ -168,7 +168,7 @@ file_rename_2_0(){
     i=0
     while (( ${i}<${#oldfiles[*]} ))
     do
-        if [[ ${oldfiles[${i}]:${start_index}:${index_length}} =~ [^0-9] ]];then
+        if [[ ${oldfiles[${i}]:${start_index}:${index_length}} =~ [^0-9] ]] || [[ ${oldfiles[${i}]:$((${start_index}-1)):1} =~ [1-9] ]];then
             failurekey_2_0=1
             break
         fi
