@@ -6,6 +6,9 @@ PARAMETER="--contimeout=5s --tpslimit 60 --tpslimit-burst 30 --timeout=10s --tra
 case $1 in
     start)
         fusermount -u ${LOCAL} >/dev/null 2>&1
+        if [[ $(pgrep rclone) == "" ]];then
+            rm -rf ${LOCAL}
+        fi
         mkdir -p ${LOCAL}
         rclone mount ${NAME}:${REMOTE} ${LOCAL} ${PARAMETER} --copy-links --no-gzip-encoding --no-check-certificate --allow-other --allow-non-empty --umask 000
         ;;
@@ -14,7 +17,7 @@ case $1 in
         ;;
     check)
         rclone_log=$(journalctl -b -u rclone -n 3)
-        if [[ ${rclone_log} =~ "ERROR" ]];then
+        if [[ ${rclone_log} =~ "ERROR" ]] || [[ ${rclone_log} =~ "cannot create directory" ]];then
             sleep 30
             systemctl restart rclone
         fi
