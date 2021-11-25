@@ -10,7 +10,7 @@ do
     echo "7.安装编译openwrt依赖  8.安装cuteone"
     echo "9.aria2管理面板        10.添加开机启动项"
     echo "11.x-ui面板            12.trojan面板"
-    echo "13.LemonBench跑分      14.VPS跑分多合一"
+    echo "13.LemonBench跑分      14.superspeed_uxh脚本"
     echo "15.修复Ubuntu中文乱码  16.流媒体解锁检测"
     echo "17.为ipv4 only服务器添加ipv6支持"
     echo "18.配置bash代理        19.安装lnmp"
@@ -62,7 +62,7 @@ do
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/lemonbench.sh)
             ;;
         14)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/bench_all.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/superspeed_uxh.sh)
             ;;
         15)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_ubuntu_zhcn.sh)
