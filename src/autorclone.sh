@@ -19,7 +19,7 @@ case $1 in
     check)
         rclone_log=$(journalctl -b -u rclone -n 3)
         if [[ ${rclone_log} =~ "ERROR" ]] || [[ ${rclone_log} =~ "cannot create directory" ]];then
-            sleep 30
+            sleep 300
             systemctl restart rclone
         fi
         ;;
