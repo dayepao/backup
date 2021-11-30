@@ -15,6 +15,7 @@ do
     echo "17.为ipv4 only服务器添加ipv6支持"
     echo "18.配置bash代理        19.安装lnmp"
     echo "20.获取网站SSL证书文件路径"
+    echo "21.添加hostname解析"
     echo "0.退出"
     read -p "请输入序号:" shkey
     case ${shkey} in
@@ -81,6 +82,9 @@ do
             ;;
         20)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/get_cert_path.sh)
+            ;;
+        21)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/add_hostname_to_hosts.sh)
             ;;
         *)
             echo -e "\033[31;1m [错误] \033[0m 请重新输入"
