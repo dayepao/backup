@@ -2,7 +2,7 @@
 NAME="onedrive"
 REMOTE="VPS"
 LOCAL="/onedrive"
-PARAMETER="--tpslimit 10 --tpslimit-burst 30 --transfers 8 --buffer-size 128M --low-level-retries 30 --vfs-read-chunk-size 128M --vfs-read-chunk-size-limit 256M --vfs-cache-mode full --vfs-read-ahead 5G --vfs-cache-max-size 20G"
+PARAMETER="--tpslimit 4 --transfers 1 --buffer-size 128M --low-level-retries 30 --vfs-read-chunk-size 128M --vfs-read-chunk-size-limit 256M --vfs-cache-mode full --vfs-read-ahead 5G --vfs-cache-max-size 20G"
 case $1 in
     start)
         fusermount -zu ${LOCAL} >/dev/null 2>&1
