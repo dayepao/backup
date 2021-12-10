@@ -3,92 +3,106 @@ while :
 do
     echo ""
     echo ""
-    echo "功能列表:"
-    echo "1.剧集重命名           2.内核自带bbr"
-    echo "3.bbr多合一脚本        4.安装onelist"
-    echo "5.安装rclone           6.linux关闭mail提示"
-    echo "7.安装编译openwrt依赖  8.安装cuteone"
-    echo "9.aria2管理面板        10.添加开机启动项"
-    echo "11.x-ui面板            12.trojan面板"
-    echo "13.LemonBench跑分      14.superspeed_uxh脚本"
-    echo "15.修复Ubuntu中文乱码  16.流媒体解锁检测"
-    echo "17.为IPv4 only服务器添加IPv6支持"
-    echo "18.配置bash代理        19.安装lnmp"
-    echo "20.获取网站SSL证书文件路径"
-    echo "21.添加hostname解析    22.斯巴达DD后添加IPv6"
+    echo -e "\033[32;1m功能列表:\033[0m"
+
+    echo -e "\033[32;1m工具:\033[0m"
+    echo "001.剧集重命名                      002.安装onelist"
+    echo "003.安装rclone                      004.安装编译openwrt依赖"
+    echo "005.安装cuteone                     006.aria2管理面板"
+    echo "007.为IPv4 only服务器添加IPv6支持   008.修复Ubuntu中文乱码"
+    echo "009.添加开机启动项                  010.配置bash代理"
+    echo "011.添加hostname解析"
+
+    echo -e "\033[32;1mVPS配置:\033[0m"
+    echo "101.内核自带bbr                     102.bbr多合一脚本"
+    echo "103.配置IPv4或IPv6优先              104.斯巴达DD后添加IPv6"
+    echo "105.linux关闭mail提示"
+
+    echo -e "\033[32;1mVPS测试:\033[0m"
+    echo "201.LemonBench跑分                  202.superspeed_uxh脚本"
+    echo "203.流媒体解锁检测"
+
+    echo -e "\033[32;1m科学:\033[0m"
+    echo "301.安装lnmp                        302.获取网站SSL证书文件路径"
+    echo "303.x-ui面板                        304.trojan面板"
+
+    echo "*********************************************************************"
     echo "0.退出"
     read -p "请输入序号:" shkey
     case ${shkey} in
         0)
             break 1
             ;;
-        1)
+        001)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/rename_lyh.sh)
             ;;
-        2)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/bbr_lyh.sh)
-            ;;
-        3)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/bbr_all.sh)
-            ;;
-        4)
+        002)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/onelist_lyh.sh)
             ;;
-        5)
+        003)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/rclone_lyh.sh)
             ;;
-        6)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/stopmail_lyh.sh)
-            ;;
-        7)
+        004)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/openwrt_require.sh)
             ;;
-        8)
+        005)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/cuteone_lyh.sh)
             ;;
-        9)
+        006)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/aria2_lyh.sh)
             rm -rf aria2.sh
             ;;
-        10)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/service_lyh.sh)
-            ;;
-        11)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/x-ui_lyh.sh)
-            ;;
-        12)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/trojan.sh)
-            ;;
-        13)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/lemonbench.sh)
-            ;;
-        14)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/superspeed_uxh.sh)
-            ;;
-        15)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_ubuntu_zhcn.sh)
-            ;;
-        16)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/media_check.sh)
-            ;;
-        17)
+        007)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/ipv4only_enable_ipv6.sh)
             ;;
-        18)
+        008)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_ubuntu_zhcn.sh)
+            ;;
+        009)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/service_lyh.sh)
+            ;;
+        010)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/set_bash_proxy.sh)
             ;;
-        19)
+        011)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/add_hostname_to_hosts.sh)
+            ;;
+        101)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/bbr_lyh.sh)
+            ;;
+        102)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/bbr_all.sh)
+            ;;
+        103)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/prefer_ipv4_or_ipv6.sh)
+            ;;
+        104)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/spt_add_netplan_ipv6.sh)
+            ;;
+        105)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/stopmail_lyh.sh)
+            ;;
+        201)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/lemonbench.sh)
+            ;;
+        202)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/superspeed_uxh.sh)
+            ;;
+        203)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/media_check.sh)
+            ;;
+        301)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/lnmp_lyh.sh)
             break 1
             ;;
-        20)
+        302)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/get_cert_path.sh)
             ;;
-        21)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/add_hostname_to_hosts.sh)
+        303)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/x-ui_lyh.sh)
             ;;
-        22)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/spt_add_netplan_ipv6.sh)
+        304)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/trojan.sh)
             ;;
         *)
             echo -e "\033[31;1m [错误] \033[0m 请重新输入"
