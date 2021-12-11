@@ -4,7 +4,9 @@ do
     echo ""
     echo ""
     echo -e "\033[32;1m功能列表:\033[0m"
-
+    
+    echo "0.退出"
+    echo "*********************************************************************"
     echo -e "\033[32;1m工具:\033[0m"
     echo "001.剧集重命名                      002.安装onelist"
     echo "003.安装rclone                      004.安装编译openwrt依赖"
@@ -15,8 +17,8 @@ do
 
     echo -e "\033[32;1mVPS配置:\033[0m"
     echo "101.内核自带bbr                     102.bbr多合一脚本"
-    echo "103.配置IPv4或IPv6优先              104.斯巴达DD后添加IPv6"
-    echo "105.linux关闭mail提示"
+    echo "103.配置IPv4或IPv6优先              104.斯巴达解决同一网段路由问题"
+    echo "105.linux关闭mail提示               106.斯巴达DD后添加IPv6"
 
     echo -e "\033[32;1mVPS测试:\033[0m"
     echo "201.LemonBench跑分                  202.superspeed_uxh脚本"
@@ -25,9 +27,7 @@ do
     echo -e "\033[32;1m科学:\033[0m"
     echo "301.安装lnmp                        302.获取网站SSL证书文件路径"
     echo "303.x-ui面板                        304.trojan面板"
-
-    echo "*********************************************************************"
-    echo "0.退出"
+    
     read -p "请输入序号:" shkey
     case ${shkey} in
         0)
@@ -77,10 +77,13 @@ do
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/prefer_ipv4_or_ipv6.sh)
             ;;
         104)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/spt_add_netplan_ipv6.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_spt_route.sh)
             ;;
         105)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/stopmail_lyh.sh)
+            ;;
+        106)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/spt_add_netplan_ipv6.sh)
             ;;
         201)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/lemonbench.sh)
