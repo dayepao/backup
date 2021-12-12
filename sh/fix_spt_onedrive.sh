@@ -10,6 +10,8 @@ fix_onedrive(){
     mv autowondershaper.sh /root/autowondershaper.sh
     systemctl enable wondershaper
     systemctl start wondershaper
+    cd ..
+    rm -rf wondershaper
 }
 while :
 do
