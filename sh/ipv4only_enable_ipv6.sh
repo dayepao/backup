@@ -31,7 +31,7 @@ prefeipv6(){
     done
 }
 
-configuration_wire­guard(){
+configuration_wireguard(){
     rm -rf wgcf-account.toml
     rm -rf wgcf-profile.conf
     systemctl stop wg-quick@wgcf
@@ -57,12 +57,12 @@ configuration_wire­guard(){
                 sudo systemctl start wg-quick@wgcf
                 sudo systemctl enable wg-quick@wgcf
                 echo ""
-                echo "已经正式启用 Wire­Guard 网络接口并设置开机启动"
+                echo "已经正式启用 WireGuard 网络接口并设置开机启动"
                 break 1
                 ;;
             [nN])
                 sudo wg-quick down wgcf
-                echo "出现错误，已关闭 Wire­Guard 临时网络接口，请自行查找原因"
+                echo "出现错误，已关闭 WireGuard 临时网络接口，请自行查找原因"
                 break 1
                 ;;
             *)
@@ -76,17 +76,17 @@ configuration_wire­guard(){
 enableipv6(){
     key=$(command -v wg-quick)
     if [[ ${key} =~ "wg-quick" ]];then
-        echo -e "Wire­Guard状态:\033[32;1m 已安装 \033[0m"
+        echo -e "WireGuard状态:\033[32;1m 已安装 \033[0m"
         while :
         do
-            read -p "是否跳过配置Wire­Guard?（y/N）:" wgkey
+            read -p "是否跳过配置WireGuard?（y/N）:" wgkey
             case ${wgkey} in
             [yY])
                 prefeipv6
                 break 1
                 ;;
             [nN])
-                configuration_wire­guard
+                configuration_wireguard
                 break 1
                 ;;
             *)
@@ -95,13 +95,13 @@ enableipv6(){
             esac
         done
     else
-        echo -e "Wire­Guard状态:\033[31;1m 未安装 \033[0m"
+        echo -e "WireGuard状态:\033[31;1m 未安装 \033[0m"
         while :
         do
-            read -p "是否要安装 Wire­Guard? (y/N): " install_key
+            read -p "是否要安装 WireGuard? (y/N): " install_key
             case ${install_key} in
             [yY])
-                configuration_wire­guard
+                configuration_wireguard
                 break 1
                 ;;
             [nN])
