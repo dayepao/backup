@@ -17,8 +17,18 @@ case $1 in
         sleep 5
         ;;
     check)
+        key=0
         rclone_log=$(journalctl -b -u rclone -n 3)
-        if [[ ${rclone_log} =~ "30/30" ]] || [[ ${rclone_log} =~ "cannot create directory" ]];then
+
+        if [[ ${rclone_log} =~ "30/30" ]];then
+            key=1
+        elif [[ ${rclone_log} =~ "cannot create directory" ]];then
+            key=1
+        elif [[ ${rclone_log} =~ "vfs cache: failed to download: vfs reader: failed to write to cache file: stream error: stream ID"]];then
+            key=1
+        fi
+
+        if [[ ${key} == 1 ]];then
             sleep 30
             systemctl restart rclone
         fi
