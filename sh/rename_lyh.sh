@@ -231,9 +231,7 @@ rename_2_0(){
         seasons=$(ls $folder)
         for season in $seasons
         do
-            echo ""
-            echo -e "\033[32;1m [正在处理] \033[0m${videoname}/${season}"
-            echo ""
+            echo " [正在处理] ${videoname}/${season}"
             cd "${season}"
             deleteuseless
             find ./ -type f -print0 | xargs -0 md5sum | sort >${rootpath}/${videoname}_${season:0-2}_old.txt
@@ -314,6 +312,7 @@ rename_2_0(){
         done
         cd ..
         echo -e "\033[32;1m [完成] \033[0m${videoname}"
+        echo ""
     done
     deleteuseless
 }
