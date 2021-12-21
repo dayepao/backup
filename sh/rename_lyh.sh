@@ -98,7 +98,7 @@ file_rename_1_0(){
 file_rename_2_0(){
     for oldfile in $(ls)
     do
-        newfile=${oldfile,,}
+        newfile=${oldfile,,}  # 变量字母转为小写
         if [[ "${oldfile}" != "${newfile}" ]];then
             mv "${oldfile}" "${newfile}1"
             mv "${newfile}1" "${newfile}"
@@ -245,7 +245,7 @@ rename_2_0(){
                 SXX="SP"
                 for filename in $filenames
                 do
-                    j=1
+                    j=0
                     while :
                     do
                         if [ $j -lt '10' ];then
@@ -278,7 +278,7 @@ rename_2_0(){
                 SXX="S${season:0-2}"
                 for filename in $filenames
                 do
-                    j=1
+                    j=0
                     while :
                     do
                         if [ $j -lt '10' ];then
