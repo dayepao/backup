@@ -2,7 +2,7 @@
 NAME="onedrive"
 REMOTE="VPS"
 LOCAL="/onedrive"
-PARAMETER="--tpslimit 10 --transfers 8 --buffer-size 128M --low-level-retries 30 --vfs-read-chunk-size 128M --vfs-read-chunk-size-limit 256M --vfs-cache-mode full --vfs-read-ahead 5G --vfs-cache-max-size 20G"
+PARAMETER="--contimeout=5s --timeout=5s --tpslimit 10 --transfers 4 --buffer-size 128M --low-level-retries 30 --vfs-read-chunk-size 128M --vfs-read-chunk-size-limit 256M --vfs-cache-mode writes"
 case $1 in
     start)
         fusermount -zu ${LOCAL} >/dev/null 2>&1
@@ -17,18 +17,16 @@ case $1 in
         sleep 5
         ;;
     check)
-        key=0
+        key="0"
         rclone_log=$(journalctl -b -u rclone -n 3)
 
         if [[ ${rclone_log} =~ "30/30" ]];then
-            key=1
+            key="1"
         elif [[ ${rclone_log} =~ "cannot create directory" ]];then
-            key=1
-        elif [[ ${rclone_log} =~ "vfs cache: failed to download: vfs reader: failed to write to cache file: stream error: stream ID"]];then
-            key=1
+            key="1"
         fi
 
-        if [[ ${key} == 1 ]];then
+        if [[ ${key} == "1" ]];then
             sleep 30
             systemctl restart rclone
         fi

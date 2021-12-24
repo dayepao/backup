@@ -19,8 +19,8 @@ do
     echo -e "\033[32;1mVPS配置:\033[0m"
     echo "101.内核自带bbr                     102.bbr多合一脚本"
     echo "103.配置IPv4或IPv6优先              104.修复斯巴达同网段路由问题"
-    echo "105.linux关闭mail提示               106.斯巴达DD后添加IPv6"
-    echo "107.修复斯巴达OneDrive上传问题"
+    echo "105.阻止Plex本地网络发现功能        106.linux关闭mail提示"
+    echo "107.斯巴达DD后添加IPv6              108.修复斯巴达OneDrive上传问题"
 
     echo -e "\033[32;1mVPS测试:\033[0m"
     echo "201.LemonBench跑分                  202.superspeed_uxh脚本"
@@ -83,12 +83,15 @@ do
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_spt_route.sh)
             ;;
         105)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/stopmail_lyh.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/stop_plex_discover.sh)
             ;;
         106)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/spt_add_netplan_ipv6.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/stopmail_lyh.sh)
             ;;
         107)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/spt_add_netplan_ipv6.sh)
+            ;;
+        108)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_spt_onedrive.sh)
             ;;
         201)
