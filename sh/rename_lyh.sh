@@ -24,13 +24,13 @@ listchange(){
                 restore_name "${newmd52}" "${oldmd52}"
                 break 1
             fi
-        done < ${rootpath}/${videoname}_${season:0-2}_new.txt
-    done < ${rootpath}/${videoname}_${season:0-2}_old.txt
+        done < "${rootpath}/${videoname}_${season:0-2}_new.txt"
+    done < "${rootpath}/${videoname}_${season:0-2}_old.txt"
     echo ""
 }
 
 checkmd5(){
-    stopkeys=$(sed -n '$=' ${rootpath}/${videoname}_${season:0-2}_new.txt)
+    stopkeys=$(sed -n '$=' "${rootpath}/${videoname}_${season:0-2}_new.txt")
     losekey=0
     IFS=$'  '
     while read oldmd51 oldmd52
@@ -47,8 +47,8 @@ checkmd5(){
                 echo -e "\033[31;1m [警告] \033[0m ${oldmd52} 可能已经丢失"
                 losekey=1
             fi
-        done < ${rootpath}/${videoname}_${season:0-2}_new.txt
-    done < ${rootpath}/${videoname}_${season:0-2}_old.txt
+        done < "${rootpath}/${videoname}_${season:0-2}_new.txt"
+    done < "${rootpath}/${videoname}_${season:0-2}_old.txt"
     if [ ${losekey} == 1 ] || [ ${failurekey} == 1 ];then
         listchange
     fi
@@ -234,7 +234,7 @@ rename_2_0(){
             echo " [正在处理] ${videoname}/${season}"
             cd "${season}"
             deleteuseless
-            find ./ -type f -print0 | xargs -0 md5sum | sort >${rootpath}/${videoname}_${season:0-2}_old.txt
+            find ./ -type f -print0 | xargs -0 md5sum | sort > "${rootpath}/${videoname}_${season:0-2}_old.txt"
             file_rename_2_0
             filenames=$(ls $folder)
             failurekey=0
@@ -306,7 +306,7 @@ rename_2_0(){
                     done
                 done
             fi
-            find ./ -type f -print0 | xargs -0 md5sum | sort >${rootpath}/${videoname}_${season:0-2}_new.txt
+            find ./ -type f -print0 | xargs -0 md5sum | sort > "${rootpath}/${videoname}_${season:0-2}_new.txt"
             checkmd5
             cd ..
         done
