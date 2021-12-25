@@ -83,7 +83,7 @@ do
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_spt_route.sh)
             ;;
         105)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/stop_plex_discover.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/prevent_plex discovery.sh)
             ;;
         106)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/stopmail_lyh.sh)
