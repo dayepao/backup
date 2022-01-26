@@ -20,7 +20,8 @@ systemctl start ${service_name}
 
 autorun(){
 echo "$(date)"
-#在此行后输入要开机自动运行的命令
+# 在此行后输入要开机自动运行的命令
+# python3.10 -u /root/check_huya_streamer.py >/dev/null 2>&1 &
 }
 
 service_name=${0%.*}
