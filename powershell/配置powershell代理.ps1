@@ -37,3 +37,4 @@ New-Alias -Name unsetp -Value unset_proxy_variable
 "@
 
 add-content $PROFILE.AllUsersAllHosts $content
+Write-Output "配置完成，重启终端后生效`n输入setp启动代理`n输入unsetp停止代理"
