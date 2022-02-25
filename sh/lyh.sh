@@ -13,8 +13,8 @@ do
     echo "003.安装rclone                      004.安装编译openwrt依赖"
     echo "005.安装cuteone                     006.aria2管理面板"
     echo "007.为IPv4 only服务器添加IPv6支持   008.修复Ubuntu中文乱码"
-    echo "009.添加开机启动项                  010.配置bash代理"
-    echo "011.添加hostname解析"
+    echo "009.重新安装vim                     010.添加开机启动项"
+    echo "011.配置bash代理                    012.添加hostname解析"
 
     echo -e "\033[32;1mVPS配置:\033[0m"
     echo "101.内核自带bbr                     102.bbr多合一脚本"
@@ -62,12 +62,15 @@ do
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_ubuntu_zhcn.sh)
             ;;
         009)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/service_lyh.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/reinstall_vim.sh)
             ;;
         010)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/set_bash_proxy.sh)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/service_lyh.sh)
             ;;
         011)
+            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/set_bash_proxy.sh)
+            ;;
+        012)
             bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/add_hostname_to_hosts.sh)
             ;;
         101)
