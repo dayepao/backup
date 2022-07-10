@@ -1,7 +1,7 @@
 #!/bin/bash
 while :
 do
-    read -p "是否要打开aria2管理面板?（y/N）:" arkey
+    read -p "是否要打开aria2管理面板?(y/N):" arkey
     case ${arkey} in
     [yY])
         bash <(curl -sL https://raw.githubusercontent.com/P3TERX/aria2.sh/master/aria2.sh)

@@ -1,7 +1,7 @@
 #!/bin/bash
 while :
 do
-    read -p "是否要安装 x-ui ?（y/N）:" v2key
+    read -p "是否要安装 x-ui ?(y/N):" v2key
     case ${v2key} in
     [yY])
         bash <(curl -Ls https://raw.githubusercontent.com/sprov065/x-ui/master/install.sh)

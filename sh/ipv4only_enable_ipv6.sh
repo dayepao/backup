@@ -50,7 +50,7 @@ configuration_wireguard(){
     curl -6 ip.p3terx.com
     while :
     do
-        read -p "是否显示了ipv6地址?（y/n）:" ipv6key
+        read -p "是否显示了ipv6地址?(y/N):" ipv6key
         case ${ipv6key} in
             [yY])
                 sudo wg-quick down wgcf
@@ -62,7 +62,7 @@ configuration_wireguard(){
                 ;;
             [nN])
                 sudo wg-quick down wgcf
-                echo "出现错误，已关闭 WireGuard 临时网络接口，请自行查找原因"
+                echo "出现错误, 已关闭 WireGuard 临时网络接口, 请自行查找原因"
                 break 1
                 ;;
             *)
@@ -79,7 +79,7 @@ enableipv6(){
         echo -e "WireGuard状态:\033[32;1m 已安装 \033[0m"
         while :
         do
-            read -p "是否跳过配置WireGuard?（y/N）:" wgkey
+            read -p "是否跳过配置WireGuard?(y/N):" wgkey
             case ${wgkey} in
             [yY])
                 prefeipv6
@@ -118,7 +118,7 @@ enableipv6(){
 
 while :
 do
-    read -p "是否要为ipv4 only服务器添加ipv6支持?（y/N）:" enableipv6key
+    read -p "是否要为ipv4 only服务器添加ipv6支持?(y/N):" enableipv6key
     case ${enableipv6key} in
     [yY])
         enableipv6

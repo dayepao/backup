@@ -1,7 +1,7 @@
 #!/bin/bash
 while :
 do
-    read -p "是否要关闭mail提醒?（y/N）：" mkey
+    read -p "是否要关闭mail提醒?(y/N): " mkey
     case ${mkey} in
     [yY])
         echo "unset MAILCHECK">> /etc/profile

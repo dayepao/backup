@@ -1,6 +1,6 @@
 #/bin/bash
 if [[ -z "$(command -v curl)" ]];then
-    echo "没有curl，请安装"
+    echo "没有curl, 请安装"
 exit 1
 fi
 content=$*
@@ -9,5 +9,5 @@ if [[ "$content" ]];then
     echo $share_link
 else
     echo "没有传入要上传的文本"
-    echo -e "一般是这样：\e[31mbash $0 \e[32m你要上传的文本\e[0m"
+    echo -e "一般是这样: \e[31mbash $0 \e[32m你要上传的文本\e[0m"
 fi

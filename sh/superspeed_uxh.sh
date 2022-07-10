@@ -1,7 +1,7 @@
 #!/bin/bash
 while :
 do
-    read -p "是否要运行superspeed_uxh脚本?（y/N）:" skey
+    read -p "是否要运行superspeed_uxh脚本?(y/N):" skey
     case ${skey} in
     [yY])
         bash <(curl -Lso- https://git.io/superspeed_uxh)

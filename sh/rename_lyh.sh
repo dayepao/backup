@@ -320,12 +320,12 @@ rename_2_0(){
 
 startrename(){
     echo "1.在当前目录执行重命名（xx.mp4）"
-    echo "2.对 rename_lyh 文件夹中的剧集进行批量重命名。（格式：rename_lyh/剧名/Season 00/剧名 S00E00.mp4）"
+    echo "2.对 rename_lyh 文件夹中的剧集进行批量重命名。（格式: rename_lyh/剧名/Season 00/剧名 S00E00.mp4）"
     echo "0.退出"
     IFS_OLD=$IFS
     while :
     do
-        read -p "请选择：" key
+        read -p "请选择: " key
         case ${key} in
             1)
                 IFS=$'\r\n'
@@ -358,7 +358,7 @@ else
     chmod 777 rename_lyh
     echo ""
     echo ""
-    echo -e "你似乎是第一次运行此脚本，已在当前目录创建\033[32;1m rename_lyh \033[0m文件夹"
+    echo -e "你似乎是第一次运行此脚本, 已在当前目录创建\033[32;1m rename_lyh \033[0m文件夹"
     echo -e "请将要重命名的剧集按照\033[32;1m rename_lyh/剧名/Season 00/视频文件 \033[0m的格式放入\033[32;1m rename_lyh \033[0m文件夹中"
     echo ""
     echo ""

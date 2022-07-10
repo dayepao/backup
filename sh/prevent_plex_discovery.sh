@@ -5,7 +5,7 @@ get_ip(){
 }
 while :
 do
-    read -p "是否要阻止Plex本地网络发现功能?（y/N）:" skey
+    read -p "是否要阻止Plex本地网络发现功能?(y/N):" skey
     case ${skey} in
     [yY])
         ufw deny out from any to 239.255.255.250 port 1900

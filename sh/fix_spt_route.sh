@@ -8,7 +8,7 @@ fix_route(){
 }
 while :
 do
-    read -p "是否要修复斯巴达同网段路由问题?（y/N）:" fkey
+    read -p "是否要修复斯巴达同网段路由问题?(y/N):" fkey
     case ${fkey} in
     [yY])
         fix_route

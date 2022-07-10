@@ -42,7 +42,7 @@ chose_para(){
 
 while :
 do
-    read -p "是否要安装 lnmp ?（y/N）:" lkey
+    read -p "是否要安装 lnmp ?(y/N):" lkey
     case ${lkey} in
     [yY])
         wget http://soft.vpser.net/lnmp/lnmp1.8.tar.gz -cO lnmp1.8.tar.gz

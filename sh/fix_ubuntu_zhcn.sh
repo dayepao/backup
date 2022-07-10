@@ -1,7 +1,7 @@
 #!/bin/bash
 while :
 do
-    read -p "是否要修复Ubuntu中文乱码?（y/N）:" fkey
+    read -p "是否要修复Ubuntu中文乱码?(y/N):" fkey
     case ${fkey} in
     [yY])
         locale-gen zh_CN.UTF-8

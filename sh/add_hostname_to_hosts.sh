@@ -1,7 +1,7 @@
 #!/bin/bash
 while :
 do
-    read -p "是否要添加hostname解析?（y/N）:" ahkey
+    read -p "是否要添加hostname解析?(y/N):" ahkey
     case ${ahkey} in
     [yY])
         hostname=$(hostname)

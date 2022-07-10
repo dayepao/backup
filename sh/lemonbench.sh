@@ -5,7 +5,7 @@ do
     echo "1.快速测试"
     echo "2.完整测试"
     echo "0.退出"
-    read -p "请选择：" key
+    read -p "请选择: " key
     case ${key} in
         1)
             curl -fsL https://ilemonra.in/LemonBenchIntl | bash -s fast

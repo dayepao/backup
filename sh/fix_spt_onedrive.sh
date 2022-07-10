@@ -15,7 +15,7 @@ fix_onedrive(){
 }
 while :
 do
-    read -p "是否要修复斯巴达OneDrive上传问题?（y/N）:" fkey
+    read -p "是否要修复斯巴达OneDrive上传问题?(y/N):" fkey
     case ${fkey} in
     [yY])
         fix_onedrive

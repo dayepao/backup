@@ -37,87 +37,87 @@ do
             break 1
             ;;
         001)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/rename_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/rename_lyh.sh)
             ;;
         002)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/onelist_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/onelist_lyh.sh)
             ;;
         003)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/rclone_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/rclone_lyh.sh)
             ;;
         004)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/openwrt_require.sh)
+            bash <(curl -sL https://sh.dayepao.com/openwrt_require.sh)
             ;;
         005)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/cuteone_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/cuteone_lyh.sh)
             ;;
         006)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/aria2_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/aria2_lyh.sh)
             rm -rf aria2.sh
             ;;
         007)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/ipv4only_enable_ipv6.sh)
+            bash <(curl -sL https://sh.dayepao.com/ipv4only_enable_ipv6.sh)
             ;;
         008)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_ubuntu_zhcn.sh)
+            bash <(curl -sL https://sh.dayepao.com/fix_ubuntu_zhcn.sh)
             ;;
         009)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/reinstall_vim.sh)
+            bash <(curl -sL https://sh.dayepao.com/reinstall_vim.sh)
             ;;
         010)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/service_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/service_lyh.sh)
             ;;
         011)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/set_bash_proxy.sh)
+            bash <(curl -sL https://sh.dayepao.com/set_bash_proxy.sh)
             ;;
         012)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/add_hostname_to_hosts.sh)
+            bash <(curl -sL https://sh.dayepao.com/add_hostname_to_hosts.sh)
             ;;
         101)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/bbr_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/bbr_lyh.sh)
             ;;
         102)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/bbr_all.sh)
+            bash <(curl -sL https://sh.dayepao.com/bbr_all.sh)
             ;;
         103)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/prefer_ipv4_or_ipv6.sh)
+            bash <(curl -sL https://sh.dayepao.com/prefer_ipv4_or_ipv6.sh)
             ;;
         104)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_spt_route.sh)
+            bash <(curl -sL https://sh.dayepao.com/fix_spt_route.sh)
             ;;
         105)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/prevent_plex_discovery.sh)
+            bash <(curl -sL https://sh.dayepao.com/prevent_plex_discovery.sh)
             ;;
         106)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/stopmail_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/stopmail_lyh.sh)
             ;;
         107)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/spt_add_netplan_ipv6.sh)
+            bash <(curl -sL https://sh.dayepao.com/spt_add_netplan_ipv6.sh)
             ;;
         108)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/fix_spt_onedrive.sh)
+            bash <(curl -sL https://sh.dayepao.com/fix_spt_onedrive.sh)
             ;;
         201)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/lemonbench.sh)
+            bash <(curl -sL https://sh.dayepao.com/lemonbench.sh)
             ;;
         202)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/superspeed_uxh.sh)
+            bash <(curl -sL https://sh.dayepao.com/superspeed_uxh.sh)
             ;;
         203)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/media_check.sh)
+            bash <(curl -sL https://sh.dayepao.com/media_check.sh)
             ;;
         301)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/lnmp_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/lnmp_lyh.sh)
             break 1
             ;;
         302)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/get_cert_path.sh)
+            bash <(curl -sL https://sh.dayepao.com/get_cert_path.sh)
             ;;
         303)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/x-ui_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/x-ui_lyh.sh)
             ;;
         304)
-            bash <(curl -sL https://raw.githubusercontent.com/dayepao/backup/main/sh/trojan.sh)
+            bash <(curl -sL https://sh.dayepao.com/trojan.sh)
             ;;
         *)
             echo -e "\033[31;1m [错误] \033[0m 请重新输入"

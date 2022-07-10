@@ -18,7 +18,7 @@ do
                 echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
                 sysctl -p
             fi
-            echo "bbr开启成功，请查看下方显示内容是否包含bbr"
+            echo "bbr开启成功, 请查看下方显示内容是否包含bbr"
             sysctl -n net.ipv4.tcp_congestion_control
             lsmod | grep bbr
             break 1
@@ -27,7 +27,7 @@ do
             sed -i "/net.core.default_qdisc/d" /etc/sysctl.conf
             sed -i "/net.ipv4.tcp_congestion_control/d" /etc/sysctl.conf
             sysctl -p
-            echo "bbr关闭成功，请重启后查看效果"
+            echo "bbr关闭成功, 请重启后查看效果"
             break 1
             ;;
         0)

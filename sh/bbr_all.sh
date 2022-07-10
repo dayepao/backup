@@ -1,7 +1,7 @@
 #!/bin/bash
 while :
 do
-    read -p "是否要运行一键bbr脚本?（y/N）:" bbrkey
+    read -p "是否要运行一键bbr脚本?(y/N):" bbrkey
     case ${bbrkey} in
     [yY])
         rm -rf tcp.sh

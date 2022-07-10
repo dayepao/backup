@@ -40,7 +40,7 @@ unsetp(){
 }
 EOF
 
-echo "配置完成，重启终端生效"
+echo "配置完成, 重启终端生效"
 echo "输入 setp 启用代理"
 echo "输入 unsetp 停止代理"
 }
@@ -48,7 +48,7 @@ echo "输入 unsetp 停止代理"
 
 while :
 do
-    read -p "是否要配置 bash 代理?（y/N）:" pkey
+    read -p "是否要配置 bash 代理?(y/N):" pkey
     case ${pkey} in
     [yY])
         set_up_proxy

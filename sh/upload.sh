@@ -1,5 +1,5 @@
 #!/bin/bash
-read -p "请输入onedrive路径（从VPS/开始）：" path
+read -p "请输入onedrive路径（从VPS/开始）: " path
 echo "开始进入限速模式"
 /usr/sbin/wondershaper eth0 7000 30000
 while read filename

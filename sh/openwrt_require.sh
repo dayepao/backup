@@ -1,7 +1,7 @@
 #!/bin/bash
 while :
 do
-    read -p "是否要安装编译openwrt所需依赖?（y/N）:" rkey
+    read -p "是否要安装编译openwrt所需依赖?(y/N):" rkey
     case ${rkey} in
     [yY])
         sudo apt update
