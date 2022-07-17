@@ -7,10 +7,10 @@ set_up_proxy(){
     fi
 
     echo "\${proxy}为\"WSL的宿主机地址\"或 \"127.0.0.1\""
-    read -p "请输入http代理地址(默认为\"http://\${proxy}:10809\"): " http_proxy
+    read -p "请输入http代理地址(默认为\"http://\${proxy}:10811\"): " http_proxy
     read -p "请输入https代理地址(默认与\"http代理地址\"相同): " https_proxy
     if [[ ${http_proxy} == '' ]];then
-        http_proxy='http://${proxy}:10809'
+        http_proxy='http://${proxy}:10811'
     fi
     if [[ ${https_proxy} == '' ]];then
         https_proxy=${http_proxy}
