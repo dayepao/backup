@@ -150,11 +150,38 @@ async function fetchAccessToken() {
   return result.access_token;
 }
 
+async function judgeEncrypted(path, accessToken, passwd) {
+  while (path != ":") {
+    path = path.split("/").slice(0, -1).join("/");
+    let uri = OAUTH.apiUrl
+    if (path == ":") {
+      uri += ":" + EXPOSE_PATH + "?expand=children(select=name,size,parentReference,lastModifiedDateTime,@microsoft.graph.downloadUrl)";
+    } else {
+      uri += encodeURI(path) + "?expand=children(select=name,size,parentReference,lastModifiedDateTime,@microsoft.graph.downloadUrl)";
+    }
+    let body = await getContentWithHeaders(uri, {
+      Authorization: "Bearer " + accessToken,
+    });
+    for (let i = 0; i < body.children.length; i++) {
+      const file = body.children[i];
+      if (file.name === PASSWD_FILENAME) {
+        const PASSWD = await getContent(file["@microsoft.graph.downloadUrl"]);
+        if (PASSWD !== passwd) {
+          return true
+        }
+      }
+    }
+  }
+  return false;
+}
+
 async function fetchFiles(path, fileName, passwd) {
   if (path === "/") path = "";
   if (path || EXPOSE_PATH) path = ":" + EXPOSE_PATH + path;
 
   const accessToken = await fetchAccessToken();
+  let encrypted = await judgeEncrypted(path, accessToken, passwd);
+
   const uri =
     OAUTH.apiUrl +
     encodeURI(path) +
@@ -173,7 +200,6 @@ async function fetchFiles(path, fileName, passwd) {
     return thisFile;
   } else {
     let files = [];
-    let encrypted = false;
     for (let i = 0; i < body.children.length; i++) {
       const file = body.children[i];
       if (file.name === PASSWD_FILENAME) {
