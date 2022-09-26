@@ -9,22 +9,34 @@ password="123456"
 # 这里判断是否已经属于登录状态 如果是则退出脚本
 captiveReturnCode=`curl -s -I -m 10 -o /dev/null -s -w %{http_code} http://www.google.cn/generate_204`
 if [ "${captiveReturnCode}" = "204" ]; then
-  echo 'You are already online!'
-  exit 0
+    echo 'You are already online!'
+    exit 0
 fi
 
 # your_ip_address 替换成自己锐捷认证的ip，例如：192.0.1.128
 loginURL='http://192.168.2.135/eportal/InterFace.do?method=login'
 
-# service是运营商中文经过两次UrlEncode编码的结果,
-# 提供编码网址为https://tool.chinaz.com/tools/urlencode.aspx
-# 例如：电信互联服务 这六个中文字符经过两次UrlEncode得到如下结果，如果你使用其他运营商请自行修改
-service='internet'
-
+case $1 in
+    xyw)
+        # service是运营商中文经过两次UrlEncode编码的结果,
+        # 提供编码网址为https://tool.chinaz.com/tools/urlencode.aspx
+        service='internet'
+        ;;
+    dx)
+        # service是运营商中文经过两次UrlEncode编码的结果,
+        # 提供编码网址为https://tool.chinaz.com/tools/urlencode.aspx
+        # 例如：电信出口 这四个中文字符经过两次UrlEncode得到如下结果，如果你使用其他运营商请自行修改
+        service='%E7%94%B5%E4%BF%A1%E5%87%BA%E5%8F%A3'
+        ;;
+    *)
+        echo -e "参数错误"
+        exit 0
+        ;;
+esac
 # 此处参数已混淆，你需要使用chrome浏览器F12打开控制台
 # 复制你成功登录的queryString进行替换即可
 # 要是登录太快来不及复制就Network把网络请求速度调至最低的1kb/s
-queryString='wlanuserip%3D0bfb59fc9c44423025ca6d68893ff5fc'
+queryString='wlanuca6d68893ff5fc'
 queryString="${queryString//&/%2526}"
 queryString="${queryString//=/%253D}"
 
