@@ -45,9 +45,9 @@ do
     read -p "是否要安装 lnmp ?(y/N):" lkey
     case ${lkey} in
     [yY])
-        wget http://soft.vpser.net/lnmp/lnmp1.8.tar.gz -cO lnmp1.8.tar.gz
-        tar zxf lnmp1.8.tar.gz
-        cd lnmp1.8
+        wget http://soft.vpser.net/lnmp/lnmp1.9.tar.gz -cO lnmp1.9.tar.gz
+        tar zxf lnmp1.9.tar.gz
+        cd lnmp1.9
         chose_para
         break 1
         ;;
