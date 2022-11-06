@@ -32,14 +32,14 @@ do
             # echo -e "\033[32;1m ----------Client secret（客户端密码）: 6_?9I0rap?]ncqONc0p]Oba314JC4rwy--------------- \033[0m"
             read -p "按回车键继续"
             rclone config
-            read -p "请输入要在本地挂载的路径(例如: /onedrive): " mountpath
-            mkdir ${mountpath}
-            chmod 777 ${mountpath}
             while :
             do
                 read -p "是否配置开机启动?(y/N):" autostartkey
                 case ${autostartkey} in
                     [yY])
+                        read -p "请输入要在本地挂载的路径(例如: /onedrive): " mountpath
+                        mkdir ${mountpath}
+                        chmod 777 ${mountpath}
                         autostart
                         break 1
                         ;;
