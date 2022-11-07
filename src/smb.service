@@ -1,0 +1,12 @@
+[Unit]
+Description=smb
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=sudo bash /root/autosmb.sh start
+ExecStop=sudo bash /root/autosmb.sh stop
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
