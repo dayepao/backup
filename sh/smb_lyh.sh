@@ -39,6 +39,13 @@ do
             if [[ $(grep "/root/autosmb.sh check" /etc/crontab) == "" ]];then
                 echo "*/1 * * * * root /usr/bin/bash /root/autosmb.sh check" >> /etc/crontab
             fi
+            echo -e "\033[32;1m -----------------------配置 SMB 挂载完成------------------------------ \033[0m"
+            echo "SMB 挂载目录:"
+            for mount_path in ${MOUNT_PATHS[*]}
+            do
+                echo "/mnt/${mount_path}"
+            done
+            echo -e "输入\033[32;1m systemctl status smb \033[0m查看挂载状态"
             break 1
             ;;
         [nN])
