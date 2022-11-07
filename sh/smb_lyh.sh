@@ -35,6 +35,7 @@ do
             if [[ $(grep "/root/autosmb.sh check" /etc/crontab) == "" ]];then
                 echo "*/1 * * * * root /usr/bin/bash /root/autosmb.sh check" >> /etc/crontab
             fi
+            /usr/bin/bash /root/autosmb.sh start
             echo -e "\033[32;1m -----------------------配置 SMB 挂载完成------------------------------ \033[0m"
             echo "SMB 挂载目录:"
             for mount_path in ${MOUNT_PATHS[*]}
