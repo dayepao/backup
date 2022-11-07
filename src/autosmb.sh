@@ -15,7 +15,6 @@ case $1 in
             echo "umount ${mount_path}"
             umount ${mount_path}
         done
-        sleep 3
         ;;
     check)
         for mount_path in ${MOUNT_PATHS[*]}

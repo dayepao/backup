@@ -30,12 +30,8 @@ do
                     echo "//192.168.1.3/${mount_path} /mnt/${mount_path} cifs credentials=/root/.nassmb" >> /etc/fstab
                 fi
             done
-            wget "https://raw.githubusercontent.com/dayepao/backup/main/src/smb.service" -O smb.service
             wget "https://raw.githubusercontent.com/dayepao/backup/main/src/autosmb.sh" -O autosmb.sh
-            mv smb.service /etc/systemd/system/smb.service
             mv autosmb.sh /root/autosmb.sh
-            systemctl enable smb
-            systemctl start smb
             if [[ $(grep "/root/autosmb.sh check" /etc/crontab) == "" ]];then
                 echo "*/1 * * * * root /usr/bin/bash /root/autosmb.sh check" >> /etc/crontab
             fi
@@ -45,7 +41,6 @@ do
             do
                 echo "/mnt/${mount_path}"
             done
-            echo -e "输入\033[32;1m systemctl status smb \033[0m查看挂载状态"
             break 1
             ;;
         [nN])
