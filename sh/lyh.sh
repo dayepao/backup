@@ -17,7 +17,7 @@ do
     echo "011.配置bash代理                    012.添加hostname解析"
 
     echo -e "\033[32;1mVPS配置:\033[0m"
-    echo "101.内核自带bbr                     102.bbr多合一脚本"
+    echo "101.内核自带bbr                     102.配置SMB挂载"
     echo "103.配置IPv4或IPv6优先              104.修复斯巴达同网段路由问题"
     echo "105.阻止Plex本地网络发现功能        106.linux关闭mail提示"
     echo "107.斯巴达DD后添加IPv6              108.PVE配置UPS连接"
@@ -77,7 +77,7 @@ do
             bash <(curl -sL https://sh.dayepao.com/bbr_lyh.sh)
             ;;
         102)
-            bash <(curl -sL https://sh.dayepao.com/bbr_all.sh)
+            bash <(curl -sL https://sh.dayepao.com/smb_lyh.sh)
             ;;
         103)
             bash <(curl -sL https://sh.dayepao.com/prefer_ipv4_or_ipv6.sh)
