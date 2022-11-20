@@ -15,6 +15,7 @@ do
     echo "007.为IPv4 only服务器添加IPv6支持   008.修复Ubuntu中文乱码"
     echo "009.重新安装vim                     010.添加开机启动项"
     echo "011.配置bash代理                    012.添加hostname解析"
+    echo "013.配置GNOME"
 
     echo -e "\033[32;1mVPS配置:\033[0m"
     echo "101.内核自带bbr                     102.配置SMB挂载"
@@ -72,6 +73,9 @@ do
             ;;
         012)
             bash <(curl -sL https://sh.dayepao.com/add_hostname_to_hosts.sh)
+            ;;
+        013)
+            bash <(curl -sL https://sh.dayepao.com/gnome.sh)
             ;;
         101)
             bash <(curl -sL https://sh.dayepao.com/bbr_lyh.sh)
