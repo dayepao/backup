@@ -8,16 +8,18 @@ do
     case ${gkey} in
         1)
             apt install task-gnome-desktop
-            gsettings set "org.gnome.settings-daemon.plugins.power" sleep-inactive-ac-type "nothing"
-            gsettings set "org.gnome.settings-daemon.plugins.power" sleep-inactive-battery-type "nothing"
-            gsettings set "org.gnome.settings-daemon.plugins.power" power-button-action "interactive"
-            gsettings set "org.gnome.desktop.session" idle-delay 0
             sed -i "/AutomaticLoginEnable =/cAutomaticLoginEnable = true" /etc/gdm3/daemon.conf
             sed -i "/AutomaticLogin =/cAutomaticLogin = root" /etc/gdm3/daemon.conf
             sed -i "/AllowRoot/d" /etc/gdm3/daemon.conf
             sed -i "/\[security\]/aAllowRoot = true" /etc/gdm3/daemon.conf
             sed -i '/user != root/ s/^\([^#].*\)$/# \1/g' /etc/pam.d/gdm-password
             sed -i '/user != root/ s/^\([^#].*\)$/# \1/g' /etc/pam.d/gdm-autologin
+            sudo startx >/dev/null 2>&1 &
+            sleep 5
+            gsettings set "org.gnome.settings-daemon.plugins.power" sleep-inactive-ac-type "nothing"
+            gsettings set "org.gnome.settings-daemon.plugins.power" sleep-inactive-battery-type "nothing"
+            gsettings set "org.gnome.settings-daemon.plugins.power" power-button-action "interactive"
+            gsettings set "org.gnome.desktop.session" idle-delay 0
             ;;
         2)
             apt purge gdm3
