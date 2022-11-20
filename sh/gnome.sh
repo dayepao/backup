@@ -16,6 +16,7 @@ do
             sed -i '/user != root/ s/^\([^#].*\)$/# \1/g' /etc/pam.d/gdm-autologin
             sudo startx >/dev/null 2>&1 &
             sleep 5
+            gtk-launch gnome-control-center >/dev/null 2>&1 &
             gsettings set "org.gnome.settings-daemon.plugins.power" sleep-inactive-ac-type "nothing"
             gsettings set "org.gnome.settings-daemon.plugins.power" sleep-inactive-battery-type "nothing"
             gsettings set "org.gnome.settings-daemon.plugins.power" power-button-action "interactive"
