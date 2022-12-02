@@ -27,7 +27,7 @@ do
             for mount_path in ${MOUNT_PATHS[*]}
             do
                 if ! [[ ${CUR_MOUNT_PATHS[*]} =~ "/mnt/${mount_path}" ]];then
-                    echo "//192.168.1.3/${mount_path} /mnt/${mount_path} cifs credentials=/root/.nassmb" >> /etc/fstab
+                    echo "//192.168.1.3/${mount_path} /mnt/${mount_path} cifs rw,dir_mode=0777,file_mode=0777,credentials=/root/.nassmb" >> /etc/fstab
                 fi
             done
             wget "https://raw.githubusercontent.com/dayepao/backup/main/src/autosmb.sh" -O autosmb.sh
