@@ -9,9 +9,12 @@ done
 
 while :
 do
-    read -p "是否要配置 SMB 挂载?(y/N): " skey
+    echo "1.配置SMB挂载"
+    echo "2.清除SMB挂载"
+    echo "0.退出"
+    read -p "请选择操作: " skey
     case ${skey} in
-        [yY])
+        1)
             echo -e "\033[32;1m -----------------------安装SMB组件并创建共享目录-------------------------------- \033[0m"
             apt install -y cifs-utils
             for mount_path in ${MOUNT_PATHS[*]}
@@ -44,7 +47,26 @@ do
             done
             break 1
             ;;
-        [nN])
+        2)
+            sed -i "/autosmb.sh check/d" /etc/crontab
+            MOUNT_PATHS=()
+            for mount_path in $(grep "^[^#]*//192.168.1.3" /etc/fstab | sed "s/^ //g" | sed "s/\/\/192.168.1.3\/.* \(\/mnt\/.*\) cifs.*/\1/g")
+            do
+                MOUNT_PATHS[${#MOUNT_PATHS[*]}]=${mount_path}
+            done
+
+            for mount_path in ${MOUNT_PATHS[*]}
+            do
+                echo "umount ${mount_path}"
+                umount ${mount_path}
+                sed -i "/${mount_path//\//\\/}/d" /etc/fstab
+                if [[ $(mount | grep ${mount_path}) == "" ]];then
+                    rm -rf ${mount_path}
+                fi
+            done
+            break 1
+            ;;
+        0)
             break 1
             ;;
         *)
