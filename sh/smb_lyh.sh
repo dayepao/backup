@@ -2,7 +2,7 @@
 MOUNT_PATHS=("nas" "temp")
 
 CUR_MOUNT_PATHS=()
-for cur_mount_path in $(grep "/192.168.1.3" /etc/fstab | sed "s/\/\/192.168.1.3\/.* \(\/mnt\/.*\) cifs.*/\1/g")
+for cur_mount_path in $(grep "^[^#]*//192.168.1.3" /etc/fstab | sed "s/^ //g" | sed "s/\/\/192.168.1.3\/.* \(\/mnt\/.*\) cifs.*/\1/g")
 do
     CUR_MOUNT_PATHS[${#CUR_MOUNT_PATHS[*]}]=${cur_mount_path}
 done

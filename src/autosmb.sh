@@ -1,6 +1,6 @@
 #!/bin/bash
 MOUNT_PATHS=()
-for mount_path in $(grep "/192.168.1.3" /etc/fstab | sed "s/\/\/192.168.1.3\/.* \(\/mnt\/.*\) cifs.*/\1/g")
+for mount_path in $(grep "^[^#]*//192.168.1.3" /etc/fstab | sed "s/^ //g" | sed "s/\/\/192.168.1.3\/.* \(\/mnt\/.*\) cifs.*/\1/g")
 do
     MOUNT_PATHS[${#MOUNT_PATHS[*]}]=${mount_path}
 done
