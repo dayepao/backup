@@ -24,6 +24,7 @@ do
             gsettings set "org.gnome.desktop.session" idle-delay 0
             ;;
         2)
+            apt purge task-gnome-desktop
             apt purge gdm3
             apt purge gnome*
             apt autopurge
