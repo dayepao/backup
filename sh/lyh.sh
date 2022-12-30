@@ -25,7 +25,7 @@ do
 
     echo -e "\033[32;1mVPS测试:\033[0m"
     echo "201.LemonBench跑分                  202.superspeed_uxh脚本"
-    echo "203.流媒体解锁检测"
+    echo "203.流媒体解锁检测                  204.测试回程路由"
 
     echo -e "\033[32;1m科学:\033[0m"
     echo "301.安装lnmp                        302.获取网站SSL证书文件路径"
@@ -109,6 +109,9 @@ do
             ;;
         203)
             bash <(curl -sL https://sh.dayepao.com/media_check.sh)
+            ;;
+        204)
+            bash <(curl -sL https://sh.dayepao.com/backtrace.sh)
             ;;
         301)
             bash <(curl -sL https://sh.dayepao.com/lnmp_lyh.sh)
