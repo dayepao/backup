@@ -8,12 +8,12 @@ do
     read -p "请选择: " key
     case ${key} in
         1)
-            curl -fsL https://ilemonra.in/LemonBenchIntl | bash -s fast
+            curl -fsL https://ilemonra.in/LemonBench | bash -s -- --fast
             rm -rf LemonBench.Result.txt
             break 1
             ;;
         2)
-            curl -fsL https://ilemonra.in/LemonBenchIntl | bash -s full
+            curl -fsL https://ilemonra.in/LemonBench | bash -s -- --full
             rm -rf LemonBench.Result.txt
             break 1
             ;;

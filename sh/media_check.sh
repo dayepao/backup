@@ -6,7 +6,7 @@ do
         # apt install -y jq
         # bash <(curl -sSL "https://github.com/CoiaPrant/MediaUnlock_Test/raw/main/check.sh")
         # rm -rf check.log
-        bash <(curl -sL "https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh")
+        bash <(curl -L -s check.unlock.media)
         break 1
         ;;
     [nN])
