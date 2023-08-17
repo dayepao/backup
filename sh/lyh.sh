@@ -12,7 +12,7 @@ do
     echo "001.剧集重命名                      002.安装onelist"
     echo "003.安装rclone                      004.安装编译openwrt依赖"
     echo "005.安装cuteone                     006.aria2管理面板"
-    echo "007.为IPv4 only服务器添加IPv6支持   008.修复Ubuntu中文乱码"
+    echo "007.为IPv4 only服务器添加IPv6支持   008.设置系统语言为中文"
     echo "009.重新安装vim                     010.添加开机启动项"
     echo "011.配置bash代理                    012.添加hostname解析"
     echo "013.配置GNOME"
@@ -60,7 +60,7 @@ do
             bash <(curl -sL https://sh.dayepao.com/ipv4only_enable_ipv6.sh)
             ;;
         008)
-            bash <(curl -sL https://sh.dayepao.com/fix_ubuntu_zhcn.sh)
+            bash <(curl -sL https://sh.dayepao.com/set_zhcn.sh)
             ;;
         009)
             bash <(curl -sL https://sh.dayepao.com/reinstall_vim.sh)
