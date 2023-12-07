@@ -386,10 +386,10 @@
         </Group>
         <!-- 湿度和PM2.5 -->
         <Group align="right" w="#__wd_w" x="#__wd_w*2-(#weatherMusic_humidity_text.text_width+#weatherMusic_humidity.text_width+#weatherMusic_pm25_text.text_width+#weatherMusic_pm25.text_width+3)">
-          <Text name="weatherMusic_humidity_text" alignV="center" color="@color_c" size="25" text="湿度:"/>
-          <Text name="weatherMusic_humidity" alignV="center" color="@color_c" size="25" textExp="#weather_humidity+'%'" bold="true" x="#weatherMusic_humidity_text.text_width"/>
-          <Text name="weatherMusic_pm25_text" alignV="center" color="@color_c" size="25" text="PM2.5:" x="#weatherMusic_humidity_text.text_width+#weatherMusic_humidity.text_width+15"/>
-          <Text name="weatherMusic_pm25" alignV="center" color="@color_c" size="25" textExp="#pm25" bold="true" x="#weatherMusic_humidity_text.text_width+#weatherMusic_humidity.text_width+#weatherMusic_pm25_text.text_width+15"/>
+          <Text name="weatherMusic_humidity_text" alignV="center" color="@color_c" size="30" text="湿度"/>
+          <Text name="weatherMusic_humidity" alignV="center" color="@color_c" size="35" textExp="#weather_humidity+'%'" bold="true" x="#weatherMusic_humidity_text.text_width+5"/>
+          <!-- <Text name="weatherMusic_pm25_text" alignV="center" color="@color_c" size="25" text="PM2.5:" x="#weatherMusic_humidity_text.text_width+#weatherMusic_humidity.text_width+15"/>
+          <Text name="weatherMusic_pm25" alignV="center" color="@color_c" size="25" textExp="#pm25" bold="true" x="#weatherMusic_humidity_text.text_width+#weatherMusic_humidity.text_width+#weatherMusic_pm25_text.text_width+15"/> -->
         </Group>
       </Group>
 
