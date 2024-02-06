@@ -24,7 +24,7 @@ do
     case ${rckey} in
         [yY])
             echo -e "\033[32;1m -----------------------开始安装fuse、zip-------------------------------- \033[0m"
-            apt install -y fuse zip
+            apt install -y fuse3 zip
             echo -e "\033[32;1m -----------------------开始安装rclone------------------------------ \033[0m"
             curl https://rclone.org/install.sh | sudo bash
             echo -e "\033[32;1m -----------------------开始配置rclone------------------------------ \033[0m"
