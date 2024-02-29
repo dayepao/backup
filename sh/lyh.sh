@@ -29,7 +29,7 @@ do
 
     echo -e "\033[32;1m科学:\033[0m"
     echo "301.安装lnmp                        302.获取网站SSL证书文件路径"
-    echo "303.x-ui面板                        304.trojan面板"
+    echo "303.3x-ui面板                       304.x-ui面板"
     
     echo "*********************************************************************"
     read -p "请输入序号:" shkey
@@ -121,10 +121,10 @@ do
             bash <(curl -sL https://sh.dayepao.com/get_cert_path.sh)
             ;;
         303)
-            bash <(curl -sL https://sh.dayepao.com/x-ui_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/3x-ui_lyh.sh)
             ;;
         304)
-            bash <(curl -sL https://sh.dayepao.com/trojan.sh)
+            bash <(curl -sL https://sh.dayepao.com/x-ui_lyh.sh)
             ;;
         *)
             echo -e "\033[31;1m [错误] \033[0m 请重新输入"
