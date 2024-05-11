@@ -15,14 +15,14 @@ plain="\033[0m"
 # WSL 环境变量
 if grep -qEi "(Microsoft|WSL)" /proc/version; then
     export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    echo -e "${yellow}检测到在WSL下运行，已设置 PATH 环境变量。${plain}"
+    echo -e "${yellow}检测到在WSL下运行，已设置 PATH 环境变量${plain}"
 fi
 
 # Debian 环境变量
 # if grep -q "Debian" /etc/os-release; then
 #     export CFLAGS="$CFLAGS -Wno-restrict"
 #     export CXXFLAGS="$CXXFLAGS -Wno-restrict"
-#     echo -e "${yellow}检测到在Debian下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量。${plain}"
+#     echo -e "${yellow}检测到在Debian下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量${plain}"
 # fi
 
 # 创建编译目录
@@ -58,9 +58,21 @@ echo "src-git luci https://github.com/openwrt/luci.git;openwrt-${luci_ver}" >>fe
 echo "src-git routing https://git.openwrt.org/feed/routing.git;openwrt-${sdk_ver}" >>feeds.conf
 echo "src-git passwall https://github.com/${passwall}.git;main" >>feeds.conf
 echo "src-git passwall_packages https://github.com/${packages}.git;main" >>feeds.conf
+
 ./scripts/feeds clean
 ./scripts/feeds update -a
-./scripts/feeds install -a -p passwall
+if [ $? -ne 0 ]; then
+    ./scripts/feeds update -a
+    if [ $? -ne 0 ]; then
+        ./scripts/feeds update -a
+        if [ $? -ne 0 ]; then
+            echo -e "${red}Update of feeds failed, exiting the script.${plain}"
+            exit 1
+        fi
+    fi
+fi
+
+./scripts/feeds install -a -f -p passwall
 
 # 编译
 echo "CONFIG_ALL_NONSHARED=n" >.config
@@ -100,10 +112,29 @@ cd sdk
 echo -e "${green}开始编译 passwall-packages${plain}"
 ./scripts/feeds clean
 ./scripts/feeds update -a
+if [ $? -ne 0 ]; then
+    ./scripts/feeds update -a
+    if [ $? -ne 0 ]; then
+        ./scripts/feeds update -a
+        if [ $? -ne 0 ]; then
+            echo -e "${red}Update of feeds failed, exiting the script.${plain}"
+            exit 1
+        fi
+    fi
+fi
+
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
-./scripts/feeds install -a -p passwall
-./scripts/feeds install -a -p passwall_packages
+if [ $? -ne 0 ]; then
+    git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
+    if [ $? -ne 0 ]; then
+        echo -e "${red}Download of packages_lang_golang failed, exiting the script.${plain}"
+        exit 1
+    fi
+fi
+
+./scripts/feeds install -a -f -p passwall
+./scripts/feeds install -a -f -p passwall_packages
 
 # 编译
 echo "CONFIG_ALL_NONSHARED=n" >.config
