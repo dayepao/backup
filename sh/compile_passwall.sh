@@ -24,8 +24,8 @@ os_version_id=$(awk -F= '$1=="VERSION_ID" {print $2}' /etc/os-release | tr -d '"
 
 # Debian 环境变量
 if [ "${os_id}" == "debian" ]; then
-    export CFLAGS="$CFLAGS -Wno-restrict"
-    export CXXFLAGS="$CXXFLAGS -Wno-restrict"
+    export CFLAGS="$CFLAGS -Wno-restrict -Wno-maybe-uninitialized"
+    export CXXFLAGS="$CXXFLAGS -Wno-restrict -Wno-maybe-uninitialized"
     echo -e "${yellow}检测到在Debian下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量${plain}"
 fi
 
@@ -131,8 +131,8 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-./scripts/feeds install -a -f -p passwall
 ./scripts/feeds install -a -f -p passwall_packages
+./scripts/feeds install -a -f -p passwall
 
 # 编译
 echo "CONFIG_ALL_NONSHARED=n" >.config
