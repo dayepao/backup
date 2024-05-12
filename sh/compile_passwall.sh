@@ -68,11 +68,8 @@ echo "src-git passwall_packages https://github.com/${packages}.git;main" >>feeds
 if [ $? -ne 0 ]; then
     ./scripts/feeds update -a
     if [ $? -ne 0 ]; then
-        ./scripts/feeds update -a
-        if [ $? -ne 0 ]; then
-            echo -e "${red}Update of feeds failed, exiting the script.${plain}"
-            exit 1
-        fi
+        echo -e "${red}Update of feeds failed, exiting the script.${plain}"
+        exit 1
     fi
 fi
 
@@ -119,11 +116,8 @@ echo -e "${green}开始编译 passwall-packages${plain}"
 if [ $? -ne 0 ]; then
     ./scripts/feeds update -a
     if [ $? -ne 0 ]; then
-        ./scripts/feeds update -a
-        if [ $? -ne 0 ]; then
-            echo -e "${red}Update of feeds failed, exiting the script.${plain}"
-            exit 1
-        fi
+        echo -e "${red}Update of feeds failed, exiting the script.${plain}"
+        exit 1
     fi
 fi
 
@@ -171,17 +165,15 @@ echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray_Plugin=y" >>.config
 make defconfig
 make download -j8
 
-for package in $(ls feeds/passwall_packages); do
+for package in $(ls package/feeds/passwall_packages); do
     if [ -d "feeds/passwall_packages/${package}" ]; then
-        make package/feeds/passwall_packages/${package}/compile -j$(nproc) 2>/dev/null
-    fi
-    if [ $? -ne 0 ]; then
         make package/feeds/passwall_packages/${package}/compile -j$(nproc) 2>/dev/null
         if [ $? -ne 0 ]; then
             make package/feeds/passwall_packages/${package}/compile -j1 V=s
-            echo -e "${red}Compilation of passwall_packages/${package} failed, exiting the script.${plain}"
-            # exit 1
-            read -p "Compilation of passwall_packages/${package} failed" choice
+            if [ $? -ne 0 ]; then
+                echo -e "${red}Compilation of passwall_packages/${package} failed, exiting the script.${plain}"
+                exit 1
+            fi
         fi
     fi
 done
