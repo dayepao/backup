@@ -18,12 +18,16 @@ if grep -qEi "(Microsoft|WSL)" /proc/version; then
     echo -e "${yellow}检测到在WSL下运行，已设置 PATH 环境变量${plain}"
 fi
 
+# 获取系统版本
+os_id=$(awk -F= '$1=="ID" {print $2}' /etc/os-release | tr -d '"')
+os_version_id=$(awk -F= '$1=="VERSION_ID" {print $2}' /etc/os-release | tr -d '"')
+
 # Debian 环境变量
-# if grep -q "Debian" /etc/os-release; then
-#     export CFLAGS="$CFLAGS -Wno-restrict"
-#     export CXXFLAGS="$CXXFLAGS -Wno-restrict"
-#     echo -e "${yellow}检测到在Debian下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量${plain}"
-# fi
+if [ "${os_id}" == "debian" ]; then
+    export CFLAGS="$CFLAGS -Wno-restrict"
+    export CXXFLAGS="$CXXFLAGS -Wno-restrict"
+    echo -e "${yellow}检测到在Debian下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量${plain}"
+fi
 
 # 创建编译目录
 cd ~
