@@ -47,7 +47,7 @@ do
             bash <(curl -sL https://sh.dayepao.com/rclone_lyh.sh)
             ;;
         004)
-            bash <(curl -sL https://sh.dayepao.com/openwrt_require.sh)
+            bash <(curl -sL https://sh.dayepao.com/setup_openwrt_build_env.sh)
             ;;
         005)
             bash <(curl -sL https://sh.dayepao.com/cuteone_lyh.sh)
