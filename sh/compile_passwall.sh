@@ -165,7 +165,7 @@ echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray_Plugin=y" >>.config
 make defconfig
 make download -j8
 
-for package in $(ls package/feeds/passwall_packages); do
+for package in $(ls feeds/passwall_packages); do
     if [ -d "feeds/passwall_packages/${package}" ]; then
         make package/feeds/passwall_packages/${package}/compile -j$(nproc) 2>/dev/null
         if [ $? -ne 0 ]; then
