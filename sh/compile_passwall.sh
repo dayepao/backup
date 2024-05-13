@@ -24,8 +24,8 @@ os_version_id=$(awk -F= '$1=="VERSION_ID" {print $2}' /etc/os-release | tr -d '"
 
 # Debian 环境变量
 if [ "${os_id}" == "debian" ]; then
-    export CFLAGS="$CFLAGS -Wno-restrict -Wno-maybe-uninitialized"
-    export CXXFLAGS="$CXXFLAGS -Wno-restrict -Wno-maybe-uninitialized"
+    export CFLAGS="$CFLAGS -Wno-error=restrict -Wno-error=maybe-uninitialized"
+    export CXXFLAGS="$CXXFLAGS -Wno-error=restrict -Wno-error=maybe-uninitialized"
     echo -e "${yellow}检测到在Debian下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量${plain}"
 fi
 
