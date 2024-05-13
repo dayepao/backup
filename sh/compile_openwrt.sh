@@ -17,7 +17,7 @@ plain="\033[0m"
 # WSL 环境变量
 if grep -qEi "(Microsoft|WSL)" /proc/version; then
     export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    echo -e "${yellow}检测到在WSL下运行，已设置 PATH 环境变量${plain}"
+    echo -e "${yellow}检测到在 WSL 下运行，已设置 PATH 环境变量${plain}"
 fi
 
 # 获取系统版本
@@ -28,7 +28,7 @@ os_version_id=$(awk -F= '$1=="VERSION_ID" {print $2}' /etc/os-release | tr -d '"
 if [ "${os_id}" == "debian" ]; then
     export CFLAGS="$CFLAGS -Wno-error=restrict -Wno-error=maybe-uninitialized"
     export CXXFLAGS="$CXXFLAGS -Wno-error=restrict -Wno-error=maybe-uninitialized"
-    echo -e "${yellow}检测到在Debian下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量${plain}"
+    echo -e "${yellow}检测到在 Debian 下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量${plain}"
 fi
 
 # 下载 OpenWrt 源码
