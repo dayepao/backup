@@ -180,7 +180,7 @@ echo "CONFIG_PACKAGE_luci-app-passwall_Nftables_Transparent_Proxy=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-ttyd=y" >>.config
 
 # tailscale
-echo "CONFIG_PACKAGE_tailscale=y" >>.config
+# echo "CONFIG_PACKAGE_tailscale=y" >>.config
 
 make defconfig
 
