@@ -8,7 +8,7 @@ async function handleRequest(request) {
     // 单独处理sh.dayepao.com的请求
     const request_url = new URL(request.url)
     if (request_url.pathname == "/") {
-        url = "https://raw.githubusercontent.com/dayepao/backup/main/sh/lyh.sh"
+        url = "https://raw.githubusercontent.com/dayepao/backup/main/sh/Toolbox.sh"
         return fetch(url)
     }
     // 替换 2 次以同时兼容 Worker 来源和域名来源

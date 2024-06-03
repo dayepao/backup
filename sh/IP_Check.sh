@@ -1,9 +1,10 @@
+#!/bin/bash
 while :
 do
-    read -p "是否要检测流媒体解锁情况?(y/N):" key
+    read -p "是否要测试IP质量?(y/N):" key
     case ${key} in
     [yY])
-        bash <(curl -L -s check.unlock.media)
+        bash <(curl -Ls IP.Check.Place)
         break 1
         ;;
     [nN])
