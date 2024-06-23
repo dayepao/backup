@@ -79,7 +79,7 @@ do
             bash <(curl -sL https://sh.dayepao.com/gnome.sh)
             ;;
         101)
-            bash <(curl -sL https://sh.dayepao.com/bbr_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/bbr.sh)
             ;;
         102)
             bash <(curl -sL https://sh.dayepao.com/smb_lyh.sh)
