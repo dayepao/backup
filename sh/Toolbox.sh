@@ -106,7 +106,7 @@ do
             bash <(curl -sL https://sh.dayepao.com/lemonbench.sh)
             ;;
         202)
-            bash <(curl -sL https://sh.dayepao.com/superspeed_uxh.sh)
+            bash <(curl -sL https://sh.dayepao.com/fusion_monster_server_test.sh)
             ;;
         203)
             bash <(curl -sL https://sh.dayepao.com/media_check.sh)

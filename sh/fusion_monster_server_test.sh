@@ -1,10 +1,10 @@
 #!/bin/bash
 while :
 do
-    read -p "是否要运行superspeed_uxh脚本?(y/N):" skey
-    case ${skey} in
+    read -p "是否要运行融合怪脚本?(y/N):" key
+    case ${key} in
     [yY])
-        bash <(curl -Lso- https://git.io/superspeed_uxh)
+        curl -L https://github.com/spiritLHLS/ecs/raw/main/ecs.sh -o ecs.sh && chmod +x ecs.sh && bash ecs.sh
         break 1
         ;;
     [nN])
