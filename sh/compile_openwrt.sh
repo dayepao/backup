@@ -35,8 +35,14 @@ fi
 echo -e "${green}Downloading OpenWrt source code...${plain}"
 cd ~
 rm -rf openwrt
-git clone $openwrt_git openwrt
+mkdir openwrt
+
 cd openwrt
+mkdir tmp
+mkdir output
+
+git clone $openwrt_git compile
+cd compile
 
 # 切换到指定版本
 git checkout v$openwrt_ver
@@ -78,15 +84,24 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-rm -rf feeds/packages/lang/golang
-git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
+# 更新 packages/lang/golang 包
+echo -e "${green}Updating packages/lang/golang...${plain}"
+rm -rf ~/openwrt/tmp/packages
+git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
 if [ $? -ne 0 ]; then
-    git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
+    git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
     if [ $? -ne 0 ]; then
-        echo -e "${red}Download of packages_lang_golang failed, exiting the script.${plain}"
+        echo -e "${red}Download of packages failed, exiting the script.${plain}"
         exit 1
     fi
 fi
+rm -rf feeds/packages/lang/golang
+cp -r ~/openwrt/tmp/packages/lang/golang feeds/packages/lang/golang
+
+# 更新 packages/lang/rust 包
+echo -e "${green}Updating packages/lang/rust...${plain}"
+rm -rf feeds/packages/lang/rust
+cp -r ~/openwrt/tmp/packages/lang/rust feeds/packages/lang/rust
 
 ./scripts/feeds install -a
 
@@ -182,17 +197,19 @@ echo "CONFIG_PACKAGE_luci-app-ttyd=y" >>.config
 # tailscale
 # echo "CONFIG_PACKAGE_tailscale=y" >>.config
 
-make defconfig
+make defconfig; make defconfig
 
 #### 编译
 echo -e "${green}Compiling...${plain}"
 make download -j8
+download_status=$?
 output=$(find dl -size -1024c -exec ls -l {} \;)
-if [ -n "$output" ]; then
+if [ $download_status -ne 0 ] || [ -n "$output" ]; then
     find dl -size -1024c -exec rm -f {} \;
     make download -j8
+    download_status=$?
     output=$(find dl -size -1024c -exec ls -l {} \;)
-    if [ -n "$output" ]; then
+    if [ $download_status -ne 0 ] || [ -n "$output" ]; then
         echo -e "${red}Download of packages failed, exiting the script.${plain}"
         exit 1
     fi
