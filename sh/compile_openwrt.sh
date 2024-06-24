@@ -3,6 +3,7 @@
 #### 配置信息
 openwrt_git="https://github.com/openwrt/openwrt.git"
 openwrt_ver="23.05.3"
+dev_flag="0"
 
 #### 相关链接
 manifest_url="https://downloads.openwrt.org/releases/${openwrt_ver}/targets/x86/64/openwrt-${openwrt_ver}-x86-64.manifest"
@@ -230,4 +231,6 @@ if [ $? -ne 0 ]; then
     echo -e "${red}Build failed, exiting the script.${plain}"
     exit 1
 fi
-echo -e "${green}Build succeeded, the firmware file is in openwrt/bin/targets/x86/64.${plain}"
+
+cp -rf bin/targets/x86/64/* ~/openwrt/output
+echo -e "${green}Build succeeded, the firmware file is in ${HOME}/openwrt/output.${plain}"
