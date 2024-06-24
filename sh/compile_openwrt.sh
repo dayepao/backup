@@ -84,8 +84,8 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-# 更新 packages/lang/golang 包
-echo -e "${green}Updating packages/lang/golang...${plain}"
+# 下载 tmp/packages
+echo -e "${green}Downloading tmp/packages...${plain}"
 rm -rf ~/openwrt/tmp/packages
 git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
 if [ $? -ne 0 ]; then
@@ -95,6 +95,16 @@ if [ $? -ne 0 ]; then
         exit 1
     fi
 fi
+
+# 切换到指定版本
+git switch openwrt-23.05
+if [ $? -ne 0 ]; then
+    echo -e "${red}Switch to openwrt-23.05 failed, exiting the script.${plain}"
+    exit 1
+fi
+
+# 更新 packages/lang/golang 包
+echo -e "${green}Updating packages/lang/golang...${plain}"
 rm -rf feeds/packages/lang/golang
 cp -r ~/openwrt/tmp/packages/lang/golang feeds/packages/lang/golang
 
