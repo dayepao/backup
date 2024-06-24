@@ -2,11 +2,9 @@
 
 #### 配置信息
 openwrt_git="https://github.com/openwrt/openwrt.git"
-openwrt_ver="23.05.3"
 
 #### 相关链接
-manifest_url="https://downloads.openwrt.org/releases/${openwrt_ver}/targets/x86/64/openwrt-${openwrt_ver}-x86-64.manifest"
-diffconfig_url="https://downloads.openwrt.org/releases/${openwrt_ver}/targets/x86/64/config.buildinfo"
+diffconfig_url="https://downloads.openwrt.org/snapshots/targets/x86/64/config.buildinfo"
 
 #### 输出颜色
 red="\033[31m"
@@ -37,13 +35,6 @@ cd ~
 rm -rf openwrt
 git clone $openwrt_git openwrt
 cd openwrt
-
-# 切换到指定版本
-git checkout v$openwrt_ver
-if [ $? -ne 0 ]; then
-    echo -e "${red}Switch to v$openwrt_ver failed, exiting the script.${plain}"
-    exit 1
-fi
 
 #### 添加第三方软件包
 echo -e "${green}Adding third-party packages...${plain}"
@@ -78,23 +69,7 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-rm -rf feeds/packages/lang/golang
-git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
-if [ $? -ne 0 ]; then
-    git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
-    if [ $? -ne 0 ]; then
-        echo -e "${red}Download of packages_lang_golang failed, exiting the script.${plain}"
-        exit 1
-    fi
-fi
-
 ./scripts/feeds install -a
-
-#### 修正 vermagic
-echo -e "${green}Fixing vermagic...${plain}"
-curl -s "${manifest_url}" | grep "kernel" | awk -F "-" '{print $NF}' >.vermagic
-sed -i -e 's/^\(.\).*vermagic$/\1cp $(TOPDIR)\/.vermagic $(LINUX_DIR)\/.vermagic/' include/kernel-defaults.mk
-cat .vermagic
 
 #### 修改默认 IP 为 192.168.1.100
 # sed -i 's/ipaddr:-"192.168.1.1"/ipaddr:-"192.168.1.100"/' package/base-files/files/bin/config_generate
@@ -102,8 +77,6 @@ cat .vermagic
 #### 修改默认密码 openwrt/package/base-files/files/etc/shadow
 
 #### 设置默认时区为 CST-8
-# CONFIG_PACKAGE_zoneinfo-asia=y
-#
 sed -i "/set system.@system\[-1\].timezone=/c\		set system.@system[-1].timezone='CST-8'" package/base-files/files/bin/config_generate
 sed -i "/set system.@system\[-1\].timezone='CST-8'/a\		set system.@system[-1].zonename='Asia/Shanghai'" package/base-files/files/bin/config_generate
 
