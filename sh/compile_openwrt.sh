@@ -7,7 +7,11 @@ dev_flag="0"
 
 #### 相关链接
 manifest_url="https://downloads.openwrt.org/releases/${openwrt_ver}/targets/x86/64/openwrt-${openwrt_ver}-x86-64.manifest"
-diffconfig_url="https://downloads.openwrt.org/releases/${openwrt_ver}/targets/x86/64/config.buildinfo"
+if [ "$dev_flag" == "1" ]; then
+    diffconfig_url="https://downloads.openwrt.org/snapshots/targets/x86/64/config.buildinfo"
+else
+    diffconfig_url="https://downloads.openwrt.org/releases/${openwrt_ver}/targets/x86/64/config.buildinfo"
+fi
 
 #### 输出颜色
 red="\033[31m"
@@ -46,7 +50,11 @@ git clone $openwrt_git compile
 cd compile
 
 # 切换到指定版本
-git checkout v$openwrt_ver
+if [ "$dev_flag" == "1" ]; then
+    git checkout main
+else
+    git checkout v$openwrt_ver
+fi
 if [ $? -ne 0 ]; then
     echo -e "${red}Switch to v$openwrt_ver failed, exiting the script.${plain}"
     exit 1
@@ -85,42 +93,46 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-# 下载 tmp/packages
-echo -e "${green}Downloading tmp/packages...${plain}"
-rm -rf ~/openwrt/tmp/packages
-git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
-if [ $? -ne 0 ]; then
+if [ "$dev_flag" != "1" ]; then
+    # 下载 tmp/packages
+    echo -e "${green}Downloading tmp/packages...${plain}"
+    rm -rf ~/openwrt/tmp/packages
     git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
     if [ $? -ne 0 ]; then
-        echo -e "${red}Download of packages failed, exiting the script.${plain}"
+        git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
+        if [ $? -ne 0 ]; then
+            echo -e "${red}Download of packages failed, exiting the script.${plain}"
+            exit 1
+        fi
+    fi
+
+    # 切换到指定版本
+    git switch openwrt-23.05
+    if [ $? -ne 0 ]; then
+        echo -e "${red}Switch to openwrt-23.05 failed, exiting the script.${plain}"
         exit 1
     fi
+
+    # 更新 packages/lang/golang 包
+    echo -e "${green}Updating packages/lang/golang...${plain}"
+    rm -rf feeds/packages/lang/golang
+    cp -r ~/openwrt/tmp/packages/lang/golang feeds/packages/lang/golang
+
+    # 更新 packages/lang/rust 包
+    echo -e "${green}Updating packages/lang/rust...${plain}"
+    rm -rf feeds/packages/lang/rust
+    cp -r ~/openwrt/tmp/packages/lang/rust feeds/packages/lang/rust
 fi
-
-# 切换到指定版本
-git switch openwrt-23.05
-if [ $? -ne 0 ]; then
-    echo -e "${red}Switch to openwrt-23.05 failed, exiting the script.${plain}"
-    exit 1
-fi
-
-# 更新 packages/lang/golang 包
-echo -e "${green}Updating packages/lang/golang...${plain}"
-rm -rf feeds/packages/lang/golang
-cp -r ~/openwrt/tmp/packages/lang/golang feeds/packages/lang/golang
-
-# 更新 packages/lang/rust 包
-echo -e "${green}Updating packages/lang/rust...${plain}"
-rm -rf feeds/packages/lang/rust
-cp -r ~/openwrt/tmp/packages/lang/rust feeds/packages/lang/rust
 
 ./scripts/feeds install -a
 
-#### 修正 vermagic
-echo -e "${green}Fixing vermagic...${plain}"
-curl -s "${manifest_url}" | grep "kernel" | awk -F "-" '{print $NF}' >.vermagic
-sed -i -e 's/^\(.\).*vermagic$/\1cp $(TOPDIR)\/.vermagic $(LINUX_DIR)\/.vermagic/' include/kernel-defaults.mk
-cat .vermagic
+if [ "$dev_flag" != "1" ]; then
+    #### 修正 vermagic
+    echo -e "${green}Fixing vermagic...${plain}"
+    curl -s "${manifest_url}" | grep "kernel" | awk -F "-" '{print $NF}' >.vermagic
+    sed -i -e 's/^\(.\).*vermagic$/\1cp $(TOPDIR)\/.vermagic $(LINUX_DIR)\/.vermagic/' include/kernel-defaults.mk
+    cat .vermagic
+fi
 
 #### 修改默认 IP 为 192.168.1.100
 # sed -i 's/ipaddr:-"192.168.1.1"/ipaddr:-"192.168.1.100"/' package/base-files/files/bin/config_generate
@@ -208,7 +220,8 @@ echo "CONFIG_PACKAGE_luci-app-ttyd=y" >>.config
 # tailscale
 # echo "CONFIG_PACKAGE_tailscale=y" >>.config
 
-make defconfig; make defconfig
+make defconfig
+make defconfig
 
 #### 编译
 echo -e "${green}Compiling...${plain}"
