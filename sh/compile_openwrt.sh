@@ -37,7 +37,11 @@ if [ "${os_id}" == "debian" ]; then
 fi
 
 #### 下载 OpenWrt 源码
-echo -e "${green}Downloading OpenWrt source code...${plain}"
+if [ "$dev_flag" == "1" ]; then
+    echo -e "${green}Downloading OpenWrt-dev source code...${plain}"
+else
+    echo -e "${green}Downloading OpenWrt-v${openwrt_ver} source code...${plain}"
+fi
 cd ~
 rm -rf openwrt
 mkdir openwrt
