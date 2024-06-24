@@ -37,11 +37,7 @@ if [ "${os_id}" == "debian" ]; then
 fi
 
 #### 下载 OpenWrt 源码
-if [ "$dev_flag" == "1" ]; then
-    echo -e "${green}Downloading OpenWrt-dev source code...${plain}"
-else
-    echo -e "${green}Downloading OpenWrt-v${openwrt_ver} source code...${plain}"
-fi
+echo -e "${green}Downloading OpenWrt source code...${plain}"
 cd ~
 rm -rf openwrt
 mkdir openwrt
@@ -55,8 +51,10 @@ cd compile
 
 # 切换到指定版本
 if [ "$dev_flag" == "1" ]; then
+    echo -e "${green}Switching to branch: main...${plain}"
     git checkout main
 else
+    echo -e "${green}Switching to tag: v$openwrt_ver...${plain}"
     git checkout v$openwrt_ver
 fi
 if [ $? -ne 0 ]; then
