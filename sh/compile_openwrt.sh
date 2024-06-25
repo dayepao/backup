@@ -158,6 +158,13 @@ sed -i "/set system.@system\[-1\].timezone='CST-8'/a\		set system.@system[-1].zo
 echo -e "${green}Downloading diffconfig${plain}"
 rm .config .config.old
 wget -O .config $diffconfig_url
+if [ $? -ne 0 ]; then
+    wget -O .config $diffconfig_url
+    if [ $? -ne 0 ]; then
+        echo -e "${red}Download of diffconfig failed, exiting the script.${plain}"
+        exit 1
+    fi
+fi
 
 #### 修改 .config
 echo -e "${green}Modifying .config${plain}"
