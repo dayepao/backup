@@ -19,6 +19,12 @@ green="\033[32m"
 yellow="\033[33m"
 plain="\033[0m"
 
+### 路径
+base_path="${HOME}/compile_openwrt"
+compile_path="${base_path}/compile"
+tmp_path="${base_path}/tmp"
+output_path="${base_path}/output"
+
 #### WSL 环境变量
 if grep -qEi "(Microsoft|WSL)" /proc/version; then
     export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -38,16 +44,15 @@ fi
 
 #### 下载 OpenWrt 源码
 echo -e "${green}Downloading OpenWrt source code${plain}"
-cd ~
-rm -rf compile_openwrt
-mkdir compile_openwrt
+rm -rf ${base_path}
+mkdir ${base_path}
 
-cd compile_openwrt
+cd ${base_path}
 mkdir tmp
 mkdir output
 
-git clone $openwrt_git openwrt
-cd openwrt
+git clone $openwrt_git compile
+cd compile
 
 # 切换到指定版本
 if [ "$dev_flag" == "1" ]; then
@@ -58,7 +63,7 @@ else
     git checkout openwrt-${openwrt_ver%.*}
 fi
 if [ $? -ne 0 ]; then
-    echo -e "${red}Switching failed, exiting the script.${plain}"
+    echo -e "${red}Switching failed, exiting the script${plain}"
     exit 1
 fi
 
@@ -75,7 +80,7 @@ git clone https://github.com/xiaorouji/openwrt-passwall.git
 # luci-app-passwall-packages
 git clone https://github.com/xiaorouji/openwrt-passwall-packages.git
 
-cd -
+cd ${compile_path}
 
 #### 添加 feeds 源
 # passwall
@@ -90,7 +95,7 @@ echo -e "${green}Updating feeds${plain}"
 if [ $? -ne 0 ]; then
     ./scripts/feeds update -a
     if [ $? -ne 0 ]; then
-        echo -e "${red}Update of feeds failed, exiting the script.${plain}"
+        echo -e "${red}Update of feeds failed, exiting the script${plain}"
         exit 1
     fi
 fi
@@ -98,33 +103,44 @@ fi
 if [ "$dev_flag" != "1" ]; then
     # 下载 tmp/packages
     echo -e "${green}Downloading tmp/packages${plain}"
-    rm -rf ~/openwrt/tmp/packages
-    git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
+    rm -rf ${tmp_path}/packages
+    git clone https://github.com/openwrt/packages ${tmp_path}/packages
     if [ $? -ne 0 ]; then
-        git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
+        git clone https://github.com/openwrt/packages ${tmp_path}/packages
         if [ $? -ne 0 ]; then
-            echo -e "${red}Download of packages failed, exiting the script.${plain}"
+            echo -e "${red}Download of packages failed, exiting the script${plain}"
             exit 1
         fi
     fi
+    cd ${tmp_path}/packages
 
     # 切换到指定版本
-    echo -e "${green}Switching to branch: openwrt-${openwrt_ver%.*}${plain}"
+    echo -e "${green}Switching to branch: main${plain}"
     git checkout main
     if [ $? -ne 0 ]; then
-        echo -e "${red}Switching failed, exiting the script.${plain}"
+        echo -e "${red}Switching failed, exiting the script${plain}"
         exit 1
     fi
 
     # 更新 packages/lang/golang 包
     echo -e "${green}Updating packages/lang/golang${plain}"
-    rm -rf feeds/packages/lang/golang
-    cp -r ~/openwrt/tmp/packages/lang/golang feeds/packages/lang/golang
+    rm -rf ${compile_path}/feeds/packages/lang/golang
+    cp -r ${tmp_path}/packages/lang/golang ${compile_path}/feeds/packages/lang/golang
+
+    # 切换到指定版本
+    # echo -e "${green}Switching to branch: openwrt-${openwrt_ver%.*}${plain}"
+    # git checkout openwrt-${openwrt_ver%.*}
+    # if [ $? -ne 0 ]; then
+    #     echo -e "${red}Switching failed, exiting the script${plain}"
+    #     exit 1
+    # fi
 
     # 更新 packages/lang/rust 包
     # echo -e "${green}Updating packages/lang/rust${plain}"
-    # rm -rf feeds/packages/lang/rust
-    # cp -r ~/openwrt/tmp/packages/lang/rust feeds/packages/lang/rust
+    # rm -rf ${compile_path}/feeds/packages/lang/rust
+    # cp -r ${tmp_path}/packages/lang/rust ${compile_path}/feeds/packages/lang/rust
+
+    cd ${compile_path}
 fi
 
 #### 安装 feeds 软件包
@@ -161,7 +177,7 @@ wget -O .config $diffconfig_url
 if [ $? -ne 0 ]; then
     wget -O .config $diffconfig_url
     if [ $? -ne 0 ]; then
-        echo -e "${red}Download of diffconfig failed, exiting the script.${plain}"
+        echo -e "${red}Download of diffconfig failed, exiting the script${plain}"
         exit 1
     fi
 fi
@@ -237,7 +253,7 @@ make defconfig
 
 #### 编译
 echo -e "${green}Downloading${plain}"
-make download -j8 V=s
+make download -j8
 download_status=$?
 output=$(find dl -size -1024c -exec ls -l {} \;)
 if [ $download_status -ne 0 ] || [ -n "$output" ]; then
@@ -246,7 +262,7 @@ if [ $download_status -ne 0 ] || [ -n "$output" ]; then
     download_status=$?
     output=$(find dl -size -1024c -exec ls -l {} \;)
     if [ $download_status -ne 0 ] || [ -n "$output" ]; then
-        echo -e "${red}Download of packages failed, exiting the script.${plain}"
+        echo -e "${red}Download of packages failed, exiting the script${plain}"
         exit 1
     fi
 fi
@@ -254,9 +270,9 @@ fi
 echo -e "${green}Compiling${plain}"
 make -j$(nproc) || make -j1 V=s
 if [ $? -ne 0 ]; then
-    echo -e "${red}Build failed, exiting the script.${plain}"
+    echo -e "${red}Build failed, exiting the script${plain}"
     exit 1
 fi
 
-cp -rf bin/targets/x86/64/* ~/compile_openwrt/output
-echo -e "${green}Build succeeded, the firmware file is in ${HOME}/compile_openwrt/output.${plain}"
+cp -rf bin/targets/x86/64/* ${output_path}
+echo -e "${green}Build succeeded, the firmware file is in ${output_path}${plain}"
