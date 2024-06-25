@@ -39,15 +39,15 @@ fi
 #### 下载 OpenWrt 源码
 echo -e "${green}Downloading OpenWrt source code${plain}"
 cd ~
-rm -rf openwrt
-mkdir openwrt
+rm -rf compile_openwrt
+mkdir compile_openwrt
 
-cd openwrt
+cd compile_openwrt
 mkdir tmp
 mkdir output
 
-git clone $openwrt_git compile
-cd compile
+git clone $openwrt_git openwrt
+cd openwrt
 
 # 切换到指定版本
 if [ "$dev_flag" == "1" ]; then
@@ -250,5 +250,5 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-cp -rf bin/targets/x86/64/* ~/openwrt/output
-echo -e "${green}Build succeeded, the firmware file is in ${HOME}/openwrt/output.${plain}"
+cp -rf bin/targets/x86/64/* ~/compile_openwrt/output
+echo -e "${green}Build succeeded, the firmware file is in ${HOME}/compile_openwrt/output.${plain}"
