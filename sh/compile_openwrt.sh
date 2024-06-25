@@ -37,7 +37,7 @@ if [ "${os_id}" == "debian" ]; then
 fi
 
 #### 下载 OpenWrt 源码
-echo -e "${green}Downloading OpenWrt source code...${plain}"
+echo -e "${green}Downloading OpenWrt source code${plain}"
 cd ~
 rm -rf openwrt
 mkdir openwrt
@@ -51,10 +51,10 @@ cd compile
 
 # 切换到指定版本
 if [ "$dev_flag" == "1" ]; then
-    echo -e "${green}Switching to branch: main...${plain}"
+    echo -e "${green}Switching to branch: main${plain}"
     git checkout main
 else
-    echo -e "${green}Switching to branch: openwrt-${openwrt_ver%.*}...${plain}"
+    echo -e "${green}Switching to branch: openwrt-${openwrt_ver%.*}${plain}"
     git checkout openwrt-${openwrt_ver%.*}
 fi
 if [ $? -ne 0 ]; then
@@ -63,7 +63,7 @@ if [ $? -ne 0 ]; then
 fi
 
 #### 添加第三方软件包
-echo -e "${green}Adding third-party packages...${plain}"
+echo -e "${green}Adding third-party packages${plain}"
 cd package
 
 # luci-theme-argon
@@ -83,7 +83,7 @@ cd -
 # echo "src-git passwall_packages https://github.com/xiaorouji/openwrt-passwall-packages.git;main" >>feeds.conf.default
 
 #### 更新 feeds 软件包
-echo -e "${green}Updating feeds...${plain}"
+echo -e "${green}Updating feeds${plain}"
 ./scripts/feeds clean
 
 ./scripts/feeds update -a
@@ -97,7 +97,7 @@ fi
 
 if [ "$dev_flag" != "1" ]; then
     # 下载 tmp/packages
-    echo -e "${green}Downloading tmp/packages...${plain}"
+    echo -e "${green}Downloading tmp/packages${plain}"
     rm -rf ~/openwrt/tmp/packages
     git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
     if [ $? -ne 0 ]; then
@@ -109,7 +109,7 @@ if [ "$dev_flag" != "1" ]; then
     fi
 
     # 切换到指定版本
-    echo -e "${green}Switching to branch: openwrt-${openwrt_ver%.*}...${plain}"
+    echo -e "${green}Switching to branch: openwrt-${openwrt_ver%.*}${plain}"
     git switch openwrt-${openwrt_ver%.*}
     if [ $? -ne 0 ]; then
         echo -e "${red}Switching failed, exiting the script.${plain}"
@@ -117,23 +117,23 @@ if [ "$dev_flag" != "1" ]; then
     fi
 
     # 更新 packages/lang/golang 包
-    echo -e "${green}Updating packages/lang/golang...${plain}"
+    echo -e "${green}Updating packages/lang/golang${plain}"
     rm -rf feeds/packages/lang/golang
     cp -r ~/openwrt/tmp/packages/lang/golang feeds/packages/lang/golang
 
     # 更新 packages/lang/rust 包
-    echo -e "${green}Updating packages/lang/rust...${plain}"
+    echo -e "${green}Updating packages/lang/rust${plain}"
     rm -rf feeds/packages/lang/rust
     cp -r ~/openwrt/tmp/packages/lang/rust feeds/packages/lang/rust
 fi
 
 #### 安装 feeds 软件包
-echo -e "${green}Installing feeds...${plain}"
+echo -e "${green}Installing feeds${plain}"
 ./scripts/feeds install -a
 
 if [ "$dev_flag" != "1" ]; then
     #### 修正 vermagic
-    echo -e "${green}Fixing vermagic...${plain}"
+    echo -e "${green}Fixing vermagic${plain}"
     curl -s "${manifest_url}" | grep "kernel" | awk -F "-" '{print $NF}' >.vermagic
     sed -i -e 's/^\(.\).*vermagic$/\1cp $(TOPDIR)\/.vermagic $(LINUX_DIR)\/.vermagic/' include/kernel-defaults.mk
     cat .vermagic
@@ -155,12 +155,12 @@ sed -i "/set system.@system\[-1\].timezone='CST-8'/a\		set system.@system[-1].zo
 
 #### 下载 diffconfig
 # ./scripts/diffconfig.sh > diffconfig
-echo -e "${green}Downloading diffconfig...${plain}"
+echo -e "${green}Downloading diffconfig${plain}"
 rm .config .config.old
 wget -O .config $diffconfig_url
 
 #### 修改 .config
-echo -e "${green}Modifying .config...${plain}"
+echo -e "${green}Modifying .config${plain}"
 
 # skip kmod-pf-ring
 echo "CONFIG_PACKAGE_kmod-pf-ring=n" >>.config
@@ -229,7 +229,7 @@ make defconfig
 make defconfig
 
 #### 编译
-echo -e "${green}Compiling...${plain}"
+echo -e "${green}Compiling${plain}"
 make download -j8
 download_status=$?
 output=$(find dl -size -1024c -exec ls -l {} \;)
