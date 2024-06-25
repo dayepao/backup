@@ -115,8 +115,8 @@ if [ "$dev_flag" != "1" ]; then
     cd ${tmp_path}/packages
 
     # 切换到指定版本
-    echo -e "${green}Switching to branch: main${plain}"
-    git checkout main
+    echo -e "${green}Switching to branch: master${plain}"
+    git checkout master
     if [ $? -ne 0 ]; then
         echo -e "${red}Switching failed, exiting the script${plain}"
         exit 1
