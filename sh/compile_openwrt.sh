@@ -54,11 +54,11 @@ if [ "$dev_flag" == "1" ]; then
     echo -e "${green}Switching to branch: main...${plain}"
     git checkout main
 else
-    echo -e "${green}Switching to tag: v$openwrt_ver...${plain}"
-    git checkout v$openwrt_ver
+    echo -e "${green}Switching to branch: openwrt-${openwrt_ver%.*}...${plain}"
+    git checkout openwrt-${openwrt_ver%.*}
 fi
 if [ $? -ne 0 ]; then
-    echo -e "${red}Switch to v$openwrt_ver failed, exiting the script.${plain}"
+    echo -e "${red}Switching failed, exiting the script.${plain}"
     exit 1
 fi
 
@@ -109,9 +109,10 @@ if [ "$dev_flag" != "1" ]; then
     fi
 
     # 切换到指定版本
-    git switch openwrt-23.05
+    echo -e "${green}Switching to branch: openwrt-${openwrt_ver%.*}...${plain}"
+    git switch openwrt-${openwrt_ver%.*}
     if [ $? -ne 0 ]; then
-        echo -e "${red}Switch to openwrt-23.05 failed, exiting the script.${plain}"
+        echo -e "${red}Switching failed, exiting the script.${plain}"
         exit 1
     fi
 
