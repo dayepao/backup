@@ -236,13 +236,13 @@ make defconfig
 make defconfig
 
 #### 编译
-echo -e "${green}Compiling${plain}"
-make download -j8
+echo -e "${green}Downloading${plain}"
+make download -j8 V=s
 download_status=$?
 output=$(find dl -size -1024c -exec ls -l {} \;)
 if [ $download_status -ne 0 ] || [ -n "$output" ]; then
     find dl -size -1024c -exec rm -f {} \;
-    make download -j1 V=s
+    make download -j8 V=s
     download_status=$?
     output=$(find dl -size -1024c -exec ls -l {} \;)
     if [ $download_status -ne 0 ] || [ -n "$output" ]; then
@@ -251,6 +251,7 @@ if [ $download_status -ne 0 ] || [ -n "$output" ]; then
     fi
 fi
 
+echo -e "${green}Compiling${plain}"
 make -j$(nproc) || make -j1 V=s
 if [ $? -ne 0 ]; then
     echo -e "${red}Build failed, exiting the script.${plain}"
