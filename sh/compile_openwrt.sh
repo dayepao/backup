@@ -82,8 +82,8 @@ cd -
 # echo "src-git passwall https://github.com/xiaorouji/openwrt-passwall.git;main" >>feeds.conf.default
 # echo "src-git passwall_packages https://github.com/xiaorouji/openwrt-passwall-packages.git;main" >>feeds.conf.default
 
-#### 更新并安装 feeds 软件包
-echo -e "${green}Updating and installing feeds...${plain}"
+#### 更新 feeds 软件包
+echo -e "${green}Updating feeds...${plain}"
 ./scripts/feeds clean
 
 ./scripts/feeds update -a
@@ -126,6 +126,8 @@ if [ "$dev_flag" != "1" ]; then
     cp -r ~/openwrt/tmp/packages/lang/rust feeds/packages/lang/rust
 fi
 
+#### 安装 feeds 软件包
+echo -e "${green}Installing feeds...${plain}"
 ./scripts/feeds install -a
 
 if [ "$dev_flag" != "1" ]; then
