@@ -242,7 +242,7 @@ download_status=$?
 output=$(find dl -size -1024c -exec ls -l {} \;)
 if [ $download_status -ne 0 ] || [ -n "$output" ]; then
     find dl -size -1024c -exec rm -f {} \;
-    make download -j8
+    make download -j1 V=s
     download_status=$?
     output=$(find dl -size -1024c -exec ls -l {} \;)
     if [ $download_status -ne 0 ] || [ -n "$output" ]; then
