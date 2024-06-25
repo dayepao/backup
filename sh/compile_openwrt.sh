@@ -95,37 +95,37 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-if [ "$dev_flag" != "1" ]; then
-    # 下载 tmp/packages
-    echo -e "${green}Downloading tmp/packages${plain}"
-    rm -rf ~/openwrt/tmp/packages
-    git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
-    if [ $? -ne 0 ]; then
-        git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
-        if [ $? -ne 0 ]; then
-            echo -e "${red}Download of packages failed, exiting the script.${plain}"
-            exit 1
-        fi
-    fi
+# if [ "$dev_flag" != "1" ]; then
+#     # 下载 tmp/packages
+#     echo -e "${green}Downloading tmp/packages${plain}"
+#     rm -rf ~/openwrt/tmp/packages
+#     git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
+#     if [ $? -ne 0 ]; then
+#         git clone https://github.com/openwrt/packages ~/openwrt/tmp/packages
+#         if [ $? -ne 0 ]; then
+#             echo -e "${red}Download of packages failed, exiting the script.${plain}"
+#             exit 1
+#         fi
+#     fi
 
-    # 切换到指定版本
-    echo -e "${green}Switching to branch: openwrt-${openwrt_ver%.*}${plain}"
-    git switch openwrt-${openwrt_ver%.*}
-    if [ $? -ne 0 ]; then
-        echo -e "${red}Switching failed, exiting the script.${plain}"
-        exit 1
-    fi
+#     # 切换到指定版本
+#     echo -e "${green}Switching to branch: openwrt-${openwrt_ver%.*}${plain}"
+#     git switch openwrt-${openwrt_ver%.*}
+#     if [ $? -ne 0 ]; then
+#         echo -e "${red}Switching failed, exiting the script.${plain}"
+#         exit 1
+#     fi
 
-    # 更新 packages/lang/golang 包
-    echo -e "${green}Updating packages/lang/golang${plain}"
-    rm -rf feeds/packages/lang/golang
-    cp -r ~/openwrt/tmp/packages/lang/golang feeds/packages/lang/golang
+#     # 更新 packages/lang/golang 包
+#     echo -e "${green}Updating packages/lang/golang${plain}"
+#     rm -rf feeds/packages/lang/golang
+#     cp -r ~/openwrt/tmp/packages/lang/golang feeds/packages/lang/golang
 
-    # 更新 packages/lang/rust 包
-    echo -e "${green}Updating packages/lang/rust${plain}"
-    rm -rf feeds/packages/lang/rust
-    cp -r ~/openwrt/tmp/packages/lang/rust feeds/packages/lang/rust
-fi
+#     # 更新 packages/lang/rust 包
+#     echo -e "${green}Updating packages/lang/rust${plain}"
+#     rm -rf feeds/packages/lang/rust
+#     cp -r ~/openwrt/tmp/packages/lang/rust feeds/packages/lang/rust
+# fi
 
 #### 安装 feeds 软件包
 echo -e "${green}Installing feeds${plain}"
