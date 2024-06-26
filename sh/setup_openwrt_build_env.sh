@@ -8,9 +8,9 @@ while :; do
         os_id=$(awk -F= '$1=="ID" {print $2}' /etc/os-release | tr -d '"')
         os_version_id=$(awk -F= '$1=="VERSION_ID" {print $2}' /etc/os-release | tr -d '"')
         if [ "${os_id}" == "ubuntu" ] && [ "${os_version_id}" == "24.04" ]; then
-            sudo apt install -y bison build-essential clang file flex g++ gawk gcc-multilib g++-multilib gettext git libncurses5-dev libssl-dev python3-setuptools qemu-utils rsync swig unzip wget zlib1g-dev
+            sudo apt install -y bison build-essential clang file flex g++ gawk gcc-multilib g++-multilib gettext git libncurses5-dev libssl-dev python3-setuptools qemu-utils rsync swig unzip wget zlib1g-dev zstd
         else
-            sudo apt install -y bison build-essential clang file flex g++ gawk gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev python3-distutils qemu-utils rsync unzip wget zlib1g-dev
+            sudo apt install -y bison build-essential clang file flex g++ gawk gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev python3-distutils qemu-utils rsync unzip wget zlib1g-dev zstd
         fi
         break 1
         ;;
