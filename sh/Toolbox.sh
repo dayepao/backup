@@ -24,7 +24,7 @@ do
     echo "107. 斯巴达DD后添加IPv6              108. PVE配置UPS连接"
 
     echo -e "\033[32;1mVPS测试:\033[0m"
-    echo "201. LemonBench跑分                  202. superspeed_uxh脚本"
+    echo "201. LemonBench跑分                  202. 融合怪脚本"
     echo "203. 流媒体解锁检测                  204. 测试回程路由"
     echo "205. IP质量检测"
 
