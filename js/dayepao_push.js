@@ -86,8 +86,8 @@ async function separate_from_xxB(request, xxB) {
     if (pushjson.msgtype == "text") {
         var text = pushjson.text
         var content = JSON.stringify(text.content)
-        content = content.substr(1)
-        content = content.substr(0,content.length-1)
+        content = content.slice(1);  // 从索引1开始，截取到字符串末尾
+        content = content.slice(0, -1);  // 截取从头开始到倒数第二个字符
         //return new Response(content)
         if (!content){
             return new Response("要推送的消息为空消息")
