@@ -193,17 +193,17 @@ echo "CONFIG_TARGET_KERNEL_PARTSIZE=512" >>.config
 echo "CONFIG_TARGET_ROOTFS_PARTSIZE=1024" >>.config
 
 # dnsmasq-full
-echo "CONFIG_PACKAGE_dnsmasq=n" >>.config
+echo "CONFIG_PACKAGE_dnsmasq=m" >>.config
 echo "CONFIG_PACKAGE_dnsmasq-full=y" >>.config
-echo "CONFIG_PACKAGE_dnsmasq_full_auth=y" >>.config
-echo "CONFIG_PACKAGE_dnsmasq_full_broken_rtc=y" >>.config
-echo "CONFIG_PACKAGE_dnsmasq_full_conntrack=y" >>.config
 echo "CONFIG_PACKAGE_dnsmasq_full_dhcp=y" >>.config
 echo "CONFIG_PACKAGE_dnsmasq_full_dhcpv6=y" >>.config
 echo "CONFIG_PACKAGE_dnsmasq_full_dnssec=y" >>.config
+echo "CONFIG_PACKAGE_dnsmasq_full_auth=y" >>.config
 echo "CONFIG_PACKAGE_dnsmasq_full_ipset=y" >>.config
 echo "CONFIG_PACKAGE_dnsmasq_full_nftset=y" >>.config
+echo "CONFIG_PACKAGE_dnsmasq_full_conntrack=y" >>.config
 echo "CONFIG_PACKAGE_dnsmasq_full_noid=y" >>.config
+echo "CONFIG_PACKAGE_dnsmasq_full_broken_rtc=y" >>.config
 echo "CONFIG_PACKAGE_dnsmasq_full_tftp=y" >>.config
 
 # zh_Hans
@@ -222,25 +222,25 @@ echo "CONFIG_PACKAGE_luci-app-nft-qos=y" >>.config
 
 # luci-app-passwall
 echo "CONFIG_PACKAGE_luci-app-passwall=y" >>.config
+echo "CONFIG_PACKAGE_luci-app-passwall_Iptables_Transparent_Proxy=y" >>.config
+echo "CONFIG_PACKAGE_luci-app-passwall_Nftables_Transparent_Proxy=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Haproxy=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Hysteria=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_NaiveProxy=y" >>.config
-echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Client=y" >>.config
-echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Server=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Libev_Client=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Libev_Server=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Client=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Server=y" >>.config
+echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Client=y" >>.config
+echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Server=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Simple_Obfs=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_SingBox=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Trojan_Plus=y" >>.config
+echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_tuic_client=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray_Geodata=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray_Plugin=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray_Plugin=y" >>.config
-echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_tuic_client=y" >>.config
-echo "CONFIG_PACKAGE_luci-app-passwall_Iptables_Transparent_Proxy=y" >>.config
-echo "CONFIG_PACKAGE_luci-app-passwall_Nftables_Transparent_Proxy=y" >>.config
 
 # luci-app-ttyd
 echo "CONFIG_PACKAGE_luci-app-ttyd=y" >>.config
