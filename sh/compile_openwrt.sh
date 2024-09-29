@@ -2,7 +2,7 @@
 
 #### 配置信息
 openwrt_git="https://github.com/openwrt/openwrt.git"
-openwrt_ver="23.05.3"
+openwrt_ver="23.05.5"
 dev_flag="0"
 
 #### 相关链接
@@ -186,7 +186,7 @@ fi
 echo -e "${green}Modifying .config${plain}"
 
 # skip kmod-pf-ring
-echo "CONFIG_PACKAGE_kmod-pf-ring=n" >>.config
+# echo "CONFIG_PACKAGE_kmod-pf-ring=n" >>.config
 
 # Target Images
 echo "CONFIG_TARGET_KERNEL_PARTSIZE=512" >>.config
