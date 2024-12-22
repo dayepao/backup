@@ -1,6 +1,6 @@
 #!/bin/bash
 NAME="onedrive"
-REMOTE="VPS"
+REMOTE="server"
 LOCAL="/onedrive"
 PARAMETER="--contimeout=5s --timeout=5s --tpslimit 10 --transfers 4 --buffer-size 128M --low-level-retries 30 --vfs-read-chunk-size 128M --vfs-read-chunk-size-limit 256M --vfs-cache-mode writes"
 case $1 in

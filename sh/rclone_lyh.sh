@@ -10,7 +10,7 @@ rclonename=${rclonename//\[/}
 rclonename=${rclonename//\]/}
 
 sed -i "s/NAME=\"onedrive\"/NAME=\"${rclonename}\"/g" /root/autorclone.sh
-sed -i "s/REMOTE=\"VPS\"/REMOTE=\"${remotepath//\//\\/}\"/g" /root/autorclone.sh
+sed -i "s/REMOTE=\"server\"/REMOTE=\"${remotepath//\//\\/}\"/g" /root/autorclone.sh
 sed -i "s/LOCAL=\"\/onedrive\"/LOCAL=\"${mountpath//\//\\/}\"/g" /root/autorclone.sh
 systemctl enable rclone
 systemctl start rclone
