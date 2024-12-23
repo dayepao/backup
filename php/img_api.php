@@ -1,5 +1,5 @@
 <?php
-$o = "bing";
+$o = "bingHD";
 $imgs = scandir("/www/wwwroot/img.dayepao.com/img/$o/");
 unset($imgs[0]);
 unset($imgs[1]);
