@@ -4,7 +4,7 @@ wget "https://raw.githubusercontent.com/dayepao/backup/main/src/rclone.service" 
 wget "https://raw.githubusercontent.com/dayepao/backup/main/src/autorclone.sh" -O autorclone.sh
 mv rclone.service /etc/systemd/system/rclone.service
 mv autorclone.sh /root/autorclone.sh
-read -p "请输入远程文件夹路径(例如: VPS): " remotepath
+read -p "请输入远程文件夹路径(例如: server): " remotepath
 rclonename=$(grep "\[" /root/.config/rclone/rclone.conf)
 rclonename=${rclonename//\[/}
 rclonename=${rclonename//\]/}
