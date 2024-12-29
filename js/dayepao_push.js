@@ -83,17 +83,15 @@ async function separate_from_xxB(request, xxB) {
     var pushstrs =[]
     var pushstr = await request.clone().text()
     var pushjson = JSON.parse(pushstr)
-    if (pushjson.msgtype == "text") {
+    if (pushjson.msgtype == "text_old") {
         var text = pushjson.text
         var content = JSON.stringify(text.content)
         content = content.slice(1);  // 从索引1开始，截取到字符串末尾
         content = content.slice(0, -1);  // 截取从头开始到倒数第二个字符
-        //return new Response(content)
         if (!content){
             return new Response("要推送的消息为空消息")
         }
         reBytesStrArr(content, xxB)
-        //return new Response(contents)
         for(var contentpart of contents){
             text.content = contentpart
             pushjson.text = text
@@ -109,10 +107,8 @@ async function separate_from_xxB(request, xxB) {
                                 .replace(/\\\\f/g, "\\f")
             pushstrs.push(pushstr)
         }
-        //return new Response(pushstrs)
     } else {
         pushstrs.push(pushstr)
-        //return new Response(pushstrs)
     }
     return dayepao_push(pushstrs, 1)
 }
