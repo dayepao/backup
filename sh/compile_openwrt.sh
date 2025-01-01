@@ -181,7 +181,7 @@ echo -e "${green}Modifying .config${plain}"
 echo "CONFIG_TARGET_KERNEL_PARTSIZE=512" >>.config
 echo "CONFIG_TARGET_ROOTFS_PARTSIZE=1024" >>.config
 
-# dnsmasq-full
+# Base system -> dnsmasq-full
 echo "CONFIG_PACKAGE_dnsmasq=m" >>.config
 echo "CONFIG_PACKAGE_dnsmasq-full=y" >>.config
 echo "CONFIG_PACKAGE_dnsmasq_full_dhcp=y" >>.config
@@ -195,21 +195,19 @@ echo "CONFIG_PACKAGE_dnsmasq_full_noid=y" >>.config
 echo "CONFIG_PACKAGE_dnsmasq_full_broken_rtc=y" >>.config
 echo "CONFIG_PACKAGE_dnsmasq_full_tftp=y" >>.config
 
-# zh_Hans
-echo "CONFIG_LUCI_LANG_zh_Hans=y" >>.config
-
-# qemu-ga
+# Utilities -> Virtualization -> qemu-ga
 echo "CONFIG_PACKAGE_qemu-ga=y" >>.config
 
-# theme
-# luci-theme-argon
+# Luci -> Modules -> Translations -> zh_Hans
+echo "CONFIG_LUCI_LANG_zh_Hans=y" >>.config
+
+# Luci -> Themes -> luci-theme-argon
 echo "CONFIG_PACKAGE_luci-theme-argon=y" >>.config
 
-# applications
-# luci-app-nft-qos
+# Luci -> Applications -> luci-app-nft-qos
 echo "CONFIG_PACKAGE_luci-app-nft-qos=y" >>.config
 
-# luci-app-passwall
+# Luci -> Applications -> luci-app-passwall
 echo "CONFIG_PACKAGE_luci-app-passwall=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_Iptables_Transparent_Proxy=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_Nftables_Transparent_Proxy=y" >>.config
@@ -231,7 +229,10 @@ echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray_Plugin=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray_Plugin=y" >>.config
 
-# luci-app-ttyd
+# Luci -> Applications -> luci-app-smartdns
+echo "CONFIG_PACKAGE_luci-app-smartdns=y" >>.config
+
+# Luci -> Applications -> luci-app-ttyd
 echo "CONFIG_PACKAGE_luci-app-ttyd=y" >>.config
 
 # tailscale
