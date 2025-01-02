@@ -230,7 +230,7 @@ echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray_Plugin=y" >>.config
 
 # Luci -> Applications -> luci-app-smartdns
-echo "CONFIG_PACKAGE_luci-app-smartdns=y" >>.config
+# echo "CONFIG_PACKAGE_luci-app-smartdns=y" >>.config
 
 # Luci -> Applications -> luci-app-ttyd
 echo "CONFIG_PACKAGE_luci-app-ttyd=y" >>.config
