@@ -1,6 +1,6 @@
 <?php
 $o = "bingHD";
-$imgs = scandir("/www/wwwroot/img.dayepao.com/img/$o/");
+$imgs = scandir("./img/$o/");
 unset($imgs[0]);
 unset($imgs[1]);
 $num = array_rand($imgs);
