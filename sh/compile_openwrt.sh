@@ -139,7 +139,11 @@ echo -e "${green}Installing feeds${plain}"
 if [ "$dev_flag" != "1" ]; then
     #### 修正 vermagic
     echo -e "${green}Fixing vermagic${plain}"
-    curl -s "${manifest_url}" | grep "kernel" | awk -F "-" '{print $NF}' >.vermagic
+    curl -s "${manifest_url}" | grep "kernel" | awk -F "-" '
+    {
+        match($0, /[0-9a-f]{32,}/, hash);
+        if (hash[0] != "") print hash[0];
+    }' > .vermagic
     sed -i -e 's/^\(.\).*vermagic$/\1cp $(TOPDIR)\/.vermagic $(LINUX_DIR)\/.vermagic/' include/kernel-defaults.mk
     cat .vermagic
 fi
