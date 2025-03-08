@@ -20,7 +20,7 @@ do
     echo -e "\033[32;1mVPS配置:\033[0m"
     echo "101. 内核自带bbr                     102. 配置SMB挂载"
     echo "103. 配置IPv4或IPv6优先              104. 修复斯巴达同网段路由问题"
-    echo "105. 阻止Plex本地网络发现功能        106. linux关闭mail提示"
+    echo "105. 阻止Plex本地网络发现功能        106. 安装 1Panel"
     echo "107. 斯巴达DD后添加IPv6              108. PVE配置UPS连接"
 
     echo -e "\033[32;1mVPS测试:\033[0m"
@@ -29,8 +29,7 @@ do
     echo "205. IP质量检测"
 
     echo -e "\033[32;1m科学:\033[0m"
-    echo "301. 安装lnmp                        302. 获取网站SSL证书文件路径"
-    echo "303. 科学上网一键脚本                304. x-ui面板"
+    echo "301. 科学上网一键脚本                302. 3x-ui面板"
     
     echo "*********************************************************************"
     read -p "请输入序号:" toolkey
@@ -94,7 +93,7 @@ do
             bash <(curl -sL https://sh.dayepao.com/prevent_plex_discovery.sh)
             ;;
         106)
-            bash <(curl -sL https://sh.dayepao.com/stopmail_lyh.sh)
+            bash <(curl -sL https://sh.dayepao.com/1panel.sh)
             ;;
         107)
             bash <(curl -sL https://sh.dayepao.com/spt_add_netplan_ipv6.sh)
@@ -118,17 +117,10 @@ do
             bash <(curl -sL https://sh.dayepao.com/IP_Check.sh)
             ;;
         301)
-            bash <(curl -sL https://sh.dayepao.com/lnmp_lyh.sh)
-            break 1
-            ;;
-        302)
-            bash <(curl -sL https://sh.dayepao.com/get_cert_path.sh)
-            ;;
-        303)
             bash <(curl -sL https://sh.dayepao.com/vasma.sh)
             ;;
-        304)
-            bash <(curl -sL https://sh.dayepao.com/x-ui_lyh.sh)
+        302)
+            bash <(curl -sL https://sh.dayepao.com/3x-ui_lyh.sh)
             ;;
         *)
             echo -e "\033[31;1m [错误] \033[0m 请重新输入"
