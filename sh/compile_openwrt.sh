@@ -102,35 +102,35 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-# if [ "$dev_flag" != "1" ]; then
-#     # 下载 tmp/packages
-#     echo -e "${green}Downloading tmp/packages${plain}"
-#     rm -rf ${tmp_path}/packages
-#     git clone https://github.com/openwrt/packages ${tmp_path}/packages
-#     if [ $? -ne 0 ]; then
-#         git clone https://github.com/openwrt/packages ${tmp_path}/packages
-#         if [ $? -ne 0 ]; then
-#             echo -e "${red}Download of packages failed, exiting the script${plain}"
-#             exit 1
-#         fi
-#     fi
-#     cd ${tmp_path}/packages
+if [ "$dev_flag" != "1" ]; then
+    # 下载 tmp/packages
+    echo -e "${green}Downloading tmp/packages${plain}"
+    rm -rf ${tmp_path}/packages
+    git clone https://github.com/openwrt/packages ${tmp_path}/packages
+    if [ $? -ne 0 ]; then
+        git clone https://github.com/openwrt/packages ${tmp_path}/packages
+        if [ $? -ne 0 ]; then
+            echo -e "${red}Download of packages failed, exiting the script${plain}"
+            exit 1
+        fi
+    fi
+    cd ${tmp_path}/packages
 
-#     # 切换到指定版本
-#     echo -e "${green}Switching to branch: master${plain}"
-#     git checkout master
-#     if [ $? -ne 0 ]; then
-#         echo -e "${red}Switching failed, exiting the script${plain}"
-#         exit 1
-#     fi
+    # 切换到指定版本
+    echo -e "${green}Switching to branch: master${plain}"
+    git checkout master
+    if [ $? -ne 0 ]; then
+        echo -e "${red}Switching failed, exiting the script${plain}"
+        exit 1
+    fi
 
-#     # 更新 packages/lang/golang 包
-#     echo -e "${green}Updating packages/lang/golang${plain}"
-#     rm -rf ${compile_path}/feeds/packages/lang/golang
-#     cp -r ${tmp_path}/packages/lang/golang ${compile_path}/feeds/packages/lang/golang
+    # 更新 packages/lang/golang 包
+    echo -e "${green}Updating packages/lang/golang${plain}"
+    rm -rf ${compile_path}/feeds/packages/lang/golang
+    cp -r ${tmp_path}/packages/lang/golang ${compile_path}/feeds/packages/lang/golang
 
-#     cd ${compile_path}
-# fi
+    cd ${compile_path}
+fi
 
 #### 安装 feeds 软件包
 echo -e "${green}Installing feeds${plain}"
