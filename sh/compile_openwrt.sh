@@ -129,6 +129,11 @@ if [ "$dev_flag" != "1" ]; then
     rm -rf ${compile_path}/feeds/packages/lang/golang
     cp -r ${tmp_path}/packages/lang/golang ${compile_path}/feeds/packages/lang/golang
 
+    # 更新 packages/lang/rust 包
+    echo -e "${green}Updating packages/lang/rust${plain}"
+    rm -rf ${compile_path}/feeds/packages/lang/rust
+    cp -r ${tmp_path}/packages/lang/rust ${compile_path}/feeds/packages/lang/rust
+
     cd ${compile_path}
 fi
 
