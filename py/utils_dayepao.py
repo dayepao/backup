@@ -67,6 +67,43 @@ def http_request(method_name: str, url: str, timeout=5, max_retries=5, c: httpx.
         raise RuntimeError(f"{sys._getframe().f_code.co_name} 出错: 已达到最大重试次数") from e
 
 
+def get_method(url: str, headers: dict = None, timeout=5, max_retries=5, c: httpx.Client = None, **kwargs) -> httpx.Response:
+    """发送 GET 请求"""
+    return http_request(
+        "get",
+        url,
+        headers=headers,
+        timeout=timeout,
+        max_retries=max_retries,
+        c=c,
+        **kwargs,
+    )
+
+
+def post_method(
+    url: str,
+    postdata: dict | None = None,
+    postjson: dict | None = None,
+    headers: dict | None = None,
+    timeout=5,
+    max_retries=5,
+    c: httpx.Client = None,
+    **kwargs,
+) -> httpx.Response:
+    """发送 POST 请求"""
+    return http_request(
+        "post",
+        url,
+        headers=headers,
+        data=postdata,
+        json=postjson,
+        timeout=timeout,
+        max_retries=max_retries,
+        c=c,
+        **kwargs,
+    )
+
+
 def get_self_dir():
     """获取自身路径
 
