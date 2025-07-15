@@ -74,13 +74,18 @@ echo -e "${green}Adding third-party packages${plain}"
 cd package
 
 # luci-theme-argon
-git clone https://github.com/jerrykuku/luci-theme-argon.git
+git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon.git
 
 # luci-app-passwall
-git clone https://github.com/xiaorouji/openwrt-passwall.git
+git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall.git
 
 # luci-app-passwall-packages
-git clone https://github.com/xiaorouji/openwrt-passwall-packages.git
+git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages.git
+
+# luci-app-openclash
+git clone --depth=1 https://github.com/vernesong/OpenClash.git openclash_tmp
+cp -r openclash_tmp/luci-app-openclash ./luci-app-openclash
+rm -rf openclash_tmp
 
 cd ${compile_path}
 
@@ -220,6 +225,7 @@ echo "CONFIG_PACKAGE_luci-app-nft-qos=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_Iptables_Transparent_Proxy=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_Nftables_Transparent_Proxy=y" >>.config
+echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Geoview=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Haproxy=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Hysteria=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_NaiveProxy=y" >>.config
@@ -229,6 +235,7 @@ echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Client=y" >>.con
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Server=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Client=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Server=y" >>.config
+echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadow_TLS=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Simple_Obfs=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_SingBox=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Trojan_Plus=y" >>.config
@@ -238,8 +245,8 @@ echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray_Plugin=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray_Plugin=y" >>.config
 
-# Luci -> Applications -> luci-app-smartdns
-# echo "CONFIG_PACKAGE_luci-app-smartdns=y" >>.config
+# Luci -> Applications -> luci-app-openclash
+echo "CONFIG_PACKAGE_luci-app-openclash=y" >>.config
 
 # Luci -> Applications -> luci-app-ttyd
 echo "CONFIG_PACKAGE_luci-app-ttyd=y" >>.config
