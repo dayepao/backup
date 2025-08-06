@@ -13,9 +13,6 @@ export default {
         // 按行分割
         let lines = configText.split('\n');
 
-        // 删除自定义行
-        lines = lines.filter(line => !DELETE_LINES.includes(line.trim()));
-
         // 按指定行号插入自定义行，-1表示插入到最后
         let offset = 0;
         ADD_LINES.forEach(addLine => {
@@ -29,6 +26,9 @@ export default {
                 offset += 1;
             }
         });
+
+        // 删除自定义行
+        lines = lines.filter(line => !DELETE_LINES.includes(line.trim()));
 
         // 调整custom_proxy_group，白名单内规则组保持原顺序
         lines = lines.map(line => {
