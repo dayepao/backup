@@ -12,6 +12,7 @@ export default {
         const WHITELIST_GROUPS = new Set(WHITELIST_GROUPS_RAW.map(norm));
         const DELETE_LINES = new Set(DELETE_LINES_RAW.map(norm));
 
+        // 尝试从远程获取配置文件
         let configText = '';
         try {
             const resp = await fetch(TARGET_URL, { cf: { cacheTtl: 60 } });
