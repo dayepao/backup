@@ -5,12 +5,22 @@ export default {
         const DELETE_LINES_RAW = (env.DELETE_LINES || '').replace(/\r/g, '').split('\n').filter(Boolean);
         const WHITELIST_GROUPS_RAW = (env.WHITELIST_GROUPS || '').split('|').filter(s => s !== '');
         const MANUAL_SELECTION_RAW = env.MANUAL_SELECTION || '[]🚀 手动选择';
+        const GROUP_OVERRIDES_RAW = (env.GROUP_OVERRIDES || '').replace(/\r/g, '').split('\n').map(s => s.trim()).filter(Boolean);
 
         // 统一标准化函数
         const norm = s => s.replace(/\r/g, '').trim();
         const MANUAL_SELECTION = norm(MANUAL_SELECTION_RAW);
         const WHITELIST_GROUPS = new Set(WHITELIST_GROUPS_RAW.map(norm));
         const DELETE_LINES = new Set(DELETE_LINES_RAW.map(norm));
+
+        // 解析 GROUP_OVERRIDES 为 Map<groupName, overrideLineAfterEqual>
+        const GROUP_OVERRIDES = new Map();
+        for (const line of GROUP_OVERRIDES_RAW) {
+            const i = line.indexOf('`');
+            if (i <= 0) continue; // 必须含组名与模式
+            const gname = norm(line.slice(0, i));
+            GROUP_OVERRIDES.set(gname, line); // 覆盖内容就是整行（等号后的全部）
+        }
 
         // 尝试从远程获取配置文件
         let configText = '';
@@ -71,7 +81,7 @@ export default {
             if (parts.length < 3) return rawLine;
 
             const header0 = parts[0]; // "custom_proxy_group=GroupName"
-            const header1 = parts[1]; // e.g., "select" / "url-test" / ...
+            const header1 = parts[1]; // 模式：select/url-test/...
             const options = parts.slice(2);
 
             const groupName = norm(header0.replace('custom_proxy_group=', ''));
@@ -89,6 +99,29 @@ export default {
 
             // 白名单保持原样
             return rawLine;
+        });
+
+        // 根据 GROUP_OVERRIDES 覆盖指定组的“模式与可选项”
+        // 放在手动选择处理之后；若同一组也被置顶过，这里将以覆盖结果为准
+        lines = lines.map(rawLine => {
+            const noCR = rawLine.replace(/\r/g, '');
+            const trimmedStart = noCR.trimStart();
+
+            if (trimmedStart.startsWith(';') || trimmedStart.startsWith('#')) return rawLine;
+            if (!trimmedStart.startsWith('custom_proxy_group=')) return rawLine;
+
+            // 取原行缩进以保持格式
+            const indent = (noCR.match(/^\s*/) || [''])[0];
+
+            // 解析组名
+            const afterEq = trimmedStart.slice('custom_proxy_group='.length);
+            const groupName = norm(afterEq.split('`')[0] || '');
+            const overrideBody = GROUP_OVERRIDES.get(groupName);
+
+            if (!overrideBody) return rawLine;
+
+            // 直接替换等号后的全部内容为环境变量提供的行
+            return `${indent}custom_proxy_group=${overrideBody}`;
         });
 
         const modifiedConfig = lines.join('\n');
