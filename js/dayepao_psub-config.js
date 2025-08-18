@@ -1,5 +1,20 @@
 export default {
     async fetch(request, env) {
+        // —— 鉴权开始：仅当配置了 AUTH_KEY 时才校验路径 ——
+        const AUTH_KEY = (env.AUTH_KEY ?? '').trim(); // 未配置或空字符串则视为未启用鉴权
+        const url = new URL(request.url);
+        // 取路径核心文本：去掉首尾斜杠
+        const pathToken = url.pathname.replace(/^\/+|\/+$/g, '');
+
+        if (AUTH_KEY) {
+            // 启用鉴权：只有当路径文本与 AUTH_KEY 完全一致时才通过
+            if (pathToken !== AUTH_KEY) {
+                return new Response('Forbidden', { status: 403 });
+            }
+        }
+        // 未配置 AUTH_KEY 时不做校验，直接放行
+        // —— 鉴权结束 ——
+
         const TARGET_URL = env.TARGET_URL || 'https://testingcf.jsdelivr.net/gh/Aethersailor/Custom_OpenClash_Rules@main/cfg/Custom_Clash.ini';
         const ADD_LINES = (env.ADD_LINES || '').replace(/\r/g, '').split('\n').filter(Boolean);
         const DELETE_LINES_RAW = (env.DELETE_LINES || '').replace(/\r/g, '').split('\n').filter(Boolean);
@@ -76,7 +91,6 @@ export default {
             if (!trimmedStart.startsWith('custom_proxy_group=')) return rawLine;
 
             // 仅在包含 MANUAL_SELECTION（规范化后）时处理
-            // 注意：比较前对被分片项做 norm()
             const parts = trimmedStart.split('`');
             if (parts.length < 3) return rawLine;
 
@@ -102,7 +116,6 @@ export default {
         });
 
         // 根据 GROUP_OVERRIDES 覆盖指定组的“模式与可选项”
-        // 放在手动选择处理之后；若同一组也被置顶过，这里将以覆盖结果为准
         lines = lines.map(rawLine => {
             const noCR = rawLine.replace(/\r/g, '');
             const trimmedStart = noCR.trimStart();
