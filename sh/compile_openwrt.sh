@@ -121,6 +121,7 @@ if [ "$dev_flag" != "1" ]; then
     fi
     cd ${tmp_path}/packages
 
+    # 更新 packages/lang/golang 包
     # 切换到指定版本
     echo -e "${green}Switching to branch: master${plain}"
     git checkout master
@@ -128,13 +129,18 @@ if [ "$dev_flag" != "1" ]; then
         echo -e "${red}Switching failed, exiting the script${plain}"
         exit 1
     fi
-
-    # 更新 packages/lang/golang 包
     echo -e "${green}Updating packages/lang/golang${plain}"
     rm -rf ${compile_path}/feeds/packages/lang/golang
     cp -r ${tmp_path}/packages/lang/golang ${compile_path}/feeds/packages/lang/golang
 
     # 更新 packages/lang/rust 包
+    # 切换到指定版本
+    echo -e "${green}Switching to commit: 10862df850ae012b34ec9c57a9005b1f7e1e2aca${plain}"
+    git checkout 10862df850ae012b34ec9c57a9005b1f7e1e2aca
+    if [ $? -ne 0 ]; then
+        echo -e "${red}Switching failed, exiting the script${plain}"
+        exit 1
+    fi
     echo -e "${green}Updating packages/lang/rust${plain}"
     rm -rf ${compile_path}/feeds/packages/lang/rust
     cp -r ${tmp_path}/packages/lang/rust ${compile_path}/feeds/packages/lang/rust
@@ -194,6 +200,11 @@ echo -e "${green}Modifying .config${plain}"
 # Target Images
 echo "CONFIG_TARGET_KERNEL_PARTSIZE=512" >>.config
 echo "CONFIG_TARGET_ROOTFS_PARTSIZE=1024" >>.config
+
+# AX411 Driver
+echo "CONFIG_PACKAGE_kmod-iwlwifi=y" >>.config
+echo "CONFIG_PACKAGE_iwlwifi-firmware-ax411=y" >>.config
+echo "CONFIG_PACKAGE_wpad=y" >>.config
 
 # Base system -> dnsmasq-full
 echo "CONFIG_PACKAGE_dnsmasq=m" >>.config
