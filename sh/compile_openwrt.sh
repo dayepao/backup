@@ -2,7 +2,7 @@
 
 #### 配置信息
 openwrt_git="https://github.com/openwrt/openwrt.git"
-openwrt_ver="24.10.2"
+openwrt_ver="24.10.3"
 dev_flag="0"
 
 #### 相关链接
@@ -68,6 +68,11 @@ if [ $? -ne 0 ]; then
     echo -e "${red}Switching failed, exiting the script${plain}"
     exit 1
 fi
+
+#### 添加自定义文件
+echo -e "${green}Adding custom files${plain}"
+mkdir -p files/etc
+wget -O files/etc/openwrt_TJDORMWIFI.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_TJDORMWIFI.sh
 
 #### 添加第三方软件包
 echo -e "${green}Adding third-party packages${plain}"
