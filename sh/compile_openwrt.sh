@@ -207,8 +207,18 @@ echo "CONFIG_TARGET_KERNEL_PARTSIZE=512" >>.config
 echo "CONFIG_TARGET_ROOTFS_PARTSIZE=1024" >>.config
 
 # AX411 Driver
-echo "CONFIG_PACKAGE_kmod-iwlwifi=y" >>.config
+## Firmware -> iwlwifi-firmware-ax411
 echo "CONFIG_PACKAGE_iwlwifi-firmware-ax411=y" >>.config
+## Kernel modules -> Wireless Drivers -> kmod-iwlwifi
+echo "CONFIG_PACKAGE_kmod-iwlwifi=y" >>.config
+
+# RTL8922AE Driver
+## Firmware -> rtl8922ae-firmware
+echo "CONFIG_PACKAGE_rtl8922ae-firmware=y" >>.config
+## Kernel modules -> Wireless Drivers -> kmod-rtw89-8922ae
+echo "CONFIG_PACKAGE_kmod-rtw89-8922ae=y" >>.config
+
+# Network -> WirelessAPD -> wpad
 echo "CONFIG_PACKAGE_wpad=y" >>.config
 
 # Base system -> dnsmasq-full
