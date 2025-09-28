@@ -73,6 +73,7 @@ fi
 echo -e "${green}Adding custom files${plain}"
 mkdir -p files/etc
 wget -O files/etc/openwrt_TJDORMWIFI.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_TJDORMWIFI.sh
+wget -O files/etc/openwrt_wifi_check.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_wifi_check.sh
 
 #### 添加第三方软件包
 echo -e "${green}Adding third-party packages${plain}"
