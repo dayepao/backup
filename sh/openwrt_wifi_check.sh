@@ -9,25 +9,6 @@ CUR_BSSID=$(iw dev phy0-sta0 link | grep "Connected to" | awk '{print $3}')
 # 如果没有连接，直接重启wifi
 if [ -z "$CUR_BSSID" ]; then
     logger "WiFi未连接，尝试重连"
-    rm -f /etc/config/wireless
-    wifi config
-
-    uci set wireless.radio0=wifi-device
-    uci set wireless.radio0.band='5g'
-    uci set wireless.radio0.channel='auto'
-    uci set wireless.radio0.htmode='VHT20'
-    uci set wireless.radio0.cell_density='0'
-    uci set wireless.radio0.disabled='0'
-
-    # uci delete wireless.@wifi-iface[0]
-    uci set wireless.wifinet1=wifi-iface
-    uci set wireless.wifinet1.device='radio0'
-    uci set wireless.wifinet1.mode='sta'
-    uci set wireless.wifinet1.network='wwan'
-    uci set wireless.wifinet1.ssid='TJ-DORM-WIFI'
-    uci set wireless.wifinet1.encryption='none'
-
-    uci commit wireless
     wifi
     exit 0
 fi
