@@ -1,6 +1,6 @@
 #!/bin/bash
-MOUNT_PATHS=("nas_m2" "nas")
-# MOUNT_PATHS=("nas")
+# MOUNT_PATHS=("nas_m2" "nas")
+MOUNT_PATHS=("nas")
 
 CUR_MOUNT_PATHS=()
 for cur_mount_path in $(grep "^[^#]*//192.168.1.3" /etc/fstab | sed "s/^ //g" | sed "s/\/\/192.168.1.3\/.* \(\/mnt\/.*\) cifs.*/\1/g")
