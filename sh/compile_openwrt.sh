@@ -281,6 +281,40 @@ echo "CONFIG_PACKAGE_luci-app-ttyd=y" >>.config
 # tailscale
 # echo "CONFIG_PACKAGE_tailscale=y" >>.config
 
+if [ "$dev_flag" == "1" ]; then
+    # 编译相关组件
+    echo "CONFIG_IMAGEOPT=y" >>.config
+    echo "CONFIG_PACKAGE_cgi-io=y" >>.config
+    echo "CONFIG_PACKAGE_libiwinfo=y" >>.config
+    echo "CONFIG_PACKAGE_libiwinfo-data=y" >>.config
+    echo "CONFIG_PACKAGE_liblucihttp=y" >>.config
+    echo "CONFIG_PACKAGE_liblucihttp-ucode=y" >>.config
+    echo "CONFIG_PACKAGE_luci=y" >>.config
+    echo "CONFIG_PACKAGE_luci-app-firewall=y" >>.config
+    echo "CONFIG_PACKAGE_luci-app-package-manager=y" >>.config
+    echo "CONFIG_PACKAGE_luci-base=y" >>.config
+    echo "CONFIG_PACKAGE_luci-light=y" >>.config
+    echo "CONFIG_PACKAGE_luci-mod-admin-full=y" >>.config
+    echo "CONFIG_PACKAGE_luci-mod-network=y" >>.config
+    echo "CONFIG_PACKAGE_luci-mod-status=y" >>.config
+    echo "CONFIG_PACKAGE_luci-mod-system=y" >>.config
+    echo "CONFIG_PACKAGE_luci-proto-ipv6=y" >>.config
+    echo "CONFIG_PACKAGE_luci-proto-ppp=y" >>.config
+    echo "CONFIG_PACKAGE_luci-ssl=y" >>.config
+    echo "CONFIG_PACKAGE_luci-theme-bootstrap=y" >>.config
+    echo "CONFIG_PACKAGE_px5g-mbedtls=y" >>.config
+    echo "CONFIG_PACKAGE_rpcd=y" >>.config
+    echo "CONFIG_PACKAGE_rpcd-mod-file=y" >>.config
+    echo "CONFIG_PACKAGE_rpcd-mod-iwinfo=y" >>.config
+    echo "CONFIG_PACKAGE_rpcd-mod-luci=y" >>.config
+    echo "CONFIG_PACKAGE_rpcd-mod-rrdns=y" >>.config
+    echo "CONFIG_PACKAGE_rpcd-mod-ucode=y" >>.config
+    echo "CONFIG_PACKAGE_ucode-mod-html=y" >>.config
+    echo "CONFIG_PACKAGE_ucode-mod-math=y" >>.config
+    echo "CONFIG_PACKAGE_uhttpd=y" >>.config
+    echo "CONFIG_PACKAGE_uhttpd-mod-ubus=y" >>.config
+fi
+
 make defconfig
 make defconfig
 

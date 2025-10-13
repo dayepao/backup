@@ -20,12 +20,14 @@ uci set wireless.wifinet1.encryption='none'
 uci commit wireless
 wifi
 
-sleep 2
+sleep 5
 uci set wireless.@wifi-iface[0].disabled='0'
 uci commit wireless
 wifi
 
-sleep 2
+sleep 5
 uci set wireless.@wifi-iface[0].disabled='1'
 uci commit wireless
 wifi
+
+/etc/init.d/network restart

@@ -1,9 +1,11 @@
 #!/bin/sh
 
 # 这里判断是否已经属于登录状态 如果是则退出脚本
-captiveReturnCode=`curl -s -I -m 10 -o /dev/null -s -w %{http_code} http://www.google.cn/generate_204`
-if [ "${captiveReturnCode}" = "204" ]; then
-    logger "校园网认证：已认证，网络正常"
+# captiveReturnCode=`curl -s -I -m 10 -o /dev/null -s -w %{http_code} http://www.google.cn/generate_204`
+# if [ "${captiveReturnCode}" = "204" ]; then
+resp="$(curl -fsSL --connect-timeout 3 -m 5 http://172.21.0.62/ 2>/dev/null)"
+if echo "$resp" | grep -q "uid="; then
+    logger "校园网认证：已认证"
     exit 0
 fi
 
