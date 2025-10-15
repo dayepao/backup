@@ -7,11 +7,11 @@
 setup_wifi() {
     # 检查是否已有无线设备配置
     if iw dev | grep -q "Interface"; then
-        echo "检测到已有无线设备配置，跳过重新配置。"
+        logger "检测到已有无线设备配置，跳过重新配置。"
         return 2
     fi
 
-    echo "未检测到无线设备，开始重新配置..."
+    logger "未检测到无线设备，开始重新配置..."
 
     rm -f /etc/config/wireless
     wifi config
@@ -50,10 +50,10 @@ setup_wifi() {
 
 restart_openclash() {
     if [ -x /etc/init.d/openclash ]; then
-        echo "重启 OpenClash..."
+        logger "重启 OpenClash..."
         /etc/init.d/openclash restart
     else
-        echo "未找到 /etc/init.d/openclash，跳过重启。"
+        logger "未找到 /etc/init.d/openclash，跳过重启。"
     fi
 }
 
@@ -73,10 +73,10 @@ case "$1" in
         setup_wifi
         rc=$?
         if [ "$rc" -eq 0 ]; then
-            echo "Wi-Fi 已重新配置，准备重启 OpenClash。"
+            logger "Wi-Fi 已重新配置，准备重启 OpenClash。"
             restart_openclash
         else
-            echo "Wi-Fi 无需重新配置，不重启 OpenClash。"
+            logger "Wi-Fi 无需重新配置，不重启 OpenClash。"
         fi
         ;;
     *)
