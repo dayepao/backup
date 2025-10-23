@@ -3,11 +3,34 @@
 #### 配置信息
 openwrt_git="https://github.com/openwrt/openwrt.git"
 openwrt_ver="24.10.4"
-dev_flag="0"
+dev_flag=0
+
+#### 解析参数（顺序无关）
+positional=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -v|--version)                 # 例如: -v 23.05.3  或 --version 23.05.3
+      [[ $# -ge 2 ]] || { echo "ERROR: $1 requires a value" >&2; exit 2; }
+      openwrt_ver="$2"; shift 2;;
+    --version=*)                  # 例如: --version=23.05.3
+      openwrt_ver="${1#*=}"; shift;;
+    -d|--dev|-dev)                # 开启 dev 标志（不带值）
+      dev_flag=1; shift;;
+    --no-dev)                     # 显式关闭（可选）
+      dev_flag=0; shift;;
+    --) shift; break;;            # 终止选项
+    -*)
+      echo "WARN: unknown option: $1 (ignored)"; shift;;
+    *)
+      positional+=("$1"); shift;; # 其他位置参数（如将来扩展）
+  esac
+done
+# 如需保留剩余参数给后续命令：
+# set -- "${positional[@]}" "$@"
 
 #### 相关链接
 manifest_url="https://downloads.openwrt.org/releases/${openwrt_ver}/targets/x86/64/openwrt-${openwrt_ver}-x86-64.manifest"
-if [ "$dev_flag" == "1" ]; then
+if [[ "$dev_flag" == "1" ]]; then
     diffconfig_url="https://downloads.openwrt.org/snapshots/targets/x86/64/config.buildinfo"
 else
     diffconfig_url="https://downloads.openwrt.org/releases/${openwrt_ver}/targets/x86/64/config.buildinfo"
@@ -19,11 +42,17 @@ green="\033[32m"
 yellow="\033[33m"
 plain="\033[0m"
 
-### 路径
+#### 路径
 base_path="${HOME}/compile_openwrt"
 compile_path="${base_path}/compile"
 tmp_path="${base_path}/tmp"
 output_path="${base_path}/output"
+
+if [[ "${dev_flag}" == "1" ]]; then
+    echo "Compiling OpenWrt version: main (snapshot)"
+else
+    echo "Compiling OpenWrt version: ${openwrt_ver}"
+fi
 
 #### WSL 环境变量
 if grep -qEi "(Microsoft|WSL)" /proc/version; then
@@ -36,7 +65,7 @@ os_id=$(awk -F= '$1=="ID" {print $2}' /etc/os-release | tr -d '"')
 os_version_id=$(awk -F= '$1=="VERSION_ID" {print $2}' /etc/os-release | tr -d '"')
 
 #### Debian 环境变量
-if [ "${os_id}" == "debian" ]; then
+if [[ "${os_id}" == "debian" ]]; then
     export CFLAGS="$CFLAGS -Wno-error=restrict -Wno-error=maybe-uninitialized"
     export CXXFLAGS="$CXXFLAGS -Wno-error=restrict -Wno-error=maybe-uninitialized"
     echo -e "${yellow}检测到在 Debian 下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量${plain}"
@@ -55,7 +84,7 @@ git clone $openwrt_git compile
 cd compile
 
 # 切换到指定版本
-if [ "$dev_flag" == "1" ]; then
+if [[ "$dev_flag" == "1" ]]; then
     echo -e "${green}Switching to branch: main${plain}"
     git checkout main
 else
@@ -64,7 +93,7 @@ else
     echo -e "${green}Switching to tag: v${openwrt_ver}${plain}"
     git checkout v${openwrt_ver}
 fi
-if [ $? -ne 0 ]; then
+if [[ $? -ne 0 ]]; then
     echo -e "${red}Switching failed, exiting the script${plain}"
     exit 1
 fi
@@ -101,14 +130,17 @@ cd ${compile_path}
 # echo "src-git passwall https://github.com/xiaorouji/openwrt-passwall.git;main" >>feeds.conf.default
 # echo "src-git passwall_packages https://github.com/xiaorouji/openwrt-passwall-packages.git;main" >>feeds.conf.default
 
+#### 修补 feeds 源
+sed -i "s#\(src-git telephony https://git.openwrt.org/feed/telephony.git\)\^.*#\1^11e9c73bff6be34ff2fdcd4bc0e81a4723d78652#" feeds.conf.default
+
 #### 更新 feeds 软件包
 echo -e "${green}Updating feeds${plain}"
 ./scripts/feeds clean
 
 ./scripts/feeds update -a
-if [ $? -ne 0 ]; then
+if [[ $? -ne 0 ]]; then
     ./scripts/feeds update -a
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
         echo -e "${red}Update of feeds failed, exiting the script${plain}"
         exit 1
     fi
@@ -119,9 +151,9 @@ if [ "$dev_flag" != "1" ]; then
     echo -e "${green}Downloading tmp/packages${plain}"
     rm -rf ${tmp_path}/packages
     git clone https://github.com/openwrt/packages ${tmp_path}/packages
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
         git clone https://github.com/openwrt/packages ${tmp_path}/packages
-        if [ $? -ne 0 ]; then
+        if [[ $? -ne 0 ]]; then
             echo -e "${red}Download of packages failed, exiting the script${plain}"
             exit 1
         fi
@@ -132,25 +164,13 @@ if [ "$dev_flag" != "1" ]; then
     # 切换到指定版本
     echo -e "${green}Switching to branch: master${plain}"
     git checkout master
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
         echo -e "${red}Switching failed, exiting the script${plain}"
         exit 1
     fi
     echo -e "${green}Updating packages/lang/golang${plain}"
     rm -rf ${compile_path}/feeds/packages/lang/golang
     cp -r ${tmp_path}/packages/lang/golang ${compile_path}/feeds/packages/lang/golang
-
-    # 更新 packages/lang/rust 包
-    # 切换到指定版本
-    echo -e "${green}Switching to commit: 10862df850ae012b34ec9c57a9005b1f7e1e2aca${plain}"
-    git checkout 10862df850ae012b34ec9c57a9005b1f7e1e2aca
-    if [ $? -ne 0 ]; then
-        echo -e "${red}Switching failed, exiting the script${plain}"
-        exit 1
-    fi
-    echo -e "${green}Updating packages/lang/rust${plain}"
-    rm -rf ${compile_path}/feeds/packages/lang/rust
-    cp -r ${tmp_path}/packages/lang/rust ${compile_path}/feeds/packages/lang/rust
 
     cd ${compile_path}
 fi
@@ -159,7 +179,7 @@ fi
 echo -e "${green}Installing feeds${plain}"
 ./scripts/feeds install -a
 
-if [ "$dev_flag" != "1" ]; then
+if [[ "$dev_flag" != "1" ]]; then
     #### 修正 vermagic
     echo -e "${green}Fixing vermagic${plain}"
     curl -s "${manifest_url}" | grep "kernel" | awk -F "-" '
@@ -190,9 +210,9 @@ sed -i "/set system.@system\[-1\].timezone='CST-8'/a\		set system.@system[-1].zo
 echo -e "${green}Downloading diffconfig${plain}"
 rm .config .config.old
 wget -O .config $diffconfig_url
-if [ $? -ne 0 ]; then
+if [[ $? -ne 0 ]]; then
     wget -O .config $diffconfig_url
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
         echo -e "${red}Download of diffconfig failed, exiting the script${plain}"
         exit 1
     fi
@@ -282,7 +302,7 @@ echo "CONFIG_PACKAGE_luci-app-ttyd=y" >>.config
 # tailscale
 # echo "CONFIG_PACKAGE_tailscale=y" >>.config
 
-if [ "$dev_flag" == "1" ]; then
+if [[ "$dev_flag" == "1" ]]; then
     # 编译相关组件
     echo "CONFIG_IMAGEOPT=y" >>.config
     echo "CONFIG_PACKAGE_cgi-io=y" >>.config
@@ -324,12 +344,12 @@ echo -e "${green}Downloading${plain}"
 make download -j8
 download_status=$?
 output=$(find dl -size -1024c -exec ls -l {} \;)
-if [ $download_status -ne 0 ] || [ -n "$output" ]; then
+if [[ $download_status -ne 0 ]] || [[ -n "$output" ]]; then
     find dl -size -1024c -exec rm -f {} \;
     make download -j8 V=s
     download_status=$?
     output=$(find dl -size -1024c -exec ls -l {} \;)
-    if [ $download_status -ne 0 ] || [ -n "$output" ]; then
+    if [[ $download_status -ne 0 ]] || [[ -n "$output" ]]; then
         echo -e "${red}Download of packages failed, exiting the script${plain}"
         exit 1
     fi
@@ -337,7 +357,7 @@ fi
 
 echo -e "${green}Compiling${plain}"
 make -j$(nproc) || make -j1 V=s
-if [ $? -ne 0 ]; then
+if [[ $? -ne 0 ]]; then
     echo -e "${red}Build failed, exiting the script${plain}"
     exit 1
 fi
