@@ -2,7 +2,7 @@
 
 #### 配置信息
 openwrt_git="https://github.com/openwrt/openwrt.git"
-openwrt_ver="24.10.3"
+openwrt_ver="24.10.4"
 dev_flag="0"
 
 #### 相关链接
