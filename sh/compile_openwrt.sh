@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 #### 输出颜色
 red="\033[31m"
@@ -54,11 +55,22 @@ else
     diffconfig_url="https://downloads.openwrt.org/releases/${openwrt_ver}/targets/x86/64/config.buildinfo"
 fi
 
-#### 路径
-base_path="${HOME}/compile_openwrt"
-compile_path="${base_path}/compile"
-tmp_path="${base_path}/tmp"
-output_path="${base_path}/output"
+#### 相关目录
+BASE_DIR="${HOME}/compile_openwrt"
+COMPILE_DIR="${BASE_DIR}/compile"
+OUTPUT_DIR="${BASE_DIR}/output"
+
+#### 创建相关目录
+if [ -n "${BASE_DIR:-}" ] && [ -d "${BASE_DIR}" ]; then
+    warn "删除已有目录: ${BASE_DIR}"
+    rm -rf -- "${BASE_DIR}"
+fi
+mkdir -p "${BASE_DIR}" || { echo "创建目录失败: ${BASE_DIR}"; exit 1; }
+mkdir -p "${OUTPUT_DIR}" || { echo "创建目录失败: ${OUTPUT_DIR}"; exit 1; }
+# 创建临时目录并确保退出时清理
+TMP_DIR=$(mktemp -d -p $BASE_DIR) || { echo "mktemp failed"; exit 1; }
+trap 'rm -rf -- "$TMP_DIR"' EXIT
+
 
 if [[ "${dev_flag}" == "1" ]]; then
     info "Compiling OpenWrt version: main (snapshot)"
@@ -68,7 +80,7 @@ fi
 
 #### WSL 环境变量
 if grep -qEi "(Microsoft|WSL)" /proc/version; then
-    export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
     warn "检测到在 WSL 下运行，已设置 PATH 环境变量"
 fi
 
@@ -78,22 +90,16 @@ os_version_id=$(awk -F= '$1=="VERSION_ID" {print $2}' /etc/os-release | tr -d '"
 
 #### Debian 环境变量
 if [[ "${os_id}" == "debian" ]]; then
-    export CFLAGS="$CFLAGS -Wno-error=restrict -Wno-error=maybe-uninitialized"
-    export CXXFLAGS="$CXXFLAGS -Wno-error=restrict -Wno-error=maybe-uninitialized"
+    export CFLAGS="${CFLAGS:-} -Wno-error=restrict -Wno-error=maybe-uninitialized"
+    export CXXFLAGS="${CXXFLAGS:-} -Wno-error=restrict -Wno-error=maybe-uninitialized"
     warn "检测到在 Debian 下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量"
 fi
 
 #### 下载 OpenWrt 源码
 info "Downloading OpenWrt source code"
-rm -rf ${base_path}
-mkdir ${base_path}
 
-cd ${base_path}
-mkdir tmp
-mkdir output
-
-git clone $openwrt_git compile
-cd compile
+git clone "${openwrt_git}" "${COMPILE_DIR}"
+cd -- "${COMPILE_DIR}"
 
 # 切换到指定版本
 if [[ "$dev_flag" == "1" ]]; then
@@ -103,7 +109,7 @@ else
     # info "Switching to branch: openwrt-${openwrt_ver%.*}"
     # git checkout openwrt-${openwrt_ver%.*}
     info "Switching to tag: v${openwrt_ver}"
-    git checkout v${openwrt_ver}
+    git checkout "v${openwrt_ver}"
 fi
 if [[ $? -ne 0 ]]; then
     error "Switching failed, exiting the script"
@@ -119,7 +125,11 @@ wget -O files/etc/openwrt_wifi_init.sh https://raw.githubusercontent.com/dayepao
 
 #### 添加第三方软件包
 info "Adding third-party packages"
-cd package
+
+# luci-app-turboacc
+curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh --no-sfe
+
+cd -- "${COMPILE_DIR}/package"
 
 # luci-theme-argon
 git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon.git
@@ -131,11 +141,10 @@ git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall.git
 git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages.git
 
 # luci-app-openclash
-git clone --depth=1 https://github.com/vernesong/OpenClash.git openclash_tmp
-cp -r openclash_tmp/luci-app-openclash ./luci-app-openclash
-rm -rf openclash_tmp
+git clone --depth=1 https://github.com/vernesong/OpenClash.git "${TMP_DIR}/openclash_tmp"
+cp -r "${TMP_DIR}/openclash_tmp/luci-app-openclash" "${COMPILE_DIR}/package/luci-app-openclash"
 
-cd ${compile_path}
+cd -- "${COMPILE_DIR}"
 
 #### 添加 feeds 源
 # passwall
@@ -159,32 +168,43 @@ if [[ $? -ne 0 ]]; then
 fi
 
 if [ "$dev_flag" != "1" ]; then
-    # 下载 tmp/packages
-    info "Downloading tmp/packages"
-    rm -rf ${tmp_path}/packages
-    git clone https://github.com/openwrt/packages ${tmp_path}/packages
+    # 下载 ${TMP_DIR}/packages
+    info "Downloading ${TMP_DIR}/packages"
+
+    TMP_PKG_DIR="${TMP_DIR}/packages"
+    if [[ -d "${TMP_PKG_DIR}" ]]; then
+        warn "删除已有目录: ${TMP_PKG_DIR}"
+        rm -rf -- "${TMP_PKG_DIR}"
+    fi
+
+    git clone https://github.com/openwrt/packages "${TMP_PKG_DIR}"
     if [[ $? -ne 0 ]]; then
-        git clone https://github.com/openwrt/packages ${tmp_path}/packages
+        git clone https://github.com/openwrt/packages "${TMP_PKG_DIR}"
         if [[ $? -ne 0 ]]; then
             error "Download of packages failed, exiting the script"
             exit 1
         fi
     fi
-    cd ${tmp_path}/packages
+    cd -- "${TMP_PKG_DIR}"
 
-    # 更新 packages/lang/golang 包
+    # 更新 golang 包
     # 切换到指定版本
+    TMP_SOURCE_DIR="${TMP_PKG_DIR}/lang/golang"
+    TMP_TARGET_DIR="${COMPILE_DIR}/feeds/packages/lang/golang"
     info "Switching to branch: master"
     git checkout master
     if [[ $? -ne 0 ]]; then
         error "Switching failed, exiting the script"
         exit 1
     fi
-    info "Updating packages/lang/golang"
-    rm -rf ${compile_path}/feeds/packages/lang/golang
-    cp -r ${tmp_path}/packages/lang/golang ${compile_path}/feeds/packages/lang/golang
+    info "Updating ${TMP_TARGET_DIR}"
+    if [[ -d "${TMP_TARGET_DIR}" ]]; then
+        warn "删除已有目录: ${TMP_TARGET_DIR}"
+        rm -rf -- "${TMP_TARGET_DIR}"
+    fi
+    cp -r "${TMP_SOURCE_DIR}" "${TMP_TARGET_DIR}"
 
-    cd ${compile_path}
+    cd -- "${COMPILE_DIR}"
 fi
 
 #### 安装 feeds 软件包
@@ -220,7 +240,16 @@ sed -i "/set system.@system\[-1\].timezone='CST-8'/a\		set system.@system[-1].zo
 #### 下载 diffconfig
 # ./scripts/diffconfig.sh > diffconfig
 info "Downloading diffconfig"
-rm .config .config.old
+
+if [[ -f .config ]]; then
+    warn "Removing .config"
+    rm -f -- .config
+fi
+if [[ -f .config.old ]]; then
+    warn "Removing .config.old"
+    rm -f -- .config.old
+fi
+
 wget -O .config $diffconfig_url
 if [[ $? -ne 0 ]]; then
     wget -O .config $diffconfig_url
@@ -311,6 +340,12 @@ echo "CONFIG_PACKAGE_luci-app-openclash=y" >>.config
 # Luci -> Applications -> luci-app-ttyd
 echo "CONFIG_PACKAGE_luci-app-ttyd=y" >>.config
 
+# Luci -> Applications -> luci-app-turboacc
+echo "CONFIG_PACKAGE_luci-app-turboacc=y" >>.config
+echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_OFFLOADING=y" >>.config
+echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_BBR_CCA=y" >>.config
+echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_NFT_FULLCONE=y" >>.config
+
 # tailscale
 # echo "CONFIG_PACKAGE_tailscale=y" >>.config
 
@@ -374,5 +409,5 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-cp -rf bin/targets/x86/64/* ${output_path}
-info "Build succeeded, the firmware file is in ${output_path}"
+cp -rf "${COMPILE_DIR}/bin/targets/x86/64/*" "${OUTPUT_DIR}"
+info "Build succeeded, the firmware file is in ${OUTPUT_DIR}"
