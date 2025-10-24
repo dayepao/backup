@@ -409,5 +409,5 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-cp -rf "${COMPILE_DIR}/bin/targets/x86/64/*" "${OUTPUT_DIR}"
+rsync -a "${COMPILE_DIR}/bin/targets/x86/64/" "${OUTPUT_DIR}/"
 info "Build succeeded, the firmware file is in ${OUTPUT_DIR}"
