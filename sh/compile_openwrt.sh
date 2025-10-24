@@ -1,6 +1,24 @@
 #!/bin/bash
 
-#### 配置信息
+#### 输出颜色
+red="\033[31m"
+green="\033[32m"
+yellow="\033[33m"
+plain="\033[0m"
+
+#### 输出函数
+print_color() {
+    local color_code="$1"
+    local message="$2"
+    local color_var="${!color_code:-$plain}"
+    printf "%b%s%b\n" "$color_var" "$message" "$plain"
+}
+
+info()  { print_color green  "INFO:  $*"; }
+warn()  { print_color yellow "WARN:  $*"; }
+error() { print_color red    "ERROR: $*"; }
+
+#### 默认配置信息
 openwrt_git="https://github.com/openwrt/openwrt.git"
 openwrt_ver="24.10.4"
 dev_flag=0
@@ -10,7 +28,7 @@ positional=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -v|--version)                 # 例如: -v 23.05.3  或 --version 23.05.3
-      [[ $# -ge 2 ]] || { echo "ERROR: $1 requires a value" >&2; exit 2; }
+      [[ $# -ge 2 ]] || { error "$1 requires a value" >&2; exit 2; }
       openwrt_ver="$2"; shift 2;;
     --version=*)                  # 例如: --version=23.05.3
       openwrt_ver="${1#*=}"; shift;;
@@ -20,7 +38,7 @@ while [[ $# -gt 0 ]]; do
       dev_flag=0; shift;;
     --) shift; break;;            # 终止选项
     -*)
-      echo "WARN: unknown option: $1 (ignored)"; shift;;
+      warn "unknown option: $1 (ignored)"; shift;;
     *)
       positional+=("$1"); shift;; # 其他位置参数（如将来扩展）
   esac
@@ -36,12 +54,6 @@ else
     diffconfig_url="https://downloads.openwrt.org/releases/${openwrt_ver}/targets/x86/64/config.buildinfo"
 fi
 
-#### 输出颜色
-red="\033[31m"
-green="\033[32m"
-yellow="\033[33m"
-plain="\033[0m"
-
 #### 路径
 base_path="${HOME}/compile_openwrt"
 compile_path="${base_path}/compile"
@@ -49,15 +61,15 @@ tmp_path="${base_path}/tmp"
 output_path="${base_path}/output"
 
 if [[ "${dev_flag}" == "1" ]]; then
-    echo "Compiling OpenWrt version: main (snapshot)"
+    info "Compiling OpenWrt version: main (snapshot)"
 else
-    echo "Compiling OpenWrt version: ${openwrt_ver}"
+    info "Compiling OpenWrt version: ${openwrt_ver}"
 fi
 
 #### WSL 环境变量
 if grep -qEi "(Microsoft|WSL)" /proc/version; then
     export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    echo -e "${yellow}检测到在 WSL 下运行，已设置 PATH 环境变量${plain}"
+    warn "检测到在 WSL 下运行，已设置 PATH 环境变量"
 fi
 
 #### 获取系统版本
@@ -68,11 +80,11 @@ os_version_id=$(awk -F= '$1=="VERSION_ID" {print $2}' /etc/os-release | tr -d '"
 if [[ "${os_id}" == "debian" ]]; then
     export CFLAGS="$CFLAGS -Wno-error=restrict -Wno-error=maybe-uninitialized"
     export CXXFLAGS="$CXXFLAGS -Wno-error=restrict -Wno-error=maybe-uninitialized"
-    echo -e "${yellow}检测到在 Debian 下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量${plain}"
+    warn "检测到在 Debian 下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量"
 fi
 
 #### 下载 OpenWrt 源码
-echo -e "${green}Downloading OpenWrt source code${plain}"
+info "Downloading OpenWrt source code"
 rm -rf ${base_path}
 mkdir ${base_path}
 
@@ -85,28 +97,28 @@ cd compile
 
 # 切换到指定版本
 if [[ "$dev_flag" == "1" ]]; then
-    echo -e "${green}Switching to branch: main${plain}"
+    info "Switching to branch: main"
     git checkout main
 else
-    # echo -e "${green}Switching to branch: openwrt-${openwrt_ver%.*}${plain}"
+    # info "Switching to branch: openwrt-${openwrt_ver%.*}"
     # git checkout openwrt-${openwrt_ver%.*}
-    echo -e "${green}Switching to tag: v${openwrt_ver}${plain}"
+    info "Switching to tag: v${openwrt_ver}"
     git checkout v${openwrt_ver}
 fi
 if [[ $? -ne 0 ]]; then
-    echo -e "${red}Switching failed, exiting the script${plain}"
+    error "Switching failed, exiting the script"
     exit 1
 fi
 
 #### 添加自定义文件
-echo -e "${green}Adding custom files${plain}"
+info "Adding custom files"
 mkdir -p files/etc
 wget -O files/etc/openwrt_TJDORMWIFI.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_TJDORMWIFI.sh
 wget -O files/etc/openwrt_wifi_check.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_wifi_check.sh
 wget -O files/etc/openwrt_wifi_init.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_wifi_init.sh
 
 #### 添加第三方软件包
-echo -e "${green}Adding third-party packages${plain}"
+info "Adding third-party packages"
 cd package
 
 # luci-theme-argon
@@ -134,27 +146,27 @@ cd ${compile_path}
 sed -i "s#\(src-git telephony https://git.openwrt.org/feed/telephony.git\)\^.*#\1^11e9c73bff6be34ff2fdcd4bc0e81a4723d78652#" feeds.conf.default
 
 #### 更新 feeds 软件包
-echo -e "${green}Updating feeds${plain}"
+info "Updating feeds"
 ./scripts/feeds clean
 
 ./scripts/feeds update -a
 if [[ $? -ne 0 ]]; then
     ./scripts/feeds update -a
     if [[ $? -ne 0 ]]; then
-        echo -e "${red}Update of feeds failed, exiting the script${plain}"
+        error "Update of feeds failed, exiting the script"
         exit 1
     fi
 fi
 
 if [ "$dev_flag" != "1" ]; then
     # 下载 tmp/packages
-    echo -e "${green}Downloading tmp/packages${plain}"
+    info "Downloading tmp/packages"
     rm -rf ${tmp_path}/packages
     git clone https://github.com/openwrt/packages ${tmp_path}/packages
     if [[ $? -ne 0 ]]; then
         git clone https://github.com/openwrt/packages ${tmp_path}/packages
         if [[ $? -ne 0 ]]; then
-            echo -e "${red}Download of packages failed, exiting the script${plain}"
+            error "Download of packages failed, exiting the script"
             exit 1
         fi
     fi
@@ -162,13 +174,13 @@ if [ "$dev_flag" != "1" ]; then
 
     # 更新 packages/lang/golang 包
     # 切换到指定版本
-    echo -e "${green}Switching to branch: master${plain}"
+    info "Switching to branch: master"
     git checkout master
     if [[ $? -ne 0 ]]; then
-        echo -e "${red}Switching failed, exiting the script${plain}"
+        error "Switching failed, exiting the script"
         exit 1
     fi
-    echo -e "${green}Updating packages/lang/golang${plain}"
+    info "Updating packages/lang/golang"
     rm -rf ${compile_path}/feeds/packages/lang/golang
     cp -r ${tmp_path}/packages/lang/golang ${compile_path}/feeds/packages/lang/golang
 
@@ -176,12 +188,12 @@ if [ "$dev_flag" != "1" ]; then
 fi
 
 #### 安装 feeds 软件包
-echo -e "${green}Installing feeds${plain}"
+info "Installing feeds"
 ./scripts/feeds install -a
 
 if [[ "$dev_flag" != "1" ]]; then
     #### 修正 vermagic
-    echo -e "${green}Fixing vermagic${plain}"
+    info "Fixing vermagic"
     curl -s "${manifest_url}" | grep "kernel" | awk -F "-" '
     {
         match($0, /[0-9a-f]{32,}/, hash);
@@ -207,19 +219,19 @@ sed -i "/set system.@system\[-1\].timezone='CST-8'/a\		set system.@system[-1].zo
 
 #### 下载 diffconfig
 # ./scripts/diffconfig.sh > diffconfig
-echo -e "${green}Downloading diffconfig${plain}"
+info "Downloading diffconfig"
 rm .config .config.old
 wget -O .config $diffconfig_url
 if [[ $? -ne 0 ]]; then
     wget -O .config $diffconfig_url
     if [[ $? -ne 0 ]]; then
-        echo -e "${red}Download of diffconfig failed, exiting the script${plain}"
+        error "Download of diffconfig failed, exiting the script"
         exit 1
     fi
 fi
 
 #### 修改 .config
-echo -e "${green}Modifying .config${plain}"
+info "Modifying .config"
 
 # skip kmod-pf-ring
 # echo "CONFIG_PACKAGE_kmod-pf-ring=n" >>.config
@@ -340,7 +352,7 @@ make defconfig
 make defconfig
 
 #### 编译
-echo -e "${green}Downloading${plain}"
+info "Downloading"
 make download -j8
 download_status=$?
 output=$(find dl -size -1024c -exec ls -l {} \;)
@@ -350,17 +362,17 @@ if [[ $download_status -ne 0 ]] || [[ -n "$output" ]]; then
     download_status=$?
     output=$(find dl -size -1024c -exec ls -l {} \;)
     if [[ $download_status -ne 0 ]] || [[ -n "$output" ]]; then
-        echo -e "${red}Download of packages failed, exiting the script${plain}"
+        error "Download of packages failed, exiting the script"
         exit 1
     fi
 fi
 
-echo -e "${green}Compiling${plain}"
+info "Compiling"
 make -j$(nproc) || make -j1 V=s
 if [[ $? -ne 0 ]]; then
-    echo -e "${red}Build failed, exiting the script${plain}"
+    error "Build failed, exiting the script"
     exit 1
 fi
 
 cp -rf bin/targets/x86/64/* ${output_path}
-echo -e "${green}Build succeeded, the firmware file is in ${output_path}${plain}"
+info "Build succeeded, the firmware file is in ${output_path}"
