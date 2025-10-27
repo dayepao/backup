@@ -1,6 +1,6 @@
 #!/bin/bash
-# MOUNT_PATHS=("nas_m2" "nas")
-MOUNT_PATHS=("nas")
+# MOUNT_ENTRIES=("nas_m2" "nas")
+MOUNT_ENTRIES=("nas")
 
 CUR_MOUNT_PATHS=()
 for cur_mount_path in $(grep "^[^#]*//192.168.1.3" /etc/fstab | sed "s/^ //g" | sed "s/\/\/192.168.1.3\/.* \(\/mnt\/.*\) cifs.*/\1/g")
@@ -18,9 +18,10 @@ do
         1)
             echo -e "\033[32;1m -----------------------安装SMB组件并创建共享目录-------------------------------- \033[0m"
             apt install -y cifs-utils
-            for mount_path in ${MOUNT_PATHS[*]}
+            for mount_entry in ${MOUNT_ENTRIES[*]}
             do
-                mkdir /mnt/${mount_path}
+                mkdir /mnt/${mount_entry}
+                chattr +i /mnt/${mount_entry}
             done
             echo -e "\033[32;1m -----------------------创建密码文件------------------------------ \033[0m"
             read -p "请输入 SMB 用户名: " username
@@ -28,10 +29,10 @@ do
             echo "username=${username}" > /root/.nassmb
             echo "password=${password}" >> /root/.nassmb
             echo -e "\033[32;1m -----------------------设置开机自动挂载 SMB------------------------------ \033[0m"
-            for mount_path in ${MOUNT_PATHS[*]}
+            for mount_entry in ${MOUNT_ENTRIES[*]}
             do
-                if ! [[ ${CUR_MOUNT_PATHS[*]} =~ "/mnt/${mount_path}" ]];then
-                    echo "//192.168.1.3/${mount_path} /mnt/${mount_path} cifs rw,dir_mode=0777,file_mode=0777,credentials=/root/.nassmb,iocharset=utf8,noperm,nobrl,noserverino,nounix 0 0" >> /etc/fstab
+                if ! [[ ${CUR_MOUNT_PATHS[*]} =~ "/mnt/${mount_entry}" ]];then
+                    echo "//192.168.1.3/${mount_entry} /mnt/${mount_entry} cifs rw,dir_mode=0777,file_mode=0777,credentials=/root/.nassmb,iocharset=utf8,noperm,nobrl,noserverino,nounix 0 0" >> /etc/fstab
                 fi
             done
             wget "https://raw.githubusercontent.com/dayepao/backup/main/src/autosmb.sh" -O autosmb.sh
@@ -42,27 +43,23 @@ do
             /usr/bin/bash /root/autosmb.sh start
             echo -e "\033[32;1m -----------------------配置 SMB 挂载完成------------------------------ \033[0m"
             echo "SMB 挂载目录:"
-            for mount_path in ${MOUNT_PATHS[*]}
+            for mount_entry in ${MOUNT_ENTRIES[*]}
             do
-                echo "/mnt/${mount_path}"
+                echo "/mnt/${mount_entry}"
             done
             break 1
             ;;
         2)
             sed -i "/autosmb.sh check/d" /etc/crontab
-            MOUNT_PATHS=()
-            for mount_path in $(grep "^[^#]*//192.168.1.3" /etc/fstab | sed "s/^ //g" | sed "s/\/\/192.168.1.3\/.* \(\/mnt\/.*\) cifs.*/\1/g")
-            do
-                MOUNT_PATHS[${#MOUNT_PATHS[*]}]=${mount_path}
-            done
 
-            for mount_path in ${MOUNT_PATHS[*]}
+            for cur_mount_path in ${CUR_MOUNT_PATHS[*]}
             do
-                echo "umount ${mount_path}"
-                umount ${mount_path}
-                sed -i "/${mount_path//\//\\/}/d" /etc/fstab
-                if [[ $(mount | grep ${mount_path}) == "" ]];then
-                    rm -rf ${mount_path}
+                echo "umount ${cur_mount_path}"
+                umount ${cur_mount_path}
+                sed -i "/${cur_mount_path//\//\\/}/d" /etc/fstab
+                if [[ $(mount | grep ${cur_mount_path}) == "" ]];then
+                    chattr -i ${cur_mount_path}
+                    rm -rf ${cur_mount_path}
                 fi
             done
             break 1
