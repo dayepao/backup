@@ -4,6 +4,14 @@
 # captiveReturnCode=`curl -s -I -m 10 -o /dev/null -s -w %{http_code} http://www.google.cn/generate_204`
 # if [ "${captiveReturnCode}" = "204" ]; then
 resp="$(curl -fsSL --connect-timeout 3 -m 5 http://172.21.0.62/ 2>/dev/null)"
+curl_status=$?
+
+if [ $curl_status -ne 0 ]; then
+    logger "校园网认证：检测到无法访问认证页面，重启 WiFi"
+    wifi reload 2>/dev/null || wifi
+    exit 2
+fi
+
 if echo "$resp" | grep -q "uid="; then
     logger "校园网认证：已认证"
     exit 0
