@@ -120,7 +120,6 @@ fi
 info "Adding custom files"
 mkdir -p files/etc
 wget -O files/etc/openwrt_TJDORMWIFI.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_TJDORMWIFI.sh
-wget -O files/etc/openwrt_wifi_check.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_wifi_check.sh
 wget -O files/etc/openwrt_wifi_init.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_wifi_init.sh
 
 #### 添加第三方软件包
@@ -141,8 +140,8 @@ git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall.git
 git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages.git
 
 # luci-app-openclash
-git clone --depth=1 https://github.com/vernesong/OpenClash.git "${TMP_DIR}/openclash_tmp"
-cp -r "${TMP_DIR}/openclash_tmp/luci-app-openclash" "${COMPILE_DIR}/package/luci-app-openclash"
+git clone --depth=1 https://github.com/vernesong/OpenClash.git "${TMP_DIR}/openclash"
+cp -r "${TMP_DIR}/openclash/luci-app-openclash" "${COMPILE_DIR}/package/luci-app-openclash"
 
 cd -- "${COMPILE_DIR}"
 
