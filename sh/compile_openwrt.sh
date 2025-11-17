@@ -89,11 +89,11 @@ os_id=$(awk -F= '$1=="ID" {print $2}' /etc/os-release | tr -d '"')
 os_version_id=$(awk -F= '$1=="VERSION_ID" {print $2}' /etc/os-release | tr -d '"')
 
 #### Debian 环境变量
-if [[ "${os_id}" == "debian" ]]; then
-    export CFLAGS="${CFLAGS:-} -Wno-error=restrict -Wno-error=maybe-uninitialized"
-    export CXXFLAGS="${CXXFLAGS:-} -Wno-error=restrict -Wno-error=maybe-uninitialized"
-    warn "检测到在 Debian 下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量"
-fi
+# if [[ "${os_id}" == "debian" ]]; then
+#     export CFLAGS="${CFLAGS:-} -Wno-error=restrict -Wno-error=maybe-uninitialized"
+#     export CXXFLAGS="${CXXFLAGS:-} -Wno-error=restrict -Wno-error=maybe-uninitialized"
+#     warn "检测到在 Debian 下运行，已设置 CFLAGS 和 CXXFLAGS 环境变量"
+# fi
 
 #### 下载 OpenWrt 源码
 info "Downloading OpenWrt source code"
