@@ -85,6 +85,7 @@ init_wifi() {
     bounce_default_iface
 
     logger "Wi-Fi 已重新配置，准备重启 OpenClash。"
+    sleep 5
 
     if [ -x /etc/init.d/openclash ]; then
         logger "重启 OpenClash..."

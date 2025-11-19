@@ -8,7 +8,22 @@ curl_status=$?
 
 if [ $curl_status -ne 0 ]; then
     logger "校园网认证：检测到无法访问认证页面，重启 WiFi"
-    wifi reload 2>/dev/null || wifi
+
+    if command -v wifi >/dev/null 2>&1; then
+        wifi reload 2>/dev/null || wifi
+    else
+        /etc/init.d/network reload || /etc/init.d/network restart
+    fi
+
+    logger "Wi-Fi 已重新配置，准备重启 OpenClash。"
+    sleep 5
+
+    if [ -x /etc/init.d/openclash ]; then
+        logger "重启 OpenClash..."
+        /etc/init.d/openclash restart
+    else
+        logger "未找到 /etc/init.d/openclash，跳过重启。"
+    fi
     exit 2
 fi
 
