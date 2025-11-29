@@ -36,11 +36,11 @@ curl_status=$?
 
 if [ $curl_status -ne 0 ]; then
     # 无法访问认证页面，累加失败次数
-    fail_num=$(inc_fail_count)
-    logger "校园网认证：检测到无法访问认证页面，连续失败 ${fail_num} 次"
+    inc_fail_count
+    logger "校园网认证：检测到无法访问认证页面，连续失败 ${FAIL_COUNT} 次"
 
     # 达到阈值，清空计数并重启 OpenWrt
-    if [ "$fail_num" -ge "$MAX_FAIL" ]; then
+    if [ "$FAIL_COUNT" -ge "$MAX_FAIL" ]; then
         logger "校园网认证：连续失败已达 ${MAX_FAIL} 次，清空计数并重启 OpenWrt"
         reset_fail_count
         reboot
