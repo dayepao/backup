@@ -28,16 +28,28 @@ reset_fail_count() {
     rm -f "$COUNT_FILE"
 }
 
-# 这里判断是否已经属于登录状态 如果是则退出脚本
-# captiveReturnCode=`curl -s -I -m 10 -o /dev/null -s -w %{http_code} http://www.google.cn/generate_204`
-# if [ "${captiveReturnCode}" = "204" ]; then
+# 尝试访问认证页面
 resp="$(curl -fsSL --connect-timeout 3 -m 5 http://172.21.0.62/ 2>/dev/null)"
-curl_status=$?
+auth_status=$?
 
-if [ $curl_status -ne 0 ]; then
-    # 无法访问认证页面，累加失败次数
+# 初始化最终故障标记：0=正常，1=彻底失败
+network_dead=0
+
+if [ $auth_status -ne 0 ]; then
+    # 认证页面访问失败了，检查外网(204)是否正常
+    probe_code=$(curl -s -I -m 5 --connect-timeout 3 -o /dev/null -w %{http_code} http://www.google.cn/generate_204)
+
+    if [ "${probe_code}" != "204" ]; then
+        # 外网也不通 (既不是认证页，也不是204)，判定为彻底失败
+        network_dead=1
+    fi
+fi
+
+# 只有无法访问认证页且无法访问外网的时候，才执行报错逻辑
+if [ $network_dead -eq 1 ]; then
+    # 累加失败次数
     inc_fail_count
-    logger "校园网认证：检测到无法访问认证页面，连续失败 ${FAIL_COUNT} 次"
+    logger "校园网认证：检测到认证页面与外网均无法访问，连续失败 ${FAIL_COUNT} 次"
 
     # 达到阈值，清空计数并重启 OpenWrt
     if [ "$FAIL_COUNT" -ge "$MAX_FAIL" ]; then
@@ -67,7 +79,7 @@ if [ $curl_status -ne 0 ]; then
     exit 2
 fi
 
-# 能访问认证页面，说明网络至少是通的，清空失败计数
+# 能访问认证页面或外网，清空失败计数
 reset_fail_count
 
 if echo "$resp" | grep -q "uid="; then
