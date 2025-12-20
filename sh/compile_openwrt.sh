@@ -21,7 +21,7 @@ error() { print_color red    "ERROR: $*"; }
 
 #### 默认配置信息
 openwrt_git="https://github.com/openwrt/openwrt.git"
-openwrt_ver="24.10.4"
+openwrt_ver="24.10.5"
 dev_flag=0
 
 #### 解析参数（顺序无关）
@@ -151,7 +151,7 @@ cd -- "${COMPILE_DIR}"
 # echo "src-git passwall_packages https://github.com/xiaorouji/openwrt-passwall-packages.git;main" >>feeds.conf.default
 
 #### 修补 feeds 源
-sed -i "s#\(src-git telephony https://git.openwrt.org/feed/telephony.git\)\^.*#\1^11e9c73bff6be34ff2fdcd4bc0e81a4723d78652#" feeds.conf.default
+# sed -i "s#\(src-git telephony https://git.openwrt.org/feed/telephony.git\)\^.*#\1^11e9c73bff6be34ff2fdcd4bc0e81a4723d78652#" feeds.conf.default
 
 #### 更新 feeds 软件包
 info "Updating feeds"
