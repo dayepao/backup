@@ -15,9 +15,9 @@ print_color() {
     printf "%b%s%b\n" "$color_var" "$message" "$plain"
 }
 
-info()  { print_color green  "INFO:  $*"; }
-warn()  { print_color yellow "WARN:  $*"; }
-error() { print_color red    "ERROR: $*"; }
+info() { print_color green "INFO:  $*"; }
+warn() { print_color yellow "WARN:  $*"; }
+error() { print_color red "ERROR: $*"; }
 
 #### 默认配置信息
 openwrt_git="https://github.com/openwrt/openwrt.git"
@@ -27,22 +27,40 @@ dev_flag=0
 #### 解析参数（顺序无关）
 positional=()
 while [[ $# -gt 0 ]]; do
-  case "$1" in
-    -v|--version)                 # 例如: -v 23.05.3  或 --version 23.05.3
-      [[ $# -ge 2 ]] || { error "$1 requires a value" >&2; exit 2; }
-      openwrt_ver="$2"; shift 2;;
-    --version=*)                  # 例如: --version=23.05.3
-      openwrt_ver="${1#*=}"; shift;;
-    -d|--dev|-dev)                # 开启 dev 标志（不带值）
-      dev_flag=1; shift;;
-    --no-dev)                     # 显式关闭（可选）
-      dev_flag=0; shift;;
-    --) shift; break;;            # 终止选项
+    case "$1" in
+    -v | --version) # 例如: -v 23.05.3  或 --version 23.05.3
+        [[ $# -ge 2 ]] || {
+            error "$1 requires a value" >&2
+            exit 2
+        }
+        openwrt_ver="$2"
+        shift 2
+        ;;
+    --version=*) # 例如: --version=23.05.3
+        openwrt_ver="${1#*=}"
+        shift
+        ;;
+    -d | --dev | -dev) # 开启 dev 标志（不带值）
+        dev_flag=1
+        shift
+        ;;
+    --no-dev) # 显式关闭（可选）
+        dev_flag=0
+        shift
+        ;;
+    --)
+        shift
+        break
+        ;; # 终止选项
     -*)
-      warn "unknown option: $1 (ignored)"; shift;;
+        warn "unknown option: $1 (ignored)"
+        shift
+        ;;
     *)
-      positional+=("$1"); shift;; # 其他位置参数（如将来扩展）
-  esac
+        positional+=("$1")
+        shift
+        ;; # 其他位置参数（如将来扩展）
+    esac
 done
 # 如需保留剩余参数给后续命令：
 # set -- "${positional[@]}" "$@"
@@ -65,12 +83,20 @@ if [ -n "${BASE_DIR:-}" ] && [ -d "${BASE_DIR}" ]; then
     warn "删除已有目录: ${BASE_DIR}"
     rm -rf -- "${BASE_DIR}"
 fi
-mkdir -p "${BASE_DIR}" || { echo "创建目录失败: ${BASE_DIR}"; exit 1; }
-mkdir -p "${OUTPUT_DIR}" || { echo "创建目录失败: ${OUTPUT_DIR}"; exit 1; }
+mkdir -p "${BASE_DIR}" || {
+    echo "创建目录失败: ${BASE_DIR}"
+    exit 1
+}
+mkdir -p "${OUTPUT_DIR}" || {
+    echo "创建目录失败: ${OUTPUT_DIR}"
+    exit 1
+}
 # 创建临时目录并确保退出时清理
-TMP_DIR=$(mktemp -d -p $BASE_DIR) || { echo "mktemp failed"; exit 1; }
+TMP_DIR=$(mktemp -d -p $BASE_DIR) || {
+    echo "mktemp failed"
+    exit 1
+}
 trap 'rm -rf -- "$TMP_DIR"' EXIT
-
 
 if [[ "${dev_flag}" == "1" ]]; then
     info "Compiling OpenWrt version: main (snapshot)"
@@ -121,6 +147,7 @@ info "Adding custom files"
 mkdir -p files/etc
 wget -O files/etc/openwrt_TJDORMWIFI.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_TJDORMWIFI.sh
 wget -O files/etc/openwrt_wifi_init.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_wifi_init.sh
+wget -O files/etc/auto_channel_tplink.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/auto_channel_tplink.sh
 
 #### 添加第三方软件包
 info "Adding third-party packages"
@@ -217,7 +244,7 @@ if [[ "$dev_flag" != "1" ]]; then
     {
         match($0, /[0-9a-f]{32,}/, hash);
         if (hash[0] != "") print hash[0];
-    }' > .vermagic
+    }' >.vermagic
     sed -i -e 's/^\(.\).*vermagic$/\1cp $(TOPDIR)\/.vermagic $(LINUX_DIR)\/.vermagic/' include/kernel-defaults.mk
     cat .vermagic
 fi
