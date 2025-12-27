@@ -180,6 +180,11 @@ cd -- "${COMPILE_DIR}"
 #### 修补 feeds 源
 # sed -i "s#\(src-git telephony https://git.openwrt.org/feed/telephony.git\)\^.*#\1^11e9c73bff6be34ff2fdcd4bc0e81a4723d78652#" feeds.conf.default
 
+#### 将feeds源替换为GitHub镜像
+sed -i -e 's|https://git.openwrt.org/feed/|https://github.com/openwrt/|g' \
+    -e 's|https://git.openwrt.org/project/|https://github.com/openwrt/|g' \
+    feeds.conf.default
+
 #### 更新 feeds 软件包
 info "Updating feeds"
 ./scripts/feeds clean
