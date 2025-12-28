@@ -14,9 +14,9 @@ do
     case ${bbrkey} in
         1)
             if [[ $key != *bbr* ]];then
-                echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
-                echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
-                sysctl -p
+                echo "net.core.default_qdisc=fq" > /etc/sysctl.d/99-bbr.conf
+                echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.d/99-bbr.conf
+                sysctl --system
             fi
             echo "bbr开启成功, 请查看下方显示内容是否包含bbr"
             sysctl -n net.ipv4.tcp_congestion_control
@@ -24,9 +24,10 @@ do
             break 1
             ;;
         2)
+            rm -f /etc/sysctl.d/99-bbr.conf
             sed -i "/net.core.default_qdisc/d" /etc/sysctl.conf
             sed -i "/net.ipv4.tcp_congestion_control/d" /etc/sysctl.conf
-            sysctl -p
+            sysctl --system
             echo "bbr关闭成功, 请重启后查看效果"
             break 1
             ;;
