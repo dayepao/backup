@@ -161,10 +161,10 @@ cd -- "${COMPILE_DIR}/package"
 git clone --depth=1 https://github.com/jerrykuku/luci-theme-argon.git
 
 # luci-app-passwall
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall.git
+git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall.git
 
 # luci-app-passwall-packages
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages.git
+git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git
 
 # luci-app-openclash
 git clone --depth=1 https://github.com/vernesong/OpenClash.git "${TMP_DIR}/openclash"
@@ -174,8 +174,8 @@ cd -- "${COMPILE_DIR}"
 
 #### 添加 feeds 源
 # passwall
-# echo "src-git passwall https://github.com/xiaorouji/openwrt-passwall.git;main" >>feeds.conf.default
-# echo "src-git passwall_packages https://github.com/xiaorouji/openwrt-passwall-packages.git;main" >>feeds.conf.default
+# echo "src-git passwall https://github.com/Openwrt-Passwall/openwrt-passwall.git;main" >>feeds.conf.default
+# echo "src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main" >>feeds.conf.default
 
 #### 修补 feeds 源
 # sed -i "s#\(src-git telephony https://git.openwrt.org/feed/telephony.git\)\^.*#\1^11e9c73bff6be34ff2fdcd4bc0e81a4723d78652#" feeds.conf.default
