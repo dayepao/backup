@@ -235,6 +235,23 @@ if [ "$dev_flag" != "1" ]; then
     fi
     cp -r "${TMP_SOURCE_DIR}" "${TMP_TARGET_DIR}"
 
+    # 更新 rust 包
+    # 切换到指定版本
+    TMP_SOURCE_DIR="${TMP_PKG_DIR}/lang/rust"
+    TMP_TARGET_DIR="${COMPILE_DIR}/feeds/packages/lang/rust"
+    info "Switching to branch: master"
+    git checkout master
+    if [[ $? -ne 0 ]]; then
+        error "Switching failed, exiting the script"
+        exit 1
+    fi
+    info "Updating ${TMP_TARGET_DIR}"
+    if [[ -d "${TMP_TARGET_DIR}" ]]; then
+        warn "删除已有目录: ${TMP_TARGET_DIR}"
+        rm -rf -- "${TMP_TARGET_DIR}"
+    fi
+    cp -r "${TMP_SOURCE_DIR}" "${TMP_TARGET_DIR}"
+
     cd -- "${COMPILE_DIR}"
 fi
 
