@@ -216,10 +216,11 @@ if [ "$dev_flag" != "1" ]; then
             exit 1
         fi
     fi
+
+    # 进入临时 packages 目录
     cd -- "${TMP_PKG_DIR}"
 
     # 更新 golang 包
-    # 切换到指定版本
     TMP_SOURCE_DIR="${TMP_PKG_DIR}/lang/golang"
     TMP_TARGET_DIR="${COMPILE_DIR}/feeds/packages/lang/golang"
     info "Switching to branch: master"
@@ -236,7 +237,6 @@ if [ "$dev_flag" != "1" ]; then
     cp -r "${TMP_SOURCE_DIR}" "${TMP_TARGET_DIR}"
 
     # 更新 rust 包
-    # 切换到指定版本
     TMP_SOURCE_DIR="${TMP_PKG_DIR}/lang/rust"
     TMP_TARGET_DIR="${COMPILE_DIR}/feeds/packages/lang/rust"
     info "Switching to branch: master"
@@ -252,8 +252,16 @@ if [ "$dev_flag" != "1" ]; then
     fi
     cp -r "${TMP_SOURCE_DIR}" "${TMP_TARGET_DIR}"
 
+    # 返回编译目录
     cd -- "${COMPILE_DIR}"
 fi
+
+# # 修复 rust 编译问题，禁用cillvm
+# sed -i -E 's/(--set=llvm\.download-ci-llvm=)true/\1false/' feeds/packages/lang/rust/Makefile
+
+# 重建 feeds 索引，确保替换后的包生效
+info "Recreating feeds index"
+./scripts/feeds update -i -a
 
 #### 安装 feeds 软件包
 info "Installing feeds"
