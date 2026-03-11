@@ -288,6 +288,7 @@ fi
 # CONFIG_PACKAGE_zoneinfo-asia=y
 #
 sed -i "/set system.@system\[-1\].timezone=/c\		set system.@system[-1].timezone='CST-8'" package/base-files/files/bin/config_generate
+sed -i "/set system.@system\[-1\].zonename=/d" package/base-files/files/bin/config_generate
 sed -i "/set system.@system\[-1\].timezone='CST-8'/a\		set system.@system[-1].zonename='Asia/Shanghai'" package/base-files/files/bin/config_generate
 
 #### 修改默认主题
