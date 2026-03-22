@@ -21,7 +21,7 @@ error() { print_color red "ERROR: $*"; }
 
 #### 默认配置信息
 openwrt_git="https://github.com/openwrt/openwrt.git"
-openwrt_ver="25.12.0"
+openwrt_ver="25.12.1"
 dev_flag=0
 
 #### 解析参数（顺序无关）
@@ -365,7 +365,7 @@ echo "CONFIG_LUCI_LANG_zh_Hans=y" >>.config
 echo "CONFIG_PACKAGE_luci-theme-argon=y" >>.config
 
 # Luci -> Applications -> luci-app-nft-qos
-echo "CONFIG_PACKAGE_luci-app-nft-qos=y" >>.config
+# echo "CONFIG_PACKAGE_luci-app-nft-qos=y" >>.config
 
 # Luci -> Applications -> luci-app-passwall
 echo "CONFIG_PACKAGE_luci-app-passwall=y" >>.config
