@@ -81,18 +81,18 @@ init_wifi() {
     reload_wifi
 
     # 执行固件 bug workaround
-    sleep 5
-    bounce_default_iface
+    # sleep 5
+    # bounce_default_iface
 
-    logger "Wi-Fi 已重新配置，准备重启 OpenClash。"
-    sleep 5
+    # logger "Wi-Fi 已重新配置，准备重启 OpenClash。"
+    # sleep 5
 
-    if [ -x /etc/init.d/openclash ]; then
-        logger "重启 OpenClash..."
-        /etc/init.d/openclash restart
-    else
-        logger "未找到 /etc/init.d/openclash，跳过重启。"
-    fi
+    # if [ -x /etc/init.d/openclash ]; then
+    #     logger "重启 OpenClash..."
+    #     /etc/init.d/openclash restart
+    # else
+    #     logger "未找到 /etc/init.d/openclash，跳过重启。"
+    # fi
 
     return 0
 }

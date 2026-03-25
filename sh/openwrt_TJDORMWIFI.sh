@@ -67,15 +67,15 @@ if [ $network_dead -eq 1 ]; then
         /etc/init.d/network reload || /etc/init.d/network restart
     fi
 
-    logger "已重启 Wi-Fi，准备重启 OpenClash"
-    sleep 5
+    # logger "已重启 Wi-Fi，准备重启 OpenClash"
+    # sleep 5
 
-    if [ -x /etc/init.d/openclash ]; then
-        logger "重启 OpenClash..."
-        /etc/init.d/openclash restart
-    else
-        logger "未找到 /etc/init.d/openclash，跳过重启。"
-    fi
+    # if [ -x /etc/init.d/openclash ]; then
+    #     logger "重启 OpenClash..."
+    #     /etc/init.d/openclash restart
+    # else
+    #     logger "未找到 /etc/init.d/openclash，跳过重启。"
+    # fi
     exit 2
 fi
 
