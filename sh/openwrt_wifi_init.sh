@@ -27,18 +27,18 @@ reload_wifi() {
 
 # 固件 bug workaround：对默认 iface 做启用→禁用“抖动”
 bounce_default_iface() {
-    if uci -q get wireless.@wifi-iface[0] >/dev/null 2>&1; then
-        uci set wireless.@wifi-iface[0].disabled='0'
+    if uci -q get wireless.@wifi-iface[1] >/dev/null 2>&1; then
+        uci set wireless.@wifi-iface[1].disabled='0'
         uci commit wireless
         reload_wifi
 
         sleep 5
-        uci set wireless.@wifi-iface[0].disabled='1'
+        uci set wireless.@wifi-iface[1].disabled='1'
         uci commit wireless
         reload_wifi
         logger "已按固件 workaround 对默认 iface 进行启用→禁用切换"
     else
-        logger "未找到默认 wifi-iface[0]，跳过 workaround"
+        logger "未找到默认 wifi-iface[1]，跳过 workaround"
     fi
 }
 
@@ -81,18 +81,18 @@ init_wifi() {
     reload_wifi
 
     # 执行固件 bug workaround
-    # sleep 5
-    # bounce_default_iface
+    sleep 5
+    bounce_default_iface
 
-    # logger "Wi-Fi 已重新配置，准备重启 OpenClash。"
-    # sleep 5
+    logger "Wi-Fi 已重新配置，准备重启 OpenClash。"
+    sleep 5
 
-    # if [ -x /etc/init.d/openclash ]; then
-    #     logger "重启 OpenClash..."
-    #     /etc/init.d/openclash restart
-    # else
-    #     logger "未找到 /etc/init.d/openclash，跳过重启。"
-    # fi
+    if [ -x /etc/init.d/openclash ]; then
+        logger "重启 OpenClash..."
+        /etc/init.d/openclash restart
+    else
+        logger "未找到 /etc/init.d/openclash，跳过重启。"
+    fi
 
     return 0
 }

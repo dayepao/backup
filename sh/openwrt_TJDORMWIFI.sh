@@ -2,7 +2,7 @@
 
 # 计数文件（放 /tmp，上电重启也会自然清零）
 COUNT_FILE="/tmp/TJDORMWIFI_auth_fail_count"
-MAX_FAIL=10
+MAX_FAIL=5
 
 inc_fail_count() {
     # 从文件读取
@@ -26,6 +26,31 @@ inc_fail_count() {
 
 reset_fail_count() {
     rm -f "$COUNT_FILE"
+}
+
+reload_wifi() {
+    if command -v wifi >/dev/null 2>&1; then
+        wifi reload 2>/dev/null || wifi
+    else
+        /etc/init.d/network reload || /etc/init.d/network restart
+    fi
+}
+
+# 固件 bug workaround：对默认 iface 做启用→禁用“抖动”
+bounce_default_iface() {
+    if uci -q get wireless.@wifi-iface[1] >/dev/null 2>&1; then
+        uci set wireless.@wifi-iface[1].disabled='0'
+        uci commit wireless
+        reload_wifi
+
+        sleep 5
+        uci set wireless.@wifi-iface[1].disabled='1'
+        uci commit wireless
+        reload_wifi
+        logger "已按固件 workaround 对默认 iface 进行启用→禁用切换"
+    else
+        logger "未找到默认 wifi-iface[1]，跳过 workaround"
+    fi
 }
 
 # 尝试访问认证页面
@@ -61,21 +86,21 @@ if [ $network_dead -eq 1 ]; then
 
     # 未达到阈值，重启 WiFi 和 OpenClash
     logger "尝试重启 Wi-Fi 接口以恢复连接"
-    if command -v wifi >/dev/null 2>&1; then
-        wifi reload 2>/dev/null || wifi
+    reload_wifi
+
+    # 执行固件 bug workaround
+    sleep 5
+    bounce_default_iface
+
+    logger "已重启 Wi-Fi，准备重启 OpenClash"
+    sleep 5
+
+    if [ -x /etc/init.d/openclash ]; then
+        logger "重启 OpenClash..."
+        /etc/init.d/openclash restart
     else
-        /etc/init.d/network reload || /etc/init.d/network restart
+        logger "未找到 /etc/init.d/openclash，跳过重启。"
     fi
-
-    # logger "已重启 Wi-Fi，准备重启 OpenClash"
-    # sleep 5
-
-    # if [ -x /etc/init.d/openclash ]; then
-    #     logger "重启 OpenClash..."
-    #     /etc/init.d/openclash restart
-    # else
-    #     logger "未找到 /etc/init.d/openclash，跳过重启。"
-    # fi
     exit 2
 fi
 
