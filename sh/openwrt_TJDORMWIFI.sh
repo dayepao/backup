@@ -36,18 +36,20 @@ reload_wifi() {
     fi
 }
 
-# 固件 bug workaround：对无线接口做禁用→启用抖动
+# 固件 bug workaround：对无线接口做禁用<->启用抖动
 bounce_default_iface() {
     if uci -q get wireless.@wifi-iface[1] >/dev/null 2>&1; then
+        uci set wireless.@wifi-iface[0].disabled='0'
         uci set wireless.@wifi-iface[1].disabled='1'
         uci commit wireless
         reload_wifi
 
         sleep 5
+        uci set wireless.@wifi-iface[0].disabled='1'
         uci set wireless.@wifi-iface[1].disabled='0'
         uci commit wireless
         reload_wifi
-        logger "已按固件 workaround 对无线接口进行禁用→启用切换"
+        logger "已按固件 workaround 对无线接口进行禁用<->启用切换"
     else
         logger "未找到 wifi-iface[1]，跳过 workaround"
     fi
