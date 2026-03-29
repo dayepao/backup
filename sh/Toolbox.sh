@@ -10,7 +10,7 @@ while :; do
     echo -e "\033[32;1m工具:\033[0m"
     echo "001. 剧集重命名                      002. 安装onelist"
     echo "003. 安装rclone                      004. 安装编译openwrt依赖"
-    echo "005. 安装cuteone                     006. aria2管理面板"
+    echo "005. 设置北京时区                    006. aria2管理面板"
     echo "007. 配置GNOME                       008. 设置系统语言为中文"
     echo "009. 重新安装vim                     010. 添加开机启动项"
     echo "011. 配置bash代理                    012. 添加hostname解析"
@@ -48,7 +48,7 @@ while :; do
         bash <(curl -sL https://sh.dayepao.com/setup_openwrt_build_env.sh)
         ;;
     005)
-        bash <(curl -sL https://sh.dayepao.com/cuteone_lyh.sh)
+        bash <(curl -sL https://sh.dayepao.com/set_beijing_timezone.sh)
         ;;
     006)
         bash <(curl -sL https://sh.dayepao.com/aria2_lyh.sh)
