@@ -19,9 +19,17 @@ info() { print_color green "INFO:  $*"; }
 warn() { print_color yellow "WARN:  $*"; }
 error() { print_color red "ERROR: $*"; }
 
+get_latest_openwrt_ver() {
+    git ls-remote --tags --refs "${openwrt_git}" 'refs/tags/v*' |
+        awk '{sub(/^refs\/tags\/v/, "", $2); print $2}' |
+        grep -E '^[0-9]+(\.[0-9]+){2}$' |
+        sort -V |
+        tail -n 1
+}
+
 #### 默认配置信息
 openwrt_git="https://github.com/openwrt/openwrt.git"
-openwrt_ver="25.12.1"
+openwrt_ver="latest"
 dev_flag=0
 
 #### 解析参数（顺序无关）
@@ -66,6 +74,13 @@ done
 # set -- "${positional[@]}" "$@"
 
 #### 相关链接
+if [[ -n "${openwrt_ver}" ]]; then
+    openwrt_ver="${openwrt_ver#v}"
+fi
+if [[ ( -z "${openwrt_ver}" || "${openwrt_ver}" == "latest" ) && "${dev_flag}" != "1" ]]; then
+    openwrt_ver="$(get_latest_openwrt_ver)"
+fi
+
 manifest_url="https://downloads.openwrt.org/releases/${openwrt_ver}/targets/x86/64/openwrt-${openwrt_ver}-x86-64.manifest"
 if [[ "$dev_flag" == "1" ]]; then
     diffconfig_url="https://downloads.openwrt.org/snapshots/targets/x86/64/config.buildinfo"
