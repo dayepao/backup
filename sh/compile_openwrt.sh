@@ -77,7 +77,7 @@ done
 if [[ -n "${openwrt_ver}" ]]; then
     openwrt_ver="${openwrt_ver#v}"
 fi
-if [[ ( -z "${openwrt_ver}" || "${openwrt_ver}" == "latest" ) && "${dev_flag}" != "1" ]]; then
+if [[ (-z "${openwrt_ver}" || "${openwrt_ver}" == "latest") && "${dev_flag}" != "1" ]]; then
     openwrt_ver="$(get_latest_openwrt_ver)"
 fi
 
@@ -352,6 +352,10 @@ echo "CONFIG_PACKAGE_kmod-iwlwifi=y" >>.config
 echo "CONFIG_PACKAGE_rtl8922ae-firmware=y" >>.config
 ## Kernel modules -> Wireless Drivers -> kmod-rtw89-8922ae
 echo "CONFIG_PACKAGE_kmod-rtw89-8922ae=y" >>.config
+
+# MT7921U Driver
+## Kernel modules -> Wireless Drivers -> kmod-mt7921u
+echo "CONFIG_PACKAGE_kmod-mt7921u=y" >>.config
 
 # Network -> WirelessAPD -> wpad
 echo "CONFIG_PACKAGE_wpad=y" >>.config
