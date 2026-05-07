@@ -20,11 +20,34 @@ warn() { print_color yellow "WARN:  $*"; }
 error() { print_color red "ERROR: $*"; }
 
 get_latest_openwrt_ver() {
-    git ls-remote --tags --refs "${openwrt_git}" 'refs/tags/v*' |
-        awk '{sub(/^refs\/tags\/v/, "", $2); print $2}' |
-        grep -E '^[0-9]+(\.[0-9]+){2}$' |
-        sort -V |
-        tail -n 1
+    local latest_ver
+
+    case "${openwrt_git}" in
+    "https://github.com/openwrt/openwrt" | "https://github.com/openwrt/openwrt.git" | "git@github.com:openwrt/openwrt.git" | "ssh://git@github.com/openwrt/openwrt.git")
+        if latest_ver="$(
+            curl -fsSL "https://api.github.com/repos/openwrt/openwrt/releases/latest" |
+                sed -nE 's/^[[:space:]]*"tag_name":[[:space:]]*"v?([0-9]+(\.[0-9]+){2})".*/\1/p' |
+                head -n 1
+        )" && [[ -n "${latest_ver}" ]]; then
+            printf "%s\n" "${latest_ver}"
+            return 0
+        fi
+        ;;
+    esac
+
+    # 对于其他 Git 仓库，或GitHub API 请求失败的情况，使用 git ls-remote 获取 tags 列表并解析版本号
+    if latest_ver="$(
+        git ls-remote --tags --refs "${openwrt_git}" 'refs/tags/v*' |
+            awk '{sub(/^refs\/tags\/v/, "", $2); print $2}' |
+            grep -E '^[0-9]+(\.[0-9]+){2}$' |
+            sort -V |
+            tail -n 1
+    )" && [[ -n "${latest_ver}" ]]; then
+        printf "%s\n" "${latest_ver}"
+        return 0
+    fi
+
+    return 1
 }
 
 #### 默认配置信息
@@ -78,7 +101,10 @@ if [[ -n "${openwrt_ver}" ]]; then
     openwrt_ver="${openwrt_ver#v}"
 fi
 if [[ (-z "${openwrt_ver}" || "${openwrt_ver}" == "latest") && "${dev_flag}" != "1" ]]; then
-    openwrt_ver="$(get_latest_openwrt_ver)"
+    if ! openwrt_ver="$(get_latest_openwrt_ver)"; then
+        error "Failed to get latest OpenWrt version from ${openwrt_git}"
+        exit 1
+    fi
 fi
 
 manifest_url="https://downloads.openwrt.org/releases/${openwrt_ver}/targets/x86/64/openwrt-${openwrt_ver}-x86-64.manifest"
