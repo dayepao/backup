@@ -194,7 +194,7 @@ wget -O files/etc/auto_channel_tplink.sh https://raw.githubusercontent.com/dayep
 info "Adding third-party packages"
 
 # luci-app-turboacc
-curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh --no-sfe
+# curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh --no-sfe
 
 cd -- "${COMPILE_DIR}/package"
 
@@ -443,10 +443,10 @@ echo "CONFIG_PACKAGE_luci-app-openclash=y" >>.config
 echo "CONFIG_PACKAGE_luci-app-ttyd=y" >>.config
 
 # Luci -> Applications -> luci-app-turboacc
-echo "CONFIG_PACKAGE_luci-app-turboacc=y" >>.config
-echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_OFFLOADING=y" >>.config
-echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_BBR_CCA=y" >>.config
-echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_NFT_FULLCONE=y" >>.config
+# echo "CONFIG_PACKAGE_luci-app-turboacc=y" >>.config
+# echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_OFFLOADING=y" >>.config
+# echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_BBR_CCA=y" >>.config
+# echo "CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_NFT_FULLCONE=y" >>.config
 
 # tailscale
 # echo "CONFIG_PACKAGE_tailscale=y" >>.config
