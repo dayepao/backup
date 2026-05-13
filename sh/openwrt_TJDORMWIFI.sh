@@ -3,6 +3,7 @@
 # 计数文件（放 /tmp，上电重启也会自然清零）
 COUNT_FILE="/tmp/TJDORMWIFI_auth_fail_count"
 MAX_FAIL=5
+TARGET_SSID="TJ-DORM-WIFI"
 
 inc_fail_count() {
     # 从文件读取
@@ -36,24 +37,23 @@ reload_wifi() {
     fi
 }
 
-# 固件 bug workaround：对无线接口做禁用<->启用抖动
-bounce_default_iface() {
-    if uci -q get wireless.@wifi-iface[1] >/dev/null 2>&1; then
-        uci set wireless.@wifi-iface[0].disabled='0'
-        uci set wireless.@wifi-iface[1].disabled='1'
-        uci commit wireless
-        reload_wifi
-
-        sleep 5
-        uci set wireless.@wifi-iface[0].disabled='1'
-        uci set wireless.@wifi-iface[1].disabled='0'
-        uci commit wireless
-        reload_wifi
-        logger "已按固件 workaround 对无线接口进行禁用<->启用切换"
-    else
-        logger "未找到 wifi-iface[1]，跳过 workaround"
-    fi
+has_target_ssid_iface() {
+    iw dev 2>/dev/null | awk -v target="$TARGET_SSID" '
+        /^[[:space:]]*ssid[[:space:]]/ {
+            ssid = $0
+            sub(/^[[:space:]]*ssid[[:space:]]+/, "", ssid)
+            if (ssid == target) {
+                found = 1
+            }
+        }
+        END { exit found ? 0 : 1 }
+    '
 }
+
+if ! has_target_ssid_iface; then
+    logger "校园网认证：未检测到 SSID(${TARGET_SSID}) 对应的无线接口，跳过执行。"
+    exit 0
+fi
 
 # 尝试访问认证页面
 resp="$(curl -fsSL --connect-timeout 3 -m 5 http://172.21.0.62/ 2>/dev/null)"
@@ -89,10 +89,6 @@ if [ $network_dead -eq 1 ]; then
     # 未达到阈值，重启 WiFi 和 OpenClash
     logger "尝试重启 Wi-Fi 接口以恢复连接"
     reload_wifi
-
-    # 执行固件 bug workaround
-    sleep 5
-    bounce_default_iface
 
     logger "已重启 Wi-Fi，准备重启 OpenClash"
     sleep 5

@@ -25,33 +25,46 @@ reload_wifi() {
     fi
 }
 
-# 固件 bug workaround：对无线接口做禁用<->启用抖动
-bounce_default_iface() {
-    if uci -q get wireless.@wifi-iface[1] >/dev/null 2>&1; then
-        uci set wireless.@wifi-iface[0].disabled='0'
-        uci set wireless.@wifi-iface[1].disabled='1'
-        uci commit wireless
-        reload_wifi
-
-        sleep 5
-        uci set wireless.@wifi-iface[0].disabled='1'
-        uci set wireless.@wifi-iface[1].disabled='0'
-        uci commit wireless
-        reload_wifi
-        logger "已按固件 workaround 对无线接口进行禁用<->启用切换"
-    else
-        logger "未找到 wifi-iface[1]，跳过 workaround"
-    fi
+has_ssid_iface() {
+    iw dev 2>/dev/null | awk -v target="$SSID" '
+        /^[[:space:]]*ssid[[:space:]]/ {
+            ssid = $0
+            sub(/^[[:space:]]*ssid[[:space:]]+/, "", ssid)
+            if (ssid == target) {
+                found = 1
+            }
+        }
+        END { exit found ? 0 : 1 }
+    '
 }
 
+# 固件 bug workaround：对无线接口做禁用<->启用抖动
+# bounce_default_iface() {
+#     if uci -q get wireless.@wifi-iface[1] >/dev/null 2>&1; then
+#         uci set wireless.@wifi-iface[0].disabled='0'
+#         uci set wireless.@wifi-iface[1].disabled='1'
+#         uci commit wireless
+#         reload_wifi
+
+#         sleep 5
+#         uci set wireless.@wifi-iface[0].disabled='1'
+#         uci set wireless.@wifi-iface[1].disabled='0'
+#         uci commit wireless
+#         reload_wifi
+#         logger "已按固件 workaround 对无线接口进行禁用<->启用切换"
+#     else
+#         logger "未找到 wifi-iface[1]，跳过 workaround"
+#     fi
+# }
+
 init_wifi() {
-    # 检查是否已有无线设备配置，若已存在无线接口则跳过重配
-    if iw dev | grep -q "Interface"; then
-        logger "检测到已有无线设备配置，跳过重新配置。"
+    # 检查是否已有目标 SSID 对应的无线接口，若存在则跳过重配
+    if has_ssid_iface; then
+        logger "检测到已有 SSID(${SSID}) 对应的无线接口，跳过重新配置。"
         return 2
     fi
 
-    logger "未检测到无线设备，开始重新配置..."
+    logger "未检测到 SSID(${SSID}) 对应的无线接口，开始重新配置..."
 
     rm -f /etc/config/wireless
     wifi config
@@ -83,8 +96,8 @@ init_wifi() {
     reload_wifi
 
     # 执行固件 bug workaround
-    sleep 5
-    bounce_default_iface
+    # sleep 5
+    # bounce_default_iface
 
     logger "Wi-Fi 已重新配置，准备重启 OpenClash。"
     sleep 5
