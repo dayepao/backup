@@ -185,10 +185,28 @@ fi
 
 #### 添加自定义文件
 info "Adding custom files"
+###### 添加 WIFI 相关脚本
 mkdir -p files/etc
 wget -O files/etc/openwrt_TJDORMWIFI.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_TJDORMWIFI.sh
 wget -O files/etc/openwrt_wifi_init.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/openwrt_wifi_init.sh
 wget -O files/etc/auto_channel_tplink.sh https://raw.githubusercontent.com/dayepao/backup/refs/heads/main/sh/auto_channel_tplink.sh
+###### 添加 OpenClash 规则数据库
+mkdir -p files/etc/openclash
+wget -O files/etc/openclash/Country.mmdb https://github.com/alecthw/mmdb_china_ip_list/releases/latest/download/Country-lite.mmdb
+wget -O files/etc/openclash/GeoIP.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+wget -O files/etc/openclash/GeoSite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+wget -O files/etc/openclash/ASN.mmdb https://github.com/xishang0128/geoip/releases/latest/download/GeoLite2-ASN.mmdb
+###### 添加 OpenClash 内核
+mkdir -p files/etc/openclash/core
+mkdir -p "${TMP_DIR}/openclash_core"
+wget -O "${TMP_DIR}/openclash_core/clash-linux-amd64-v1.tar.gz" https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-amd64-v1.tar.gz
+tar -xzf "${TMP_DIR}/openclash_core/clash-linux-amd64-v1.tar.gz" -C "${TMP_DIR}/openclash_core"
+if [[ -f "${TMP_DIR}/openclash_core/clash" ]]; then
+    cp -f "${TMP_DIR}/openclash_core/clash" files/etc/openclash/core/clash_meta
+else
+    error "Clash core not found in the extracted files, exiting the script"
+    exit 1
+fi
 
 #### 添加第三方软件包
 info "Adding third-party packages"
