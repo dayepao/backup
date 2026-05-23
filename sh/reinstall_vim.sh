@@ -1,4 +1,13 @@
 #!/bin/bash
+
+is_package_installed() {
+    dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -q "install ok installed"
+}
+
+if is_package_installed vim || ! is_package_installed vim-common; then
+    exit 0
+fi
+
 while :
 do
     read -p "是否要重新安装vim?(y/N):" rkey
