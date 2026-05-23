@@ -226,7 +226,7 @@ git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall.git
 git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git
 
 # luci-app-openclash
-git clone --depth=1 https://github.com/vernesong/OpenClash.git "${TMP_DIR}/openclash"
+git clone --depth=1 --branch dev https://github.com/vernesong/OpenClash.git "${TMP_DIR}/openclash"
 cp -r "${TMP_DIR}/openclash/luci-app-openclash" "${COMPILE_DIR}/package/luci-app-openclash"
 
 cd -- "${COMPILE_DIR}"
