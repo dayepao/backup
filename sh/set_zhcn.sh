@@ -6,8 +6,7 @@ is_supported_system() {
     . /etc/os-release
 
     case " ${ID:-} ${ID_LIKE:-} " in
-    *" debian "* | *" ubuntu "*)
-        ;;
+    *" debian "* | *" ubuntu "*) ;;
     *)
         return 1
         ;;
@@ -16,8 +15,7 @@ is_supported_system() {
     command -v apt-get >/dev/null 2>&1 && command -v dpkg-query >/dev/null 2>&1
 }
 
-while :
-do
+while :; do
     read -p "是否要设置系统语言为中文?(y/N):" skey
     case ${skey} in
     [yY])
@@ -34,7 +32,7 @@ do
 
         sed -i '/^LANG=/s/^\(LANG=.*\)/# \1/' $HOME/.profile
         sed -i '/^LANGUAGE=/s/^\(LANGUAGE=.*\)/# \1/' $HOME/.profile
-        sed -i '/#.*zh_CN.UTF-8 UTF-8/s/^#[[:space:]]*//' /etc/locale.gen && ! grep -qE "^[[:space:]]*zh_CN.UTF-8 UTF-8" /etc/locale.gen && echo "zh_CN.UTF-8 UTF-8" >> /etc/locale.gen
+        sed -i '/#.*zh_CN.UTF-8 UTF-8/s/^#[[:space:]]*//' /etc/locale.gen && ! grep -qE "^[[:space:]]*zh_CN.UTF-8 UTF-8" /etc/locale.gen && echo "zh_CN.UTF-8 UTF-8" >>/etc/locale.gen
         locale-gen
         update-locale "LANG=zh_CN.UTF-8"
         locale-gen --purge
