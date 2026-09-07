@@ -3,7 +3,6 @@
 # 计数文件（放 /tmp，上电重启也会自然清零）
 COUNT_FILE="/tmp/TJDORMWIFI_auth_fail_count"
 MAX_FAIL=5
-TARGET_SSID="TJ-DORM-WIFI"
 
 inc_fail_count() {
     # 从文件读取
@@ -29,32 +28,6 @@ reset_fail_count() {
     rm -f "$COUNT_FILE"
 }
 
-reload_wifi() {
-    if command -v wifi >/dev/null 2>&1; then
-        wifi reload 2>/dev/null || wifi
-    else
-        /etc/init.d/network reload || /etc/init.d/network restart
-    fi
-}
-
-has_target_ssid_iface() {
-    iw dev 2>/dev/null | awk -v target="$TARGET_SSID" '
-        /^[[:space:]]*ssid[[:space:]]/ {
-            ssid = $0
-            sub(/^[[:space:]]*ssid[[:space:]]+/, "", ssid)
-            if (ssid == target) {
-                found = 1
-            }
-        }
-        END { exit found ? 0 : 1 }
-    '
-}
-
-if ! has_target_ssid_iface; then
-    logger "校园网认证：未检测到 SSID(${TARGET_SSID}) 对应的无线接口，跳过执行。"
-    exit 0
-fi
-
 # 尝试访问认证页面
 resp="$(curl -fsSL --connect-timeout 3 -m 5 http://172.21.0.62/ 2>/dev/null)"
 auth_status=$?
@@ -66,10 +39,14 @@ if [ $auth_status -ne 0 ]; then
     # 认证页面访问失败了，检查外网(204)是否正常
     probe_code=$(curl -s -I -m 5 --connect-timeout 3 -o /dev/null -w %{http_code} http://www.google.cn/generate_204)
 
-    if [ "${probe_code}" != "204" ]; then
-        # 外网也不通 (既不是认证页，也不是204)，判定为彻底失败
-        network_dead=1
+    if [ "${probe_code}" = "204" ]; then
+        reset_fail_count
+        logger "校园网认证：外网访问正常，跳过认证"
+        exit 0
     fi
+
+    # 外网也不通 (既不是认证页，也不是204)，判定为彻底失败
+    network_dead=1
 fi
 
 # 只有无法访问认证页且无法访问外网的时候，才执行报错逻辑
@@ -86,23 +63,10 @@ if [ $network_dead -eq 1 ]; then
         exit 3
     fi
 
-    # 未达到阈值，重启 WiFi 和 OpenClash
-    logger "尝试重启 Wi-Fi 接口以恢复连接"
-    reload_wifi
-
-    logger "已重启 Wi-Fi，准备重启 OpenClash"
-    sleep 5
-
-    if [ -x /etc/init.d/openclash ]; then
-        logger "重启 OpenClash..."
-        /etc/init.d/openclash restart
-    else
-        logger "未找到 /etc/init.d/openclash，跳过重启。"
-    fi
     exit 2
 fi
 
-# 能访问认证页面或外网，清空失败计数
+# 能访问认证页面，清空失败计数
 reset_fail_count
 
 if echo "$resp" | grep -q "uid="; then
@@ -155,5 +119,15 @@ v="5021"
 lang2="zh"
 
 loginURL="${loginURL}?callback=${callback}&DDDDD=${DDDDD}&upass=${upass}&0MKKey=${tmp0MKKey}&R1=${R1}&R2=${R2}&R3=${R3}&R6=${R6}&para=${para}&v6ip=${v6ip}&terminal_type=${terminal_type}&lang=${lang1}&jsVersion=${jsVersion}&v=${v}&lang=${lang2}"
-auth=$(curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.91 Safari/537.36" "${loginURL}")
-logger $auth
+auth=$(curl -s --connect-timeout 3 -m 10 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0" "${loginURL}")
+login_status=$?
+
+# curl 超时或失败时，已收到的响应仍会保留，但不能保证完整。
+case "$login_status" in
+0) login_result="登录请求完成" ;;
+28) login_result="登录请求超时，响应可能不完整" ;;
+*) login_result="登录请求失败（curl 退出码：${login_status}），响应可能不完整" ;;
+esac
+
+logger "校园网认证：${login_result}，响应：${auth:-未收到响应体}"
+exit "$login_status"
