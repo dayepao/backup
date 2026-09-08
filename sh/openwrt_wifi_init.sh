@@ -1,19 +1,35 @@
 #!/bin/sh
-# 用法: ./init_wifi.sh "SSID" "BSSID(optional, 11:22:33:44:55:66)"
+# 用法: ./openwrt_wifi_init.sh 'SSID' 'BSSID(optional, 00:11:22:33:44:55)' 'MACADDR(optional, 02:11:22:33:44:55)'
+# 仅固定网卡 MAC: ./openwrt_wifi_init.sh 'TJ-DORM-WIFI' '' '02:11:22:33:44:55'
 # 返回码：0 = 重新配置；2 = 已有接口，跳过
 
 SSID="${1:-TJ-DORM-WIFI}"
 BSSID_RAW="$2"
+MACADDR_RAW="$3"
 
 to_upper() { echo "$1" | tr 'a-f' 'A-F'; }
-is_mac() { echo "$1" | grep -Eiq '^[0-9A-F]{2}(:[0-9A-F]{2}){5}$'; }
+is_mac() {
+    # MAC/BSSID 必须是非全零的单播地址，首字节最低位为 0。
+    [ "${#1}" -eq 17 ] || return 1
+    [ "$1" != '00:00:00:00:00:00' ] || return 1
+    printf '%s\n' "$1" | grep -Eiq '^[0-9A-F][02468ACE](:[0-9A-F]{2}){5}$'
+}
 
 BSSID=""
 if [ -n "$BSSID_RAW" ]; then
     BSSID="$(to_upper "$BSSID_RAW")"
     if ! is_mac "$BSSID"; then
-        logger "BSSID 格式不合法: $BSSID_RAW，已忽略"
+        logger "BSSID 不合法: $BSSID_RAW，须为格式正确且非全零的单播地址，已忽略"
         BSSID=""
+    fi
+fi
+
+MACADDR=""
+if [ -n "$MACADDR_RAW" ]; then
+    MACADDR="$(to_upper "$MACADDR_RAW")"
+    if ! is_mac "$MACADDR"; then
+        logger "MAC 地址不合法: $MACADDR_RAW，须为格式正确且非全零的单播地址，已忽略"
+        MACADDR=""
     fi
 fi
 
@@ -83,13 +99,22 @@ init_wifi() {
     uci set wireless.wifinet1.ssid="${SSID}"
     uci set wireless.wifinet1.encryption='none'
 
-    # 指定 BSSID（仅当提供且合法时），否则确保清除可能存在的旧 bssid 锁定
+    # 指定网卡 MAC（仅当提供且合法时），否则清除旧 macaddr 配置
+    if [ -n "$MACADDR" ]; then
+        uci set wireless.wifinet1.macaddr="${MACADDR}"
+        logger "已固定网卡 MAC 地址: ${MACADDR}"
+    else
+        uci -q delete wireless.wifinet1.macaddr
+        logger "未指定 MAC 地址或地址不合法，已清除固定 MAC 配置；未烧录 MAC 的网卡重启后地址可能变化。"
+    fi
+
+    # 指定 BSSID（仅当提供且合法时），否则清除旧 bssid 锁定
     if [ -n "$BSSID" ]; then
         uci set wireless.wifinet1.bssid="${BSSID}"
         logger "已锁定到指定 BSSID: ${BSSID}"
     else
         uci -q delete wireless.wifinet1.bssid
-        logger "未指定或格式不合法，未设置 BSSID 锁定。"
+        logger "未指定 BSSID 或地址不合法，已清除 BSSID 锁定配置；若有多个 AP，可能会连接到信号最强的。"
     fi
 
     uci commit wireless
